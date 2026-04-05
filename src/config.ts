@@ -5,8 +5,8 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-config({ path: path.resolve(__dirname, "../.env") });
-config();
+config({ path: path.resolve(__dirname, "../.env"), quiet: true });
+config({ quiet: true });
 
 export const LAW_API_KEY = process.env.LAW_API_KEY ?? "";
 export const LAW_API_OC = process.env.LAW_API_OC ?? process.env.LAW_API_KEY ?? "";
