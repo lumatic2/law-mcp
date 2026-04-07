@@ -13,6 +13,11 @@ export interface LegalRuleIssue {
   profile: LegalRuleProfile | "custom";
 }
 
+export interface GroupedLegalRuleIssue {
+  term: string;
+  issues: LegalRuleIssue[];
+}
+
 const PROFILE_RULES: Record<LegalRuleProfile, LegalReplacementRule[]> = {
   legal: [
     { bad: "갑", good: "당사자 A", reason: "계약 설명 문서에서는 당사자 표기를 풀어 쓰는 편이 가독성이 높습니다." },
@@ -63,4 +68,19 @@ export function evaluateLegalRuleIssues(
   }
 
   return issues;
+}
+
+export function groupLegalRuleIssuesByTerm(issues: LegalRuleIssue[]): GroupedLegalRuleIssue[] {
+  const grouped = new Map<string, LegalRuleIssue[]>();
+
+  for (const issue of issues) {
+    const bucket = grouped.get(issue.term) ?? [];
+    bucket.push(issue);
+    grouped.set(issue.term, bucket);
+  }
+
+  return [...grouped.entries()].map(([term, groupedIssues]) => ({
+    term,
+    issues: groupedIssues,
+  }));
 }

@@ -1,10 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import * as z from "zod";
-import { evaluateLegalRuleIssues } from "./legal-rules.js";
-import { toMcpErrorResponse } from "./mcp-error.js";
+import { evaluateLegalRuleIssues, groupLegalRuleIssuesByTerm } from "./legal-rules.js";
+import { createMcpError, toMcpErrorResponse } from "./mcp-error.js";
 import { LawGoProvider } from "./providers/lawgo-provider.js";
 import { suggestTermPatches } from "./term-patches.js";
+import type { BatchValidateLegalTermsResult } from "./types.js";
 
 const provider = new LawGoProvider();
 
@@ -58,10 +59,13 @@ server.registerTool(
     try {
       const result = await provider.getLawArticle(law_id, article_no);
       if (!result) {
-        return {
-          content: [{ type: "text", text: `ERROR: Article not found: law_id=${law_id}, article_no=${article_no}` }],
-          isError: true,
-        };
+        return toMcpErrorResponse(
+          createMcpError({
+            code: "NOT_FOUND",
+            message: `Article not found: law_id=${law_id}, article_no=${article_no}`,
+            retryable: false,
+          }),
+        );
       }
 
       return {
@@ -97,13 +101,20 @@ server.registerTool(
   async ({ terms, profile, custom_replacements }) => {
     try {
       const issues = evaluateLegalRuleIssues(terms, profile, custom_replacements);
-      const issueMap = new Map(issues.map((issue) => [issue.term, issue]));
+      const groupedIssues = new Map(
+        groupLegalRuleIssuesByTerm(issues).map((group) => [group.term, group.issues]),
+      );
       const uniqueTerms = [...new Set(terms.map((term) => term.trim()).filter(Boolean))];
+      const warnings = [...groupedIssues.entries()]
+        .filter(([, grouped]) => grouped.length > 1)
+        .map(([term]) => `충돌하는 대체 규칙이 감지되었습니다: ${term}`);
 
-      const result = {
+      const result: BatchValidateLegalTermsResult = {
         items: uniqueTerms.map((term) => {
-          const issue = issueMap.get(term);
-          if (!issue) {
+          const termIssues = groupedIssues.get(term) ?? [];
+          const [primaryIssue, ...conflicts] = termIssues;
+
+          if (!primaryIssue) {
             return {
               term,
               status: "ok" as const,
@@ -113,11 +124,19 @@ server.registerTool(
           return {
             term,
             status: "suspect" as const,
-            reason: issue.reason,
-            suggested: issue.suggested,
-            profile: issue.profile,
+            reason: primaryIssue.reason,
+            suggested: primaryIssue.suggested,
+            profile: primaryIssue.profile,
+            conflicts: conflicts.length > 0
+              ? conflicts.map((issue) => ({
+                  suggested: issue.suggested,
+                  reason: issue.reason,
+                  profile: issue.profile,
+                }))
+              : undefined,
           };
         }),
+        warnings,
       };
 
       return {

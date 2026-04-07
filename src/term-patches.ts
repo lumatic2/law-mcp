@@ -2,6 +2,7 @@ import axios from "axios";
 import { evaluateLegalRuleIssues } from "./legal-rules.js";
 import { getProfileRules } from "./legal-rules.js";
 import { NIKL_API_KEY, NIKL_BASE_URL } from "./config.js";
+import type { SuggestTermPatchesResult } from "./types.js";
 
 export interface CustomReplacement {
   bad: string;
@@ -15,6 +16,21 @@ export interface SuggestedPatch {
   reason: string;
   source: "rules" | "dictionary";
 }
+
+const TERM_BOUNDARY_CLASS = "가-힣A-Za-z0-9_";
+const KOREAN_PARTICLE_PATTERN = [
+  "은", "는", "이", "가", "을", "를", "과", "와",
+  "으로는", "으로도", "으로", "로는", "로도", "로",
+  "의", "에는", "에도", "에서는", "에서도", "에서",
+  "에게는", "에게도", "에게서", "에게",
+  "께서는", "께서", "께",
+  "도", "만",
+  "부터는", "부터도", "부터",
+  "까지는", "까지도", "까지",
+  "마다", "처럼", "보다", "이라도", "라도", "이나", "나",
+  "조차", "마저", "뿐", "밖에",
+  "한테는", "한테도", "한테서", "한테",
+].join("|");
 
 interface NiklSearchRow {
   word?: string;
@@ -72,12 +88,16 @@ function pickParticle(lastChar: string, particle: string): string {
 }
 
 function polishKoreanParticles(text: string): string {
-  return text.replace(/([가-힣]+)(은|는|이|가|을|를|과|와|으로|로)/g, (whole, word: string, particle: string) => {
-    const lastChar = word[word.length - 1];
-    if (!lastChar) return whole;
-    const corrected = pickParticle(lastChar, particle);
-    return `${word}${corrected}`;
-  });
+  return text.replace(
+    /([가-힣A-Za-z0-9]+(?:\s+[가-힣A-Za-z0-9]+)*)(은|는|이|가|을|를|과|와|으로|로)/g,
+    (whole, word: string, particle: string) => {
+      const chars = [...word].filter((char) => /[가-힣]/.test(char));
+      const lastChar = chars[chars.length - 1];
+      if (!lastChar) return whole;
+      const corrected = pickParticle(lastChar, particle);
+      return `${word}${corrected}`;
+    },
+  );
 }
 
 async function findDictionarySuggestion(term: string): Promise<string | null> {
@@ -103,19 +123,25 @@ async function findDictionarySuggestion(term: string): Promise<string | null> {
   return first;
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function replaceWholeTerm(text: string, before: string, after: string): string {
+  const pattern = new RegExp(
+    `(^|[^${TERM_BOUNDARY_CLASS}])(${escapeRegExp(before)})(?=$|[^${TERM_BOUNDARY_CLASS}]|(?:${KOREAN_PARTICLE_PATTERN}))`,
+    "g",
+  );
+  return text.replace(pattern, (_, prefix: string) => `${prefix}${after}`);
+}
+
 export async function suggestTermPatches(params: {
   text?: string;
   terms?: string[];
   profile: "legal" | "tax";
   customReplacements?: CustomReplacement[];
   includeDictionary?: boolean;
-}): Promise<{
-  terms: string[];
-  patches: SuggestedPatch[];
-  notes: string[];
-  patched_text?: string;
-  applied_patch_count?: number;
-}> {
+}): Promise<SuggestTermPatchesResult> {
   const {
     text = "",
     terms = [],
@@ -162,17 +188,23 @@ export async function suggestTermPatches(params: {
     if (!NIKL_API_KEY) {
       notes.push("NIKL_API_KEY가 없어 사전 기반 제안은 건너뛰었습니다.");
     } else {
-      for (const term of dictionaryTerms) {
-        // Already patched by explicit rules; do not duplicate.
-        if (patches.some((patch) => patch.before === term)) continue;
-        const suggested = await findDictionarySuggestion(term);
-        if (!suggested) continue;
-        patches.push({
-          before: term,
-          after: suggested,
-          reason: "사전 include 검색의 대표 표제어와 다릅니다.",
-          source: "dictionary",
-        });
+      const dictionarySuggestions = await Promise.all(
+        dictionaryTerms.map(async (term) => {
+          if (patches.some((patch) => patch.before === term)) return null;
+          const suggested = await findDictionarySuggestion(term);
+          if (!suggested) return null;
+          return {
+            before: term,
+            after: suggested,
+            reason: "사전 include 검색의 대표 표제어와 다릅니다.",
+            source: "dictionary" as const,
+          };
+        }),
+      );
+
+      for (const patch of dictionarySuggestions) {
+        if (!patch) continue;
+        patches.push(patch);
       }
     }
   }
@@ -194,7 +226,7 @@ export async function suggestTermPatches(params: {
     let count = 0;
     for (const patch of ordered) {
       if (!patch.before || patch.before === patch.after) continue;
-      const replaced = next.split(patch.before).join(patch.after);
+      const replaced = replaceWholeTerm(next, patch.before, patch.after);
       if (replaced !== next) {
         count += 1;
         next = replaced;
@@ -208,6 +240,7 @@ export async function suggestTermPatches(params: {
     terms: baseTerms,
     patches: finalPatches,
     notes,
+    warnings: notes,
     patched_text: patchedText,
     applied_patch_count: appliedPatchCount,
   };
