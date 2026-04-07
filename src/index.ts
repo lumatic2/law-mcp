@@ -79,6 +79,116 @@ server.registerTool(
 );
 
 server.registerTool(
+  "search_precedents",
+  {
+    title: "Search Precedents",
+    description: "Search court precedents by keyword via provider adapter.",
+    inputSchema: {
+      query: z.string().min(1),
+      limit: z.number().int().min(1).max(100).default(10),
+    },
+  },
+  async ({ query, limit }) => {
+    try {
+      const result = await provider.searchPrecedents(query, { limit });
+      return {
+        content: [{ type: "text", text: toText(result) }],
+        structuredContent: toStructuredContent(result),
+      };
+    } catch (error) {
+      return toMcpErrorResponse(error);
+    }
+  },
+);
+
+server.registerTool(
+  "get_precedent",
+  {
+    title: "Get Precedent",
+    description: "Get precedent detail by precedent id.",
+    inputSchema: {
+      precedent_id: z.string().min(1),
+    },
+  },
+  async ({ precedent_id }) => {
+    try {
+      const result = await provider.getPrecedent(precedent_id);
+      if (!result) {
+        return toMcpErrorResponse(
+          createMcpError({
+            code: "NOT_FOUND",
+            message: `Precedent not found: precedent_id=${precedent_id}`,
+            retryable: false,
+          }),
+        );
+      }
+
+      return {
+        content: [{ type: "text", text: toText(result) }],
+        structuredContent: toStructuredContent(result),
+      };
+    } catch (error) {
+      return toMcpErrorResponse(error);
+    }
+  },
+);
+
+server.registerTool(
+  "search_admin_rules",
+  {
+    title: "Search Admin Rules",
+    description: "Search administrative rules by keyword via provider adapter.",
+    inputSchema: {
+      query: z.string().min(1),
+      limit: z.number().int().min(1).max(100).default(10),
+    },
+  },
+  async ({ query, limit }) => {
+    try {
+      const result = await provider.searchAdminRules(query, { limit });
+      return {
+        content: [{ type: "text", text: toText(result) }],
+        structuredContent: toStructuredContent(result),
+      };
+    } catch (error) {
+      return toMcpErrorResponse(error);
+    }
+  },
+);
+
+server.registerTool(
+  "get_admin_rule",
+  {
+    title: "Get Admin Rule",
+    description: "Get administrative rule detail by rule id.",
+    inputSchema: {
+      rule_id: z.string().min(1),
+    },
+  },
+  async ({ rule_id }) => {
+    try {
+      const result = await provider.getAdminRule(rule_id);
+      if (!result) {
+        return toMcpErrorResponse(
+          createMcpError({
+            code: "NOT_FOUND",
+            message: `Admin rule not found: rule_id=${rule_id}`,
+            retryable: false,
+          }),
+        );
+      }
+
+      return {
+        content: [{ type: "text", text: toText(result) }],
+        structuredContent: toStructuredContent(result),
+      };
+    } catch (error) {
+      return toMcpErrorResponse(error);
+    }
+  },
+);
+
+server.registerTool(
   "batch_validate_legal_terms",
   {
     title: "Batch Validate Legal Terms",

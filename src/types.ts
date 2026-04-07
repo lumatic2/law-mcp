@@ -32,6 +32,65 @@ export interface GetLawArticleResult {
   warnings?: string[];
 }
 
+export interface SearchPrecedentItem {
+  precedent_id: string;
+  사건번호?: string | null;
+  사건명?: string | null;
+  선고일자?: string | null;
+  법원명?: string | null;
+  사건종류명?: string | null;
+  데이터출처명?: string | null;
+  판례상세링크?: string | null;
+}
+
+export interface SearchPrecedentsResult {
+  query: string;
+  total: number;
+  items: SearchPrecedentItem[];
+  warnings?: string[];
+}
+
+export interface GetPrecedentResult {
+  precedent_id: string;
+  사건명?: string | null;
+  법원명?: string | null;
+  선고일자?: string | null;
+  판시사항?: string | null;
+  판결요지?: string | null;
+  참조조문?: string | null;
+  판례내용?: string | null;
+  warnings?: string[];
+}
+
+export interface SearchAdminRuleItem {
+  rule_id: string;
+  행정규칙ID?: string | null;
+  행정규칙명?: string | null;
+  행정규칙종류?: string | null;
+  소관부처명?: string | null;
+  발령일자?: string | null;
+  시행일자?: string | null;
+  현행연혁구분?: string | null;
+}
+
+export interface SearchAdminRulesResult {
+  query: string;
+  total: number;
+  items: SearchAdminRuleItem[];
+  warnings?: string[];
+}
+
+export interface GetAdminRuleResult {
+  rule_id: string;
+  행정규칙명?: string | null;
+  행정규칙종류?: string | null;
+  소관부처명?: string | null;
+  발령일자?: string | null;
+  시행일자?: string | null;
+  조문내용: string[];
+  warnings?: string[];
+}
+
 export interface BatchValidateLegalTermsItemConflict {
   suggested: string;
   reason: string;

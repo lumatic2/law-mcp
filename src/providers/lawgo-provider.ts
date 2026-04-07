@@ -6,7 +6,14 @@ import {
   LAW_SERVICE_BASE_URL,
 } from "../config.js";
 import { createMcpError } from "../mcp-error.js";
-import type { GetLawArticleResult, SearchLawResult } from "../types.js";
+import type {
+  GetAdminRuleResult,
+  GetLawArticleResult,
+  GetPrecedentResult,
+  SearchAdminRulesResult,
+  SearchLawResult,
+  SearchPrecedentsResult,
+} from "../types.js";
 import type { LawProvider } from "./law-provider.js";
 
 const ARTICLE_NUMBER_KEYS = ["조문번호", "JO_NO", "article_no", "no"] as const;
@@ -41,6 +48,11 @@ function pickString(obj: Record<string, unknown>, keys: string[]): string | null
     if (typeof value === "number" && Number.isFinite(value)) return String(value);
   }
   return null;
+}
+
+function stripHtml(value: string | null): string | null {
+  if (!value) return value;
+  return value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
 function normalizeLawName(value: string): string {
@@ -338,5 +350,151 @@ export class LawGoProvider implements LawProvider {
 
     const fallbackRoot = await fetchLawArticleRoot(lawId, "MST", joParam);
     return findArticleInRoot(fallbackRoot, requestedArticle, normalizedArticleNo, lawId, articleNo);
+  }
+
+  async searchPrecedents(query: string, options: { limit?: number } = {}): Promise<SearchPrecedentsResult> {
+    assertLawApiKey();
+    const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
+
+    const root = await fetchLawApi(LAW_SEARCH_BASE_URL, {
+      OC: LAW_API_OC,
+      target: "prec",
+      type: "JSON",
+      query,
+      display: limit,
+    });
+
+    const searchObj = asObject(root.PrecSearch);
+    const items = toArray(searchObj.prec)
+      .map((row) => asObject(row))
+      .filter((row) => Object.keys(row).length > 0)
+      .map((row, index) => ({
+        precedent_id: pickString(row, ["판례일련번호", "판례ID", "ID", "id"]) ?? `unknown-${index + 1}`,
+        사건번호: pickString(row, ["사건번호"]),
+        사건명: stripHtml(pickString(row, ["사건명"])),
+        선고일자: pickString(row, ["선고일자"]),
+        법원명: stripHtml(pickString(row, ["법원명"])),
+        사건종류명: stripHtml(pickString(row, ["사건종류명"])),
+        데이터출처명: stripHtml(pickString(row, ["데이터출처명"])),
+        판례상세링크: pickString(row, ["판례상세링크"]),
+      }))
+      .slice(0, limit);
+
+    const totalRaw = pickString(searchObj, ["totalCnt", "TotalCnt"]);
+    const total = totalRaw ? Number(totalRaw) : items.length;
+
+    return {
+      query,
+      total: Number.isFinite(total) ? total : items.length,
+      items,
+      warnings: [],
+    };
+  }
+
+  async getPrecedent(precedentId: string): Promise<GetPrecedentResult | null> {
+    assertLawApiKey();
+    const root = await fetchLawApi(LAW_SERVICE_BASE_URL, {
+      OC: LAW_API_OC,
+      target: "prec",
+      ID: precedentId,
+      type: "JSON",
+    });
+
+    const serviceObj = asObject(root.PrecService);
+    if (Object.keys(serviceObj).length === 0) return null;
+
+    const 사건명 = stripHtml(pickString(serviceObj, ["사건명"]));
+    const 판례내용 = stripHtml(pickString(serviceObj, ["판례내용"]));
+    if (!사건명 && !판례내용) return null;
+
+    return {
+      precedent_id: precedentId,
+      사건명,
+      법원명: stripHtml(pickString(serviceObj, ["법원명"])),
+      선고일자: pickString(serviceObj, ["선고일자"]),
+      판시사항: stripHtml(pickString(serviceObj, ["판시사항"])),
+      판결요지: stripHtml(pickString(serviceObj, ["판결요지"])),
+      참조조문: stripHtml(pickString(serviceObj, ["참조조문"])),
+      판례내용,
+      warnings: [],
+    };
+  }
+
+  async searchAdminRules(query: string, options: { limit?: number } = {}): Promise<SearchAdminRulesResult> {
+    assertLawApiKey();
+    const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
+
+    const root = await fetchLawApi(LAW_SEARCH_BASE_URL, {
+      OC: LAW_API_OC,
+      target: "admrul",
+      type: "JSON",
+      query,
+      display: limit,
+    });
+
+    const searchObj = asObject(root.AdmRulSearch);
+    const items = toArray(searchObj.admrul)
+      .map((row) => asObject(row))
+      .filter((row) => Object.keys(row).length > 0)
+      .map((row, index) => ({
+        rule_id: pickString(row, ["행정규칙일련번호", "ID", "id"]) ?? `unknown-${index + 1}`,
+        행정규칙ID: pickString(row, ["행정규칙ID"]),
+        행정규칙명: stripHtml(pickString(row, ["행정규칙명"])),
+        행정규칙종류: stripHtml(pickString(row, ["행정규칙종류"])),
+        소관부처명: stripHtml(pickString(row, ["소관부처명"])),
+        발령일자: pickString(row, ["발령일자"]),
+        시행일자: pickString(row, ["시행일자"]),
+        현행연혁구분: stripHtml(pickString(row, ["현행연혁구분"])),
+      }))
+      .slice(0, limit);
+
+    const totalRaw = pickString(searchObj, ["totalCnt", "TotalCnt"]);
+    const total = totalRaw ? Number(totalRaw) : items.length;
+
+    return {
+      query,
+      total: Number.isFinite(total) ? total : items.length,
+      items,
+      warnings: [],
+    };
+  }
+
+  async getAdminRule(ruleId: string): Promise<GetAdminRuleResult | null> {
+    assertLawApiKey();
+    const root = await fetchLawApi(LAW_SERVICE_BASE_URL, {
+      OC: LAW_API_OC,
+      target: "admrul",
+      ID: ruleId,
+      type: "JSON",
+    });
+
+    const serviceObj = asObject(root.AdmRulService);
+    if (Object.keys(serviceObj).length === 0) return null;
+
+    const basicInfo = asObject(serviceObj.행정규칙기본정보);
+    const 조문내용 = toArray(serviceObj.조문내용)
+      .map((item) => {
+        if (typeof item === "string") return stripHtml(item);
+        const obj = asObject(item);
+        return stripHtml(
+          pickString(obj, ["조문내용", "내용", "content", "text"])
+          ?? (Object.keys(obj).length === 0 ? null : JSON.stringify(obj)),
+        );
+      })
+      .filter((item): item is string => typeof item === "string" && item.length > 0);
+
+    const 행정규칙명 = stripHtml(pickString(basicInfo, ["행정규칙명"]));
+    if (!행정규칙명 && 조문내용.length === 0) return null;
+
+    return {
+      rule_id: ruleId,
+      행정규칙명,
+      행정규칙종류: stripHtml(pickString(basicInfo, ["행정규칙종류"])),
+      소관부처명: stripHtml(pickString(basicInfo, ["소관부처명"])),
+      발령일자: pickString(basicInfo, ["발령일자"]),
+      시행일자: pickString(basicInfo, ["시행일자"]),
+      조문내용,
+      warnings: [],
+    };
   }
 }
