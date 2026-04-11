@@ -226,6 +226,40 @@ function shouldStopLawFetchFallback(error: unknown): boolean {
   );
 }
 
+/**
+ * 법제처 API의 조문 중첩 구조(항 → 호 → 목)를 재귀적으로 수집해 전문(全文)을 반환한다.
+ * 조문내용: 조문 표제 행 / 항내용: 각 항 본문 / 호내용: 각 호 / 목내용: 각 목
+ */
+function extractFullArticleContent(joObj: Record<string, unknown>): string {
+  const parts: string[] = [];
+
+  const heading = pickString(joObj, ["조문내용", "JO_CONTENT", "content"]);
+  if (heading) parts.push(heading);
+
+  const 항List = toArray((joObj["항"] ?? joObj["para"] ?? joObj["paragraph"]) as unknown);
+  for (const 항 of 항List) {
+    const 항Obj = asObject(항);
+    const 항내용 = stripHtml(pickString(항Obj, ["항내용", "PARA_CONTENT", "para_content"]));
+    if (항내용) parts.push(항내용);
+
+    const 호List = toArray((항Obj["호"] ?? 항Obj["ho"] ?? 항Obj["subitem"]) as unknown);
+    for (const 호 of 호List) {
+      const 호Obj = asObject(호);
+      const 호내용 = stripHtml(pickString(호Obj, ["호내용", "HO_CONTENT", "ho_content"]));
+      if (호내용) parts.push(호내용);
+
+      const 목List = toArray((호Obj["목"] ?? 호Obj["mok"] ?? 호Obj["detail"]) as unknown);
+      for (const 목 of 목List) {
+        const 목Obj = asObject(목);
+        const 목내용 = stripHtml(pickString(목Obj, ["목내용", "MOK_CONTENT", "mok_content"]));
+        if (목내용) parts.push(목내용);
+      }
+    }
+  }
+
+  return parts.join("\n").trim();
+}
+
 function findArticleInRoot(
   root: Record<string, unknown>,
   requestedArticle: ArticleReference | null,
@@ -251,7 +285,7 @@ function findArticleInRoot(
       : normalizeArticleInput(rowArticle.display) === normalizedArticleNo;
     if (!isMatch) continue;
 
-    const content = pickString(joObj, ["조문내용", "JO_CONTENT", "content"]) ?? "";
+    const content = extractFullArticleContent(joObj);
     if (!content) return null;
 
     return {
