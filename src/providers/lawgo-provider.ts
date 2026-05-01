@@ -367,22 +367,44 @@ export class LawGoProvider implements LawProvider {
     };
   }
 
+  /**
+   * Resolve a law identifier to a numeric ID.
+   * If the input is already numeric, return as-is.
+   * Otherwise, search by name and return the best match's law_id.
+   */
+  private async resolveLawId(lawId: string): Promise<string> {
+    if (/^\d+$/.test(lawId)) return lawId;
+
+    const result = await this.searchLaw(lawId, { limit: 1 });
+    if (result.items.length === 0) {
+      throw createMcpError({
+        code: "LAW_NOT_FOUND",
+        message: `법령 "${lawId}"을(를) 찾을 수 없습니다. 숫자 법령코드 또는 정확한 법령명을 사용해주세요.`,
+        retryable: false,
+      });
+    }
+    return result.items[0].law_id;
+  }
+
   async getLawArticle(lawId: string, articleNo: string): Promise<GetLawArticleResult | null> {
     assertLawApiKey();
+
+    // Auto-resolve law name to numeric ID if needed
+    const resolvedLawId = await this.resolveLawId(lawId);
 
     const requestedArticle = parseArticleReference(articleNo);
     const normalizedArticleNo = normalizeArticleInput(articleNo);
     const joParam = requestedArticle?.joParam ?? normalizedArticleNo;
 
     try {
-      const root = await fetchLawArticleRoot(lawId, "ID", joParam);
+      const root = await fetchLawArticleRoot(resolvedLawId, "ID", joParam);
       const exactById = findArticleInRoot(root, requestedArticle, normalizedArticleNo, lawId, articleNo);
       if (exactById) return exactById;
     } catch (error) {
       if (shouldStopLawFetchFallback(error)) throw error;
     }
 
-    const fallbackRoot = await fetchLawArticleRoot(lawId, "MST", joParam);
+    const fallbackRoot = await fetchLawArticleRoot(resolvedLawId, "MST", joParam);
     return findArticleInRoot(fallbackRoot, requestedArticle, normalizedArticleNo, lawId, articleNo);
   }
 
@@ -435,11 +457,26 @@ export class LawGoProvider implements LawProvider {
     });
 
     const serviceObj = asObject(root.PrecService);
-    if (Object.keys(serviceObj).length === 0) return null;
-
     const 사건명 = stripHtml(pickString(serviceObj, ["사건명"]));
     const 판례내용 = stripHtml(pickString(serviceObj, ["판례내용"]));
-    if (!사건명 && !판례내용) return null;
+
+    if (Object.keys(serviceObj).length === 0 || (!사건명 && !판례내용)) {
+      // JSON 단건 미지원 (주로 NTS sourced 판례). 웹 링크로 본문 확인 가능.
+      const webLink = `https://www.law.go.kr/LSW/precInfoP.do?precSeq=${precedentId}&mode=0`;
+      return {
+        precedent_id: precedentId,
+        사건명: "",
+        법원명: "",
+        선고일자: "",
+        판시사항: "",
+        판결요지: "",
+        참조조문: "",
+        판례내용: "",
+        warnings: [
+          `lawService JSON 단건 미지원 (NTS sourced 가능성). 웹 링크에서 본문 확인: ${webLink}`,
+        ],
+      };
+    }
 
     return {
       precedent_id: precedentId,
