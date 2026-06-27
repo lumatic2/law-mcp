@@ -89,13 +89,10 @@ function pickParticle(lastChar: string, particle: string): string {
 
 function polishKoreanParticles(text: string): string {
   return text.replace(
-    /([가-힣A-Za-z0-9]+(?:\s+[가-힣A-Za-z0-9]+)*)(은|는|이|가|을|를|과|와|으로|로)/g,
-    (whole, word: string, particle: string) => {
-      const chars = [...word].filter((char) => /[가-힣]/.test(char));
-      const lastChar = chars[chars.length - 1];
-      if (!lastChar) return whole;
+    /([가-힣])(은|는|이|가|을|를|과|와|으로|로)(?=$|[^가-힣])/g,
+    (_whole, lastChar: string, particle: string) => {
       const corrected = pickParticle(lastChar, particle);
-      return `${word}${corrected}`;
+      return `${lastChar}${corrected}`;
     },
   );
 }
