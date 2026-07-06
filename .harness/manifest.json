@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "project": "law-mcp",
+  "primary_mode": "tooling",
+  "modes_enabled": [
+    "tooling"
+  ],
+  "mode_kinds": {},
+  "last_bootstrap_mode": "tooling",
+  "last_bootstrap_kind": null,
+  "updated_at": "2026-07-06T15:56:10+09:00",
+  "notes": [
+    "primary_mode is the original repo orientation unless intentionally changed.",
+    "modes_enabled are additive capabilities; /harness chooses per run intent and ROADMAP target."
+  ]
+}
