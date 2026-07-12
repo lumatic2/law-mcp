@@ -6,7 +6,7 @@ import {
   LAW_SERVICE_BASE_URL,
 } from "../config.js";
 import { createMcpError } from "../mcp-error.js";
-import { bridgeTerm, formatBridgeWarning } from "../term-bridge.js";
+import { bridgeTerm, formatBridgeWarning, type TermBridgeMatch } from "../term-bridge.js";
 import type {
   GetAdminRuleResult,
   GetLawArticleResult,
@@ -248,6 +248,32 @@ export function relaxQuery(query: string): string | null {
   const tokens = query.trim().split(/\s+/).filter(Boolean);
   if (tokens.length <= 1) return null;
   return tokens.slice(0, -1).join(" ");
+}
+
+/**
+ * 용어 브리지 치환 쿼리가 그 자체로도 0건일 때 쓰는 다단 완화: relaxQuery를 반복 적용해
+ * (토큰 1개가 남을 때까지) 재검색한다. 히트 시 브리지 치환과 완화 경위를 모두 담은 warning과
+ * 함께 결과를 반환하고, 끝까지 0건이면 null을 반환한다(기존 동작 회귀 없음).
+ */
+export async function bridgeThenRelaxSearch<T>(
+  originalQuery: string,
+  bridged: TermBridgeMatch,
+  fetchOnce: (query: string) => Promise<{ items: T[]; total: number }>,
+): Promise<{ items: T[]; total: number; warning: string } | null> {
+  let candidate = bridged.replaced;
+  for (let relaxed = relaxQuery(candidate); relaxed; relaxed = relaxQuery(candidate)) {
+    candidate = relaxed;
+    const result = await fetchOnce(candidate);
+    if (result.items.length > 0) {
+      const label = bridged.direction === "old-to-new" ? "개정 후" : "개정 전";
+      return {
+        items: result.items,
+        total: result.total,
+        warning: `'${originalQuery}' 0건 → ${label} 용어 '${bridged.replaced}'로 치환 후 '${candidate}'로 완화 재검색`,
+      };
+    }
+  }
+  return null;
 }
 
 function buildUpstreamError(message: string, code: string, retryable: boolean, upstreamStatus?: number): Error {
@@ -585,6 +611,19 @@ export class LawGoProvider implements LawProvider {
           warnings: [formatBridgeWarning(bridged, query)],
         };
       }
+
+      // 브리지 치환 쿼리조차 0건이면(다단어 신용어 쿼리 등) 마지막 토큰부터 점진 완화해 재시도.
+      const bridgeRelax = await bridgeThenRelaxSearch(query, bridged, (q) =>
+        this.fetchLawSearchOnce(q, limit, display, 2),
+      );
+      if (bridgeRelax) {
+        return {
+          query,
+          total: bridgeRelax.total,
+          items: bridgeRelax.items,
+          warnings: [bridgeRelax.warning],
+        };
+      }
     }
 
     return { query, total: 0, items: [], warnings: [] };
@@ -699,6 +738,19 @@ export class LawGoProvider implements LawProvider {
           total: bridgeSearch.total,
           items: bridgeSearch.items,
           warnings: [formatBridgeWarning(bridged, query)],
+        };
+      }
+
+      // 브리지 치환 쿼리조차 0건이면(다단어 신용어 쿼리 등) 마지막 토큰부터 점진 완화해 재시도.
+      const bridgeRelax = await bridgeThenRelaxSearch(query, bridged, (q) =>
+        this.fetchPrecedentSearchOnce(q, limit),
+      );
+      if (bridgeRelax) {
+        return {
+          query,
+          total: bridgeRelax.total,
+          items: bridgeRelax.items,
+          warnings: [bridgeRelax.warning],
         };
       }
     }

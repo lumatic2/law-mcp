@@ -77,3 +77,43 @@
     제도 개편성 변경은 개념 재구성 위험으로 제외.
   - 브리지는 원 쿼리 기준 1회만 동작(치환된 쿼리에 대해 재귀적으로 다시 완화·브리지하지 않음 —
     과설계 방지).
+
+## Follow-up (ib2b, 2026-07-12) — 게이트 실패 보완 수리
+
+### Gate failure (실측)
+
+- BACKLOG #5 원 repro 쿼리 `search_precedents("기업업무추진비 한도 손금불산입")` → 수리 후에도
+  **0건, warnings []**.
+- 원인: 브리지 치환 쿼리 `접대비 한도 손금불산입` 자체도 0건이었고(`접대비 한도`도 0건),
+  브리지 폴백이 "치환 쿼리 1회 조회"에서 끝나 그 이상 완화하지 않았다. `접대비`(토큰 1개)까지
+  완화해야 3건 이상이 나오는데, 브리지 이후 점진 완화 루프가 없었다.
+
+### Fix
+
+- `src/providers/lawgo-provider.ts`에 `bridgeThenRelaxSearch()` 헬퍼 추가: 브리지 치환 쿼리가
+  0건이면 기존 `relaxQuery()`(마지막 토큰 제거)를 반복 적용해(최소 1토큰까지) 재검색한다.
+  히트 시 warning에 "브리지 치환 → 어느 쿼리로 완화해 도달했는지"를 모두 담는다.
+- `searchPrecedents`·`searchLaw` 양쪽의 브리지 폴백 끝에 동일하게 연결(계약 요구사항대로 두 경로
+  동형 처리).
+- 기존 동작 불변: 사전 무관 쿼리, 구용어 직접 쿼리(relax 경유)는 그대로 — `bridgeThenRelaxSearch`는
+  브리지 매치가 있고 그 치환 쿼리 자체가 0건일 때만 개입.
+
+### Evidence — 실 API before/after (수리 후 실측)
+
+| 쿼리 | before (게이트 실패 시점) | after (이번 수리 후) |
+|---|---|---|
+| `기업업무추진비 한도 손금불산입` | 0건, warnings [] | **56건**, warning: `'기업업무추진비 한도 손금불산입' 0건 → 개정 전 용어 '접대비 한도 손금불산입'로 치환 후 '접대비'로 완화 재검색` |
+| `가지급금 대표이사 소득처분` (사전 무관, 회귀) | 3건, warnings [] | 3건, warnings [] (무변화) |
+| `접대비 한도` (구용어 직접, relax 경유, 회귀) | relax 경유 히트 | 56건, warning: `원 쿼리 0건 → '접대비'로 재검색.` (브리지 미개입 — relax 단계에서 이미 히트, 동작 불변) |
+
+### 단위 테스트 (ib2b 추가분)
+
+`test/lawgo-provider.test.ts`에 `bridgeThenRelaxSearch` 3건 추가(BACKLOG #5 재현: 2단 완화로
+`접대비 한도` → `접대비` 도달, 완전 0건 시 null 반환, 단일 토큰 브리지 결과는 완화 불필요 확인).
+`npm test`: 20 pass / 0 fail (기존 17 + 신규 3).
+
+### Sync
+
+- 소스 레포(`~/projects/law-mcp`): `npm run build` + `npm test` 통과 후 커밋·push.
+- 배포 사본(`~/projects/custom-mcps/law-mcp`): `git pull --ff-only` → `npm run build` → `npm test`
+  완료(로그는 커밋 해시와 함께 오케스트레이터 보고에 포함).
