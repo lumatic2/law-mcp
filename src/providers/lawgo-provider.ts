@@ -164,6 +164,30 @@ export function isNtsPlaceholderContent(value: string | null | undefined): boole
  * NTS taxlaw.nts.go.kr action.do 응답(data.ASIQTB002PR01)을 GetPrecedentResult로 매핑한다.
  * 판시사항·정확한 선고일자 등 NTS 구조에 없는 필드는 null로 두고 warnings 에 한계를 명시한다.
  */
+/**
+ * dcmHwpEditorDVOList 에서 서버가 HWP 첨부를 변환해 둔 HTML 전문(dcmFleTy === 'html' && dcmFleByte 有)을
+ * dcmFleSn 순으로 이어붙여 텍스트로 반환한다. 해당 항목이 없으면 null.
+ */
+function extractNtsFullTextFromHwpEditorList(actionData: Record<string, unknown>): string | null {
+  const entries = toArray(actionData.dcmHwpEditorDVOList).map((row) => asObject(row));
+  const htmlEntries = entries
+    .filter((row) => pickString(row, ["dcmFleTy"]) === "html" && pickString(row, ["dcmFleByte"]))
+    .sort((a, b) => {
+      const snA = Number(pickString(a, ["dcmFleSn"]) ?? 0);
+      const snB = Number(pickString(b, ["dcmFleSn"]) ?? 0);
+      return snA - snB;
+    });
+
+  if (htmlEntries.length === 0) return null;
+
+  const text = htmlEntries
+    .map((row) => stripHtml(pickString(row, ["dcmFleByte"])))
+    .filter((value): value is string => !!value)
+    .join("\n\n");
+
+  return text.trim() || null;
+}
+
 export function mapNtsPrecedentDetail(
   actionData: Record<string, unknown>,
   precedentId: string,
@@ -184,13 +208,22 @@ export function mapNtsPrecedentDetail(
 
   const contentIsPlaceholder = isNtsPlaceholderContent(rawContent);
   const webLink = `https://taxlaw.nts.go.kr/qt/USEQTA002P.do?ntstDcmId=${ntstDcmId}`;
+  const fullText = extractNtsFullTextFromHwpEditorList(actionData);
 
   const warnings = [
     "NTS(국세법령정보시스템) 소스 판례 — law.go.kr lawService 단건조회 미지원으로 국세청 문서 API로 폴백함. "
       + "판시사항·정확한 선고일자는 NTS 응답에 없어 공란임(사건명·판결요지·참조조문만 매핑).",
   ];
-  if (contentIsPlaceholder) {
+
+  let content: string | null;
+  if (fullText) {
+    content = fullText;
+    warnings.push("전문은 NTS 서버 변환 HTML(첨부 HWP 변환본)에서 추출함");
+  } else if (contentIsPlaceholder) {
+    content = gist;
     warnings.push(`판례 전문은 첨부파일(HWP)에 있어 이 도구로 도달 불가 — 판결요지로 대체함. 원문 확인: ${webLink}`);
+  } else {
+    content = rawContent;
   }
 
   return {
@@ -201,7 +234,7 @@ export function mapNtsPrecedentDetail(
     판시사항: null,
     판결요지: gist,
     참조조문: referenceArticles.length > 0 ? referenceArticles.join("; ") : null,
-    판례내용: contentIsPlaceholder ? gist : rawContent,
+    판례내용: content,
     warnings,
   };
 }

@@ -9,6 +9,7 @@
 | # | Changeset | 날짜 | Scope | Verification | Status |
 |---|-----------|------|-------|--------------|--------|
 | 1 | [20260712-ib1-h8ta2-repair](20260712-ib1-h8ta2-repair/README.md) | 2026-07-12 | lawgo-provider.ts, law-provider.ts, types.ts, index.ts, test/lawgo-provider.test.ts | ✅ | done |
+| 2 | [20260712-ib1b-nts-fulltext-html](20260712-ib1b-nts-fulltext-html/README.md) | 2026-07-12 | lawgo-provider.ts, test/lawgo-provider.test.ts | ✅ | done |
 
 ## 운영 원칙
 
