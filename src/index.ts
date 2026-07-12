@@ -26,7 +26,10 @@ server.registerTool(
   "search_law",
   {
     title: "Search Law",
-    description: "Search laws by keyword via provider adapter.",
+    description:
+      "Search laws by keyword. Tries law-name match first; if 0 results, automatically retries "
+      + "as a full-text (body) search, then once more with the query relaxed (last token dropped) "
+      + "if still 0. A warning field notes when a fallback mode was used.",
     inputSchema: {
       query: z.string().min(1),
       limit: z.number().int().min(1).max(100).default(10),
@@ -82,7 +85,10 @@ server.registerTool(
   "search_precedents",
   {
     title: "Search Precedents",
-    description: "Search court precedents by keyword via provider adapter.",
+    description:
+      "Search court precedents by keyword (AND match across all query tokens). "
+      + "Multi-word natural-language queries that return 0 results are automatically retried once "
+      + "with the last token dropped; a warning field notes when this relaxed retry was used.",
     inputSchema: {
       query: z.string().min(1),
       limit: z.number().int().min(1).max(100).default(10),
@@ -105,7 +111,12 @@ server.registerTool(
   "get_precedent",
   {
     title: "Get Precedent",
-    description: "Get precedent detail by precedent id.",
+    description:
+      "Get precedent detail by precedent id. Most precedents resolve via law.go.kr lawService. "
+      + "NTS(국세법령정보시스템)-sourced tax precedents fall back to the NTS taxlaw document API: "
+      + "사건명/판결요지/참조조문 are recovered, but 판시사항 and exact 선고일자 are not available "
+      + "from that source, and full text (판례내용) is often only in an HWP attachment the tool "
+      + "cannot reach — in that case 판결요지 is used as 판례내용 and a warning notes the gap.",
     inputSchema: {
       precedent_id: z.string().min(1),
     },
@@ -137,7 +148,10 @@ server.registerTool(
   "search_admin_rules",
   {
     title: "Search Admin Rules",
-    description: "Search administrative rules by keyword via provider adapter.",
+    description:
+      "Search administrative rules by keyword. Tries rule-name match first; if 0 results, "
+      + "automatically retries as a full-text (body) search. A warning field notes when the "
+      + "fallback mode was used.",
     inputSchema: {
       query: z.string().min(1),
       limit: z.number().int().min(1).max(100).default(10),
@@ -160,14 +174,19 @@ server.registerTool(
   "get_admin_rule",
   {
     title: "Get Admin Rule",
-    description: "Get administrative rule detail by rule id.",
+    description:
+      "Get administrative rule detail by rule id. 조문내용 is an array of per-article text "
+      + "segments; large rule documents can exceed tool output limits, so use offset/limit to "
+      + "page through 조문내용 (response includes total_article_count/has_more).",
     inputSchema: {
       rule_id: z.string().min(1),
+      offset: z.number().int().min(0).optional(),
+      limit: z.number().int().min(1).optional(),
     },
   },
-  async ({ rule_id }) => {
+  async ({ rule_id, offset, limit }) => {
     try {
-      const result = await provider.getAdminRule(rule_id);
+      const result = await provider.getAdminRule(rule_id, { offset, limit });
       if (!result) {
         return toMcpErrorResponse(
           createMcpError({

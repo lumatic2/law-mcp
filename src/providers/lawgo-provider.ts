@@ -20,6 +20,16 @@ const ARTICLE_NUMBER_KEYS = ["조문번호", "JO_NO", "article_no", "no"] as con
 const ARTICLE_BRANCH_KEYS = ["조문가지번호", "JO_BRANCH", "branch_no", "가지번호"] as const;
 const ARTICLE_ENABLED_KEYS = ["조문여부", "조문여부YN", "JO_YN", "is_article"] as const;
 
+// NTS(국세법령정보시스템) 소스 판례 폴백 경로. law.go.kr lawService(target=prec) 단건조회가
+// NTS sourced 판례에서는 빈 응답을 주기 때문에, precInfoP.do 리다이렉트를 따라가 국세청
+// taxlaw.nts.go.kr 문서 API(action.do)로 본문을 확보한다.
+const NTS_PREC_REDIRECT_URL = "https://www.law.go.kr/LSW/precInfoP.do";
+const NTS_TAXLAW_ACTION_URL = "https://taxlaw.nts.go.kr/action.do";
+const NTS_ACTION_ID = "ASIQTB002PR01";
+const NTS_BROWSER_USER_AGENT =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+const NTS_PLACEHOLDER_CONTENT_PATTERN = /붙임과\s*같습니다/;
+
 type ArticleReference = {
   display: string;
   main: number;
@@ -126,6 +136,86 @@ function getArticleReferenceFromRow(joObj: Record<string, unknown>): ArticleRefe
   return parseArticleReference(articleNo, branchNo);
 }
 
+/**
+ * precInfoP.do 302 응답의 Location 헤더에서 NTS 문서 ID(ntstDcmId)를 추출한다.
+ * NTS 소스가 아닌 리다이렉트(법제처 자체 페이지 등)는 null을 반환한다.
+ */
+export function extractNtstDcmIdFromLocation(location: string | null | undefined): string | null {
+  if (!location) return null;
+  try {
+    const url = new URL(location, "https://www.law.go.kr");
+    if (!url.hostname.toLowerCase().endsWith("nts.go.kr")) return null;
+    return url.searchParams.get("ntstDcmId");
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * NTS 문서 API는 전문(全文)이 HWP 첨부에만 있는 문서(대부분의 판결·결정)의 경우
+ * 본문 필드에 "판결 내용은 붙임과 같습니다" 류의 플레이스홀더만 채워 넣는다.
+ */
+export function isNtsPlaceholderContent(value: string | null | undefined): boolean {
+  if (!value || !value.trim()) return true;
+  return NTS_PLACEHOLDER_CONTENT_PATTERN.test(value);
+}
+
+/**
+ * NTS taxlaw.nts.go.kr action.do 응답(data.ASIQTB002PR01)을 GetPrecedentResult로 매핑한다.
+ * 판시사항·정확한 선고일자 등 NTS 구조에 없는 필드는 null로 두고 warnings 에 한계를 명시한다.
+ */
+export function mapNtsPrecedentDetail(
+  actionData: Record<string, unknown>,
+  precedentId: string,
+  ntstDcmId: string,
+): GetPrecedentResult {
+  const dcmDVO = asObject(actionData.dcmDVO);
+  const relatedProvisions = toArray(actionData.dcmRltnStttList).map((row) => asObject(row));
+
+  const title = stripHtml(pickString(dcmDVO, ["ntstDcmTtl"]));
+  const gist = stripHtml(pickString(dcmDVO, ["ntstDcmGistCntn"]));
+  const rawContent = stripHtml(pickString(dcmDVO, ["ntstDcmCntn"]));
+  const caseNo = pickString(dcmDVO, ["dsbdHpnnNo"]);
+  const court = caseNo ? (caseNo.split("-")[0]?.trim() || null) : null;
+
+  const referenceArticles = relatedProvisions
+    .map((row) => pickString(row, ["ntstTextNm"]))
+    .filter((value): value is string => !!value);
+
+  const contentIsPlaceholder = isNtsPlaceholderContent(rawContent);
+  const webLink = `https://taxlaw.nts.go.kr/qt/USEQTA002P.do?ntstDcmId=${ntstDcmId}`;
+
+  const warnings = [
+    "NTS(국세법령정보시스템) 소스 판례 — law.go.kr lawService 단건조회 미지원으로 국세청 문서 API로 폴백함. "
+      + "판시사항·정확한 선고일자는 NTS 응답에 없어 공란임(사건명·판결요지·참조조문만 매핑).",
+  ];
+  if (contentIsPlaceholder) {
+    warnings.push(`판례 전문은 첨부파일(HWP)에 있어 이 도구로 도달 불가 — 판결요지로 대체함. 원문 확인: ${webLink}`);
+  }
+
+  return {
+    precedent_id: precedentId,
+    사건명: title,
+    법원명: court,
+    선고일자: null,
+    판시사항: null,
+    판결요지: gist,
+    참조조문: referenceArticles.length > 0 ? referenceArticles.join("; ") : null,
+    판례내용: contentIsPlaceholder ? gist : rawContent,
+    warnings,
+  };
+}
+
+/**
+ * 다단어 자연어 쿼리가 0건일 때 쓰는 완화 재시도 1단: 공백 기준 마지막 토큰을 제거한다.
+ * 토큰이 1개 이하면(더 완화할 수 없으면) null을 반환한다.
+ */
+export function relaxQuery(query: string): string | null {
+  const tokens = query.trim().split(/\s+/).filter(Boolean);
+  if (tokens.length <= 1) return null;
+  return tokens.slice(0, -1).join(" ");
+}
+
 function buildUpstreamError(message: string, code: string, retryable: boolean, upstreamStatus?: number): Error {
   return createMcpError({
     code,
@@ -199,6 +289,52 @@ async function fetchLawApi(url: string, params: Record<string, string | number>)
 
     throw error;
   }
+}
+
+/**
+ * precInfoP.do 를 리다이렉트 없이 호출해 302 Location 헤더로 NTS 문서 ID를 알아낸다.
+ * NTS 소스가 아니거나(법제처 자체 상세) 리다이렉트가 없으면 null.
+ */
+async function resolveNtstDcmId(precedentId: string): Promise<string | null> {
+  const response = await axios.get<unknown>(NTS_PREC_REDIRECT_URL, {
+    params: { precSeq: precedentId, mode: 0 },
+    timeout: 15_000,
+    maxRedirects: 0,
+    validateStatus: () => true,
+    headers: { "User-Agent": NTS_BROWSER_USER_AGENT },
+  });
+
+  if (response.status < 300 || response.status >= 400) return null;
+  return extractNtstDcmIdFromLocation(response.headers?.location as string | undefined);
+}
+
+/**
+ * NTS taxlaw.nts.go.kr 문서 상세 AJAX(action.do, actionId=ASIQTB002PR01)를 호출한다.
+ * 응답의 data.ASIQTB002PR01(dcmDVO 포함)을 그대로 반환하며, 문서가 없으면 null.
+ */
+async function fetchNtsActionData(ntstDcmId: string): Promise<Record<string, unknown> | null> {
+  const response = await axios.post<unknown>(
+    NTS_TAXLAW_ACTION_URL,
+    new URLSearchParams({
+      actionId: NTS_ACTION_ID,
+      paramData: JSON.stringify({ dcmDVO: { ntstDcmId } }),
+    }).toString(),
+    {
+      timeout: 15_000,
+      validateStatus: () => true,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": NTS_BROWSER_USER_AGENT,
+      },
+    },
+  );
+
+  if (response.status >= 400) return null;
+  const root = asObject(response.data);
+  const data = asObject(root.data);
+  const actionData = asObject(data[NTS_ACTION_ID]);
+  if (Object.keys(asObject(actionData.dcmDVO)).length === 0) return null;
+  return actionData;
 }
 
 async function fetchLawArticleRoot(
@@ -307,11 +443,15 @@ function findArticleInRoot(
  * - 법령 상세: DRF/lawService.do
  */
 export class LawGoProvider implements LawProvider {
-  async searchLaw(query: string, options: { limit?: number } = {}): Promise<SearchLawResult> {
-    assertLawApiKey();
-    const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
-    const display = Math.max(limit * 3, 30);
-
+  /**
+   * lawSearch.do(target=law) 1회 호출 + 파싱. search=2 는 본문(전문) 검색 모드.
+   */
+  private async fetchLawSearchOnce(
+    query: string,
+    limit: number,
+    display: number,
+    searchMode?: 1 | 2,
+  ): Promise<{ items: SearchLawResult["items"]; total: number }> {
     const root = await fetchLawApi(LAW_SEARCH_BASE_URL, {
       OC: LAW_API_OC,
       target: "law",
@@ -319,6 +459,7 @@ export class LawGoProvider implements LawProvider {
       mobileYn: "Y",
       query,
       display,
+      ...(searchMode ? { search: searchMode } : {}),
     });
 
     const directLawRows = root.법령 ?? root.law ?? root.Law;
@@ -359,12 +500,45 @@ export class LawGoProvider implements LawProvider {
     const totalRaw = pickString(root, ["totalCnt", "total", "TotalCnt"]);
     const total = totalRaw ? Number(totalRaw) : items.length;
 
-    return {
-      query,
-      total: Number.isFinite(total) ? total : items.length,
-      items,
-      warnings: [],
-    };
+    return { items, total: Number.isFinite(total) ? total : items.length };
+  }
+
+  async searchLaw(query: string, options: { limit?: number } = {}): Promise<SearchLawResult> {
+    assertLawApiKey();
+    const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
+    const display = Math.max(limit * 3, 30);
+
+    const primary = await this.fetchLawSearchOnce(query, limit, display);
+    if (primary.items.length > 0) {
+      return { query, total: primary.total, items: primary.items, warnings: [] };
+    }
+
+    // 법령명 매칭 0건 → 본문(전문) 검색(search=2)으로 재시도.
+    const bodySearch = await this.fetchLawSearchOnce(query, limit, display, 2);
+    if (bodySearch.items.length > 0) {
+      return {
+        query,
+        total: bodySearch.total,
+        items: bodySearch.items,
+        warnings: ["법령명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음."],
+      };
+    }
+
+    // 본문 검색도 0건 + 다단어 쿼리면 마지막 토큰을 제거해 한 번 더 완화 재시도.
+    const relaxed = relaxQuery(query);
+    if (relaxed) {
+      const relaxedSearch = await this.fetchLawSearchOnce(relaxed, limit, display, 2);
+      if (relaxedSearch.items.length > 0) {
+        return {
+          query,
+          total: relaxedSearch.total,
+          items: relaxedSearch.items,
+          warnings: [`원 쿼리 0건 → '${relaxed}'로 재검색(본문 검색).`],
+        };
+      }
+    }
+
+    return { query, total: 0, items: [], warnings: [] };
   }
 
   /**
@@ -408,10 +582,10 @@ export class LawGoProvider implements LawProvider {
     return findArticleInRoot(fallbackRoot, requestedArticle, normalizedArticleNo, lawId, articleNo);
   }
 
-  async searchPrecedents(query: string, options: { limit?: number } = {}): Promise<SearchPrecedentsResult> {
-    assertLawApiKey();
-    const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
-
+  private async fetchPrecedentSearchOnce(
+    query: string,
+    limit: number,
+  ): Promise<{ items: SearchPrecedentsResult["items"]; total: number }> {
     const root = await fetchLawApi(LAW_SEARCH_BASE_URL, {
       OC: LAW_API_OC,
       target: "prec",
@@ -439,12 +613,33 @@ export class LawGoProvider implements LawProvider {
     const totalRaw = pickString(searchObj, ["totalCnt", "TotalCnt"]);
     const total = totalRaw ? Number(totalRaw) : items.length;
 
-    return {
-      query,
-      total: Number.isFinite(total) ? total : items.length,
-      items,
-      warnings: [],
-    };
+    return { items, total: Number.isFinite(total) ? total : items.length };
+  }
+
+  async searchPrecedents(query: string, options: { limit?: number } = {}): Promise<SearchPrecedentsResult> {
+    assertLawApiKey();
+    const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
+
+    const primary = await this.fetchPrecedentSearchOnce(query, limit);
+    if (primary.items.length > 0) {
+      return { query, total: primary.total, items: primary.items, warnings: [] };
+    }
+
+    // 다단어 자연어 쿼리 0건 → 마지막 토큰을 제거해 한 번 완화 재시도.
+    const relaxed = relaxQuery(query);
+    if (relaxed) {
+      const relaxedSearch = await this.fetchPrecedentSearchOnce(relaxed, limit);
+      if (relaxedSearch.items.length > 0) {
+        return {
+          query,
+          total: relaxedSearch.total,
+          items: relaxedSearch.items,
+          warnings: [`원 쿼리 0건 → '${relaxed}'로 재검색.`],
+        };
+      }
+    }
+
+    return { query, total: 0, items: [], warnings: [] };
   }
 
   async getPrecedent(precedentId: string): Promise<GetPrecedentResult | null> {
@@ -461,8 +656,18 @@ export class LawGoProvider implements LawProvider {
     const 판례내용 = stripHtml(pickString(serviceObj, ["판례내용"]));
 
     if (Object.keys(serviceObj).length === 0 || (!사건명 && !판례내용)) {
-      // JSON 단건 미지원 (주로 NTS sourced 판례). 웹 링크로 본문 확인 가능.
+      // JSON 단건 미지원 (주로 NTS sourced 판례). NTS 문서 API로 폴백 시도.
       const webLink = `https://www.law.go.kr/LSW/precInfoP.do?precSeq=${precedentId}&mode=0`;
+      try {
+        const ntstDcmId = await resolveNtstDcmId(precedentId);
+        if (ntstDcmId) {
+          const actionData = await fetchNtsActionData(ntstDcmId);
+          if (actionData) return mapNtsPrecedentDetail(actionData, precedentId, ntstDcmId);
+        }
+      } catch {
+        // NTS 폴백 실패 시 아래 기본 안내로 대체 (도구 자체를 실패시키지 않음).
+      }
+
       return {
         precedent_id: precedentId,
         사건명: "",
@@ -491,16 +696,18 @@ export class LawGoProvider implements LawProvider {
     };
   }
 
-  async searchAdminRules(query: string, options: { limit?: number } = {}): Promise<SearchAdminRulesResult> {
-    assertLawApiKey();
-    const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
-
+  private async fetchAdminRuleSearchOnce(
+    query: string,
+    limit: number,
+    searchMode?: 1 | 2,
+  ): Promise<{ items: SearchAdminRulesResult["items"]; total: number }> {
     const root = await fetchLawApi(LAW_SEARCH_BASE_URL, {
       OC: LAW_API_OC,
       target: "admrul",
       type: "JSON",
       query,
       display: limit,
+      ...(searchMode ? { search: searchMode } : {}),
     });
 
     const searchObj = asObject(root.AdmRulSearch);
@@ -522,15 +729,36 @@ export class LawGoProvider implements LawProvider {
     const totalRaw = pickString(searchObj, ["totalCnt", "TotalCnt"]);
     const total = totalRaw ? Number(totalRaw) : items.length;
 
-    return {
-      query,
-      total: Number.isFinite(total) ? total : items.length,
-      items,
-      warnings: [],
-    };
+    return { items, total: Number.isFinite(total) ? total : items.length };
   }
 
-  async getAdminRule(ruleId: string): Promise<GetAdminRuleResult | null> {
+  async searchAdminRules(query: string, options: { limit?: number } = {}): Promise<SearchAdminRulesResult> {
+    assertLawApiKey();
+    const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
+
+    const primary = await this.fetchAdminRuleSearchOnce(query, limit);
+    if (primary.items.length > 0) {
+      return { query, total: primary.total, items: primary.items, warnings: [] };
+    }
+
+    // 행정규칙명 매칭 0건 → 본문(전문) 검색(search=2)으로 재시도.
+    const bodySearch = await this.fetchAdminRuleSearchOnce(query, limit, 2);
+    if (bodySearch.items.length > 0) {
+      return {
+        query,
+        total: bodySearch.total,
+        items: bodySearch.items,
+        warnings: ["행정규칙명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음."],
+      };
+    }
+
+    return { query, total: 0, items: [], warnings: [] };
+  }
+
+  async getAdminRule(
+    ruleId: string,
+    options: { offset?: number; limit?: number } = {},
+  ): Promise<GetAdminRuleResult | null> {
     assertLawApiKey();
     const root = await fetchLawApi(LAW_SERVICE_BASE_URL, {
       OC: LAW_API_OC,
@@ -543,7 +771,7 @@ export class LawGoProvider implements LawProvider {
     if (Object.keys(serviceObj).length === 0) return null;
 
     const basicInfo = asObject(serviceObj.행정규칙기본정보);
-    const 조문내용 = toArray(serviceObj.조문내용)
+    const 전체조문내용 = toArray(serviceObj.조문내용)
       .map((item) => {
         if (typeof item === "string") return stripHtml(item);
         const obj = asObject(item);
@@ -555,7 +783,24 @@ export class LawGoProvider implements LawProvider {
       .filter((item): item is string => typeof item === "string" && item.length > 0);
 
     const 행정규칙명 = stripHtml(pickString(basicInfo, ["행정규칙명"]));
-    if (!행정규칙명 && 조문내용.length === 0) return null;
+    if (!행정규칙명 && 전체조문내용.length === 0) return null;
+
+    // 법제처 API는 조문 단위 offset/limit 을 지원하지 않으므로, 클라이언트에서 조문내용
+    // 배열을 잘라 반환한다(대형 문서가 MCP 도구 토큰 한도를 넘겨 자체 차단되는 것을 방지).
+    const offset = Math.max(options.offset ?? 0, 0);
+    const limit = options.limit;
+    const 조문내용 = typeof limit === "number"
+      ? 전체조문내용.slice(offset, offset + limit)
+      : 전체조문내용.slice(offset);
+
+    const warnings: string[] = [];
+    const hasMore = offset + 조문내용.length < 전체조문내용.length;
+    if (offset > 0 || hasMore) {
+      warnings.push(
+        `조문 ${offset + 1}~${offset + 조문내용.length}/${전체조문내용.length}건 반환.`
+          + (hasMore ? ` 이어보려면 offset=${offset + 조문내용.length} 로 재조회.` : ""),
+      );
+    }
 
     return {
       rule_id: ruleId,
@@ -565,7 +810,10 @@ export class LawGoProvider implements LawProvider {
       발령일자: pickString(basicInfo, ["발령일자"]),
       시행일자: pickString(basicInfo, ["시행일자"]),
       조문내용,
-      warnings: [],
+      total_article_count: 전체조문내용.length,
+      offset,
+      has_more: hasMore,
+      warnings,
     };
   }
 }

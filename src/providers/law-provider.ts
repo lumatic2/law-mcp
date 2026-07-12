@@ -13,5 +13,8 @@ export interface LawProvider {
   searchPrecedents(query: string, options?: { limit?: number }): Promise<SearchPrecedentsResult>;
   getPrecedent(precedentId: string): Promise<GetPrecedentResult | null>;
   searchAdminRules(query: string, options?: { limit?: number }): Promise<SearchAdminRulesResult>;
-  getAdminRule(ruleId: string): Promise<GetAdminRuleResult | null>;
+  getAdminRule(
+    ruleId: string,
+    options?: { offset?: number; limit?: number },
+  ): Promise<GetAdminRuleResult | null>;
 }

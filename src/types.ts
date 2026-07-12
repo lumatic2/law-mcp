@@ -88,6 +88,9 @@ export interface GetAdminRuleResult {
   발령일자?: string | null;
   시행일자?: string | null;
   조문내용: string[];
+  total_article_count?: number;
+  offset?: number;
+  has_more?: boolean;
   warnings?: string[];
 }
 
