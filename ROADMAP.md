@@ -13,18 +13,20 @@
 
 ## Active Milestones
 
-<!-- harness:milestone id="IB1" status="active" priority="P0" -->
+<!-- harness:milestone id="IB1" status="completed" priority="P0" evidence="changesets/20260712-ib1-h8ta2-repair + npm test 9/9 + 실 API 재현 4/4" -->
 ### IB1 — get_precedent NTS 소스 본문 도달 + 검색 결함 수리
 - DoD: ① 실패 5건(619683/618097/310830/325202/612611) 중 NTS 소스 판례의 본문(판시사항·판결요지
   또는 판례내용 텍스트)이 `get_precedent`로 도달하거나, 구조적 불가 시 대체 경로(자동 폴백 +
   구체 안내)가 구현·검증됨 ② `search_law`/`search_admin_rules` 본문 키워드 검색 지원(law.go.kr
   DRF search=2 등) — "가지급금" 류 쿼리가 법인세법 계열 도달 ③ 다단어 자연어 쿼리 0건 시 완화
   재시도 폴백(경고 포함) ④ 대형 admin rule 부분 반환 옵션 또는 문서화. 전부 실 API 스모크로 검증
-- Evidence: changesets/20260712-ib1-* + `npm test` + 실 API 스모크 로그(재현 5건 재실행 결과)
+- Evidence: changesets/20260712-ib1-h8ta2-repair + npm test 9/9 + 실 API 재현 4/4
 - Gap: ai-accounting-firm H8 TA2 조세불복 의견서 실험에서 판례 인용이 제목 수준으로 제한 —
   판례 검색 기능의 실효성 붕괴 (BACKLOG.md Issue-back Queue #1~#4)
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-12
+- Summary: 결함 4건 수리: NTS 폴백(5/5 요지 도달)·본문검색·완화재시도·부분반환, 게이트 독립 재현 PASS
 ## Next Candidates
 - (없음 — 새 후보는 ai-accounting-firm 실소비 issue-back에서만)
 

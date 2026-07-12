@@ -6,7 +6,13 @@
 
 ### 2026-07-12 — H8 TA2 조세불복 쟁점 의견서 실험 (첫 실소비, 원본: `~/projects/ai-accounting-firm/docs/cases/2026-07-12-taxr-appeal-opinion/mcp-log.md`)
 
-> 상태: 미수리. 총 34회 호출(hit 16 / miss 11 / 도구 실패 5 / 처리 실패 1)에서 발견.
+> **상태: 수리 완료 (2026-07-12, IB1 — 커밋 87abd83, changesets/20260712-ib1-h8ta2-repair).**
+> #1: NTS 문서 API(taxlaw.nts.go.kr action.do ASIQTB002PR01) 폴백으로 실패 5건 전부 사건명·판결요지
+> (+참조조문) 도달. 잔여 한계: 판시사항·전문은 NTS 구조상 부재/HWP 첨부(경고로 명시). #2: search=2
+> 본문검색 자동 폴백. #3: 0건 시 토큰 완화 재시도 1단. #4: get_admin_rule offset/limit 클라이언트
+> 슬라이싱. 게이트: 오케스트레이터 실 API 독립 재현 4/4 + npm test 9/9. 다음 단계는
+> ai-accounting-firm RX2(MCP 재시작 후 재실험 → 승격 판단).
+> 원기록 — 총 34회 호출(hit 16 / miss 11 / 도구 실패 5 / 처리 실패 1)에서 발견,
 > **#1 수리가 어스회계법인 taxr-task-01의 ax_possible 승격 조건** (`ax-verdict.md`).
 
 1. **[치명적] `get_precedent` 사실상 100% 실패 (5/5)** — `search_precedents`가 반환한 `precedent_id`
