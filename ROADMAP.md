@@ -1,15 +1,16 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-12
-> 상태: issueback-repair-h8ta2 진행 — IB1 active
+> 상태: issueback-repair-h8ta2 완료(2026-07-12) — active 없음, 새 후보는 소비자 issue-back 대기
 > 북극성: 한국 법령·판례·행정규칙을 MCP로 신뢰성 있게 소비 가능하게 한다 (소비자 issue-back 기반 개선)
 > line budget: <=150
 
 ## Current Horizon
 
-<!-- harness:goal id="issueback-repair-h8ta2" status="active" -->
-목표: ai-accounting-firm H8 TA2 실소비 결함 4건(BACKLOG.md Issue-back Queue 2026-07-12) 수리 —
-특히 #1 `get_precedent` 구조 실패. #1 수리가 어스회계법인 taxr-task-01 ax_possible 승격 조건.
+<!-- harness:goal id="issueback-repair-h8ta2" status="completed" -->
+(완료 2026-07-12 — 결함 4건 수리 + ib1b 전문 도달. 소비자 RX2 재실험에서 원 실패 5건 전부
+MCP 경유 재현 성공, taxr-task-01 ax_possible 승격 확정. Objective 임팩트: 판례 검색이
+"제목만" → "전문 도달"로 — 첫 실소비 issue-back 루프 완결.)
 
 ## Active Milestones
 
