@@ -6,6 +6,7 @@ import {
   LAW_SERVICE_BASE_URL,
 } from "../config.js";
 import { createMcpError } from "../mcp-error.js";
+import { bridgeTerm, formatBridgeWarning } from "../term-bridge.js";
 import type {
   GetAdminRuleResult,
   GetLawArticleResult,
@@ -571,6 +572,21 @@ export class LawGoProvider implements LawProvider {
       }
     }
 
+    // 기존 폴백까지 전부 0건 + 쿼리에 개정 신·구 용어가 있으면 대응 용어로 1회 치환해
+    // 본문(전문) 검색으로 마지막 재시도(용어 자체가 없으면 동작 불변).
+    const bridged = bridgeTerm(query);
+    if (bridged) {
+      const bridgeSearch = await this.fetchLawSearchOnce(bridged.replaced, limit, display, 2);
+      if (bridgeSearch.items.length > 0) {
+        return {
+          query,
+          total: bridgeSearch.total,
+          items: bridgeSearch.items,
+          warnings: [formatBridgeWarning(bridged, query)],
+        };
+      }
+    }
+
     return { query, total: 0, items: [], warnings: [] };
   }
 
@@ -668,6 +684,21 @@ export class LawGoProvider implements LawProvider {
           total: relaxedSearch.total,
           items: relaxedSearch.items,
           warnings: [`원 쿼리 0건 → '${relaxed}'로 재검색.`],
+        };
+      }
+    }
+
+    // 완화 재시도까지 전부 0건 + 쿼리에 개정 신·구 용어가 있으면 대응 용어로 1회 치환해
+    // 마지막 재시도(판례 색인이 선고 당시 구용어에 묶여 신용어 검색이 0건인 경우 구제).
+    const bridged = bridgeTerm(query);
+    if (bridged) {
+      const bridgeSearch = await this.fetchPrecedentSearchOnce(bridged.replaced, limit);
+      if (bridgeSearch.items.length > 0) {
+        return {
+          query,
+          total: bridgeSearch.total,
+          items: bridgeSearch.items,
+          warnings: [formatBridgeWarning(bridged, query)],
         };
       }
     }
