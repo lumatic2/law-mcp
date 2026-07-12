@@ -4,6 +4,18 @@
 
 ## Issue-back Queue (ai-accounting-firm 실소비에서 돌아온 결함)
 
+### 2026-07-12(b) — H10 C6-2 법인세 세무조정 실험 (두 번째 실소비, 원본: `~/projects/ai-accounting-firm/docs/cases/2026-07-12-taxc-adjustment-review/mcp-log.md`)
+
+> 상태: 미수리. 총 35회 호출(hit 24/69%)에서 발견. **수리 3종(IB1·ib1b) 회귀 없음 확인**
+> (get_precedent 5/5 성공 — TA2 0/5 의 완전 역전, 완화 재시도·본문검색 폴백 정상).
+
+5. **[중요] 세법 용어 개정 신·구 용어 갭** — `search_precedents("기업업무추진비 …")` 0건 vs
+   구용어 `("접대비 …")` 3건. 판례 색인이 선고 당시 용어에 묶여 현행 법령 용어 검색이 실패.
+   완화 재시도(토큰 제거)로 구제 불가, `batch_validate_legal_terms`/`suggest_term_patches` 는
+   목적이 달라 브리지 못함(후자는 NIKL_API_KEY 부재로 사전 경로 비활성). 개선 후보: 신·구 용어
+   동의어 브리지(개정 이력 사전 — 기업업무추진비↔접대비 등, kifrs-rag term_bridge 동형).
+   소비자 판정: 승격 조건 아님(실무자에겐 자명한 우회) — 도구 단독 사용자 함정 제거 목적.
+
 ### 2026-07-12 — H8 TA2 조세불복 쟁점 의견서 실험 (첫 실소비, 원본: `~/projects/ai-accounting-firm/docs/cases/2026-07-12-taxr-appeal-opinion/mcp-log.md`)
 
 > **상태: 수리 완료 (2026-07-12, IB1 — 커밋 87abd83, changesets/20260712-ib1-h8ta2-repair).**
