@@ -14,7 +14,11 @@
 ```
 
 ## Gotchas
-<!-- TODO: 비명백한 동작·필수 env var·알려진 함정을 채운다. 없다는 확신이 서면 이 섹션 자체를 지워도 된다. -->
+- **배포 사본 분리**: Claude MCP 설정(`~/.claude.json`)은 이 레포가 아니라
+  `~/projects/custom-mcps/law-mcp/dist/index.js` 를 실행한다. 이 레포에서 수정·커밋해도 MCP 에
+  반영되지 않는다 — 반영 절차: 여기서 push → custom-mcps 사본에서 `git pull && npm run build` →
+  **MCP 서버 재시작**(사용자). 소스 수정만 하고 완료 처리 금지 (2026-07-12 RX2 재실험에서 적발).
+- `LAW_API_OC` env 필요(법제처 DRF). NTS(taxlaw.nts.go.kr) 폴백은 인증 불요.
 
 ## 작업 방식
 - 1 tooling changeset = 1 작업 단위
