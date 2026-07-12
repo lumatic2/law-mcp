@@ -4,6 +4,18 @@
 
 ## Issue-back Queue (ai-accounting-firm 실소비에서 돌아온 결함)
 
+### 2026-07-12(c) — H11 C13-2 부가세 매입세액 불공제 실험 (세 번째 실소비, 원본: `~/projects/ai-accounting-firm/docs/cases/2026-07-12-taxi-vat-deduction/mcp-log.md`)
+
+> 상태: 미수리(경미 2건). 핵심 5도구 37콜(hit 27/73%). **수리 전 종목 회귀 없음 + ib2/ib2b
+> 용어 브리지 첫 실전 관측**: `search_precedents("기업업무추진비 매입세액 불공제")` → 브리지
+> warning + 56건 도달(오케스트레이터 독립 재현 동일). get_precedent 7/7(ib1b 유지),
+> search_law 본문 폴백 정상.
+
+6. **[경미] `search_admin_rules` 일부 쿼리에서 본문 폴백 미트리거** — 법령명 매칭 0건 후
+   본문 재검색으로 넘어가지 않는 쿼리 패턴 존재. search_law 와 폴백 체인 대칭성 점검 필요.
+7. **[경미] 본문 폴백 랭킹 품질** — 본문 검색 결과가 쟁점 관련도 순이 아님(TA2·C6-2·C13-2
+   3연속 재현). 개선 후보: 토큰 매칭 수 기반 재정렬. 승격 조건 아님(우회: 쿼리 구체화).
+
 ### 2026-07-12(b) — H10 C6-2 법인세 세무조정 실험 (두 번째 실소비, 원본: `~/projects/ai-accounting-firm/docs/cases/2026-07-12-taxc-adjustment-review/mcp-log.md`)
 
 > 상태: **수리 완료 (2026-07-12, ib2·ib2b — a195765·8ba2d49)**. 총 35회 호출(hit 24/69%)에서
