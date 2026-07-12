@@ -8,7 +8,10 @@
 
 > **상태: 수리 완료 (2026-07-12, IB1 — 커밋 87abd83, changesets/20260712-ib1-h8ta2-repair).**
 > #1: NTS 문서 API(taxlaw.nts.go.kr action.do ASIQTB002PR01) 폴백으로 실패 5건 전부 사건명·판결요지
-> (+참조조문) 도달. 잔여 한계: 판시사항·전문은 NTS 구조상 부재/HWP 첨부(경고로 명시). #2: search=2
+> (+참조조문) 도달. **후속 ib1b(커밋 497063d)로 전문까지 도달 완성** — NTS 응답의
+> `dcmHwpEditorDVOList` 내 서버 변환 HTML(dcmFleTy=html)을 추출(HWP 파싱 불요, 사용자 제안이
+> 트리거). 실패 5건 전부 주문·이유 포함 전문 반환(337~13,621자). 잔여 한계: 판시사항 필드는
+> NTS 구조상 부재(전문·판결요지로 갈음). #2: search=2
 > 본문검색 자동 폴백. #3: 0건 시 토큰 완화 재시도 1단. #4: get_admin_rule offset/limit 클라이언트
 > 슬라이싱. 게이트: 오케스트레이터 실 API 독립 재현 4/4 + npm test 9/9. 다음 단계는
 > ai-accounting-firm RX2(MCP 재시작 후 재실험 → 승격 판단).
