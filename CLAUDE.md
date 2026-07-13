@@ -27,7 +27,7 @@
 
 ## ROADMAP 운영
 - `ROADMAP.md` 는 current horizon / active milestone 장부이며 150줄 이하로 유지한다.
-- `BACKLOG.md` 는 완료·보류·아카이브된 milestone 압축 이력이다.
+- `docs/BACKLOG.md` 는 완료·보류·아카이브된 milestone 압축 이력이다.
 - ROADMAP/BACKLOG 쓰기 소유자는 `/harness` 이다. milestone 완료·compact·horizon-check 는 `/harness` 가 처리한다.
 - `session-end` 는 ROADMAP 을 수정하지 않는다. read-only 로 확인하고 `CLAUDE.local.md` handoff 에만 반영한다.
 

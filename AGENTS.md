@@ -13,7 +13,7 @@
 
 - `CLAUDE.md`: 프로젝트 기술 스택, 구조, 개발 명령어, 보호 파일 / 금지 사항, 기타 이 프로젝트 고유의 작업 방식
 - `ROADMAP.md`: 현재 horizon·active milestone·다음 할 일. milestone 완료·compact 는 `/harness` 소유
-- `BACKLOG.md`: 완료·보류·아카이브된 milestone 압축 이력. `/harness` 의 ROADMAP.md 150줄 budget 유지용
+- `docs/BACKLOG.md`: 완료·보류·아카이브된 milestone 압축 이력. `/harness` 의 ROADMAP.md 150줄 budget 유지용
 - `session-end`: ROADMAP 을 수정하지 않고 read-only 로 확인한 뒤 `CLAUDE.local.md` handoff 에만 반영
 
 `CLAUDE.md`의 내용 중 Claude 전용 도구 호출 규칙은 Codex 환경에 맞게 해석하되, 프로젝트 구조·규칙은 그대로 따른다.
