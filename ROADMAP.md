@@ -2,7 +2,8 @@
 
 > 마지막 업데이트: 2026-07-12
 > 상태: issueback-repair-h8ta2 완료(2026-07-12) — active 없음, 새 후보는 소비자 issue-back 대기
-> 북극성: 한국 법령·판례·행정규칙을 MCP로 신뢰성 있게 소비 가능하게 한다 (소비자 issue-back 기반 개선)
+> 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
+> 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
 
 ## Current Horizon
