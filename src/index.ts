@@ -29,7 +29,8 @@ server.registerTool(
     description:
       "Search laws by keyword. Tries law-name match first; if 0 results, automatically retries "
       + "as a full-text (body) search, then once more with the query relaxed (last token dropped) "
-      + "if still 0. A warning field notes when a fallback mode was used.",
+      + "if still 0, then with revised legal terms substituted. A warning field notes when a "
+      + "fallback mode was used; body-search results are NOT relevance-ranked.",
     inputSchema: {
       query: z.string().min(1),
       limit: z.number().int().min(1).max(100).default(10),
@@ -150,8 +151,10 @@ server.registerTool(
     title: "Search Admin Rules",
     description:
       "Search administrative rules by keyword. Tries rule-name match first; if 0 results, "
-      + "automatically retries as a full-text (body) search. A warning field notes when the "
-      + "fallback mode was used.",
+      + "automatically retries as a full-text (body) search, then with the query relaxed (last "
+      + "token dropped), then with revised legal terms substituted (e.g. 기업업무추진비 <-> 접대비). "
+      + "A warning field notes which fallback produced the results; body-search results are NOT "
+      + "relevance-ranked.",
     inputSchema: {
       query: z.string().min(1),
       limit: z.number().int().min(1).max(100).default(10),

@@ -31,6 +31,11 @@ const NTS_BROWSER_USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 const NTS_PLACEHOLDER_CONTENT_PATTERN = /붙임과\s*같습니다/;
 
+// 본문(전문) 검색 결과에는 upstream 이 매칭 스니펫·관련도 점수를 주지 않는다(2026-07-20 실측).
+// 정렬은 법령명 토큰 겹침 → upstream 순서(가나다)일 뿐이므로, 상위 = 가장 관련 있는 법령이 아니다.
+const BODY_SEARCH_RANK_WARNING =
+  "본문검색 결과는 관련도순이 아님(upstream 이 관련도 점수를 제공하지 않음) — 목록에서 쟁점에 맞는 항목을 직접 고를 것.";
+
 type ArticleReference = {
   display: string;
   main: number;
@@ -68,6 +73,26 @@ function stripHtml(value: string | null): string | null {
 
 function normalizeLawName(value: string): string {
   return value.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
+}
+
+/**
+ * 본문(전문) 검색 결과의 정렬 점수. 본문검색은 쿼리가 법령명에 걸리지 않아 match_type 이 전부
+ * "contains" 로 동률이 되고, 그러면 법령명 글자수 타이브레이커가 사실상 유일한 정렬 기준이 되어
+ * "이름 짧은 법 순"이 된다(2026-07-20 실측: '가지급금 인정이자' → 예금자보호법·방송법 시행규칙이
+ * 법인세법 시행령보다 상위). upstream 응답 순서도 관련도가 아닌 가나다순이라 대안이 못 된다.
+ * 응답에 매칭 스니펫·스코어 필드가 없으므로 쓸 수 있는 유일한 쿼리 의존 신호는 법령명 토큰 겹침이다.
+ */
+export function countNameTokenMatches(lawName: string, query: string): number {
+  const normalizedName = normalizeLawName(lawName);
+  if (!normalizedName) return 0;
+
+  const tokens = query
+    .trim()
+    .split(/\s+/)
+    .map((token) => normalizeLawName(token))
+    .filter(Boolean);
+
+  return tokens.filter((token) => normalizedName.includes(token)).length;
 }
 
 function getMatchType(normalizedLawName: string, normalizedQuery: string): MatchType {
@@ -545,17 +570,25 @@ export class LawGoProvider implements LawProvider {
           _sortRank: getMatchRank(matchType),
           _sortIndex: index,
           _normalizedLawLength: normalizedLaw.length,
+          _nameTokenMatches: countNameTokenMatches(lawName, query),
         };
       })
       .sort((left, right) => {
         if (left._sortRank !== right._sortRank) return left._sortRank - right._sortRank;
+        // 본문검색 모드는 match_type 이 전부 contains 로 동률이라, 쿼리 의존 신호인 법령명 토큰
+        // 겹침을 기존 타이브레이커 *위에* 얹는다. 겹침이 0으로 동률이면 아래 기존 순서(짧은 이름
+        // 우선 — 시행령·시행규칙보다 본법을 앞에 두는 약한 사전확률)로 떨어진다.
+        // upstream 순서는 관련도가 아니라 가나다순이므로 신호로 쓰지 않는다(2026-07-20 실측).
+        if (searchMode === 2 && left._nameTokenMatches !== right._nameTokenMatches) {
+          return right._nameTokenMatches - left._nameTokenMatches;
+        }
         if (left._normalizedLawLength !== right._normalizedLawLength) {
           return left._normalizedLawLength - right._normalizedLawLength;
         }
         return left._sortIndex - right._sortIndex;
       })
       .slice(0, limit)
-      .map(({ _sortRank, _sortIndex, _normalizedLawLength, ...item }) => item);
+      .map(({ _sortRank, _sortIndex, _normalizedLawLength, _nameTokenMatches, ...item }) => item);
 
     const totalRaw = pickString(root, ["totalCnt", "total", "TotalCnt"]);
     const total = totalRaw ? Number(totalRaw) : items.length;
@@ -580,7 +613,7 @@ export class LawGoProvider implements LawProvider {
         query,
         total: bodySearch.total,
         items: bodySearch.items,
-        warnings: ["법령명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음."],
+        warnings: ["법령명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음.", BODY_SEARCH_RANK_WARNING],
       };
     }
 
@@ -593,7 +626,7 @@ export class LawGoProvider implements LawProvider {
           query,
           total: relaxedSearch.total,
           items: relaxedSearch.items,
-          warnings: [`원 쿼리 0건 → '${relaxed}'로 재검색(본문 검색).`],
+          warnings: [`원 쿼리 0건 → '${relaxed}'로 재검색(본문 검색).`, BODY_SEARCH_RANK_WARNING],
         };
       }
     }
@@ -608,7 +641,7 @@ export class LawGoProvider implements LawProvider {
           query,
           total: bridgeSearch.total,
           items: bridgeSearch.items,
-          warnings: [formatBridgeWarning(bridged, query)],
+          warnings: [formatBridgeWarning(bridged, query), BODY_SEARCH_RANK_WARNING],
         };
       }
 
@@ -621,7 +654,7 @@ export class LawGoProvider implements LawProvider {
           query,
           total: bridgeRelax.total,
           items: bridgeRelax.items,
-          warnings: [bridgeRelax.warning],
+          warnings: [bridgeRelax.warning, BODY_SEARCH_RANK_WARNING],
         };
       }
     }
@@ -864,8 +897,48 @@ export class LawGoProvider implements LawProvider {
         query,
         total: bodySearch.total,
         items: bodySearch.items,
-        warnings: ["행정규칙명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음."],
+        warnings: ["행정규칙명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음.", BODY_SEARCH_RANK_WARNING],
       };
+    }
+
+    // 이하 3단은 searchLaw 와 대칭 (2026-07-20 #6 — 행정규칙만 사다리가 2칸이라
+    // '기업업무추진비 손금불산입 기준' 류 다단어 쿼리가 구제 없이 0건으로 끝났다).
+    const relaxed = relaxQuery(query);
+    if (relaxed) {
+      const relaxedSearch = await this.fetchAdminRuleSearchOnce(relaxed, limit, 2);
+      if (relaxedSearch.items.length > 0) {
+        return {
+          query,
+          total: relaxedSearch.total,
+          items: relaxedSearch.items,
+          warnings: [`원 쿼리 0건 → '${relaxed}'로 재검색(본문 검색).`, BODY_SEARCH_RANK_WARNING],
+        };
+      }
+    }
+
+    const bridged = bridgeTerm(query);
+    if (bridged) {
+      const bridgeSearch = await this.fetchAdminRuleSearchOnce(bridged.replaced, limit, 2);
+      if (bridgeSearch.items.length > 0) {
+        return {
+          query,
+          total: bridgeSearch.total,
+          items: bridgeSearch.items,
+          warnings: [formatBridgeWarning(bridged, query), BODY_SEARCH_RANK_WARNING],
+        };
+      }
+
+      const bridgeRelax = await bridgeThenRelaxSearch(query, bridged, (q) =>
+        this.fetchAdminRuleSearchOnce(q, limit, 2),
+      );
+      if (bridgeRelax) {
+        return {
+          query,
+          total: bridgeRelax.total,
+          items: bridgeRelax.items,
+          warnings: [bridgeRelax.warning, BODY_SEARCH_RANK_WARNING],
+        };
+      }
     }
 
     return { query, total: 0, items: [], warnings: [] };

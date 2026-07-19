@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   bridgeThenRelaxSearch,
+  countNameTokenMatches,
   extractNtstDcmIdFromLocation,
   isNtsPlaceholderContent,
   mapNtsPrecedentDetail,
@@ -179,4 +180,16 @@ test("bridgeThenRelaxSearch does not need to relax when the direct bridge term i
   const result = await bridgeThenRelaxSearch(query, bridged!, fetchOnce);
 
   assert.equal(result, null);
+});
+
+test("countNameTokenMatches counts query tokens present in the law name", () => {
+  assert.equal(countNameTokenMatches("부가가치세법 시행규칙", "부가가치세 매입세액 불공제"), 1);
+  assert.equal(countNameTokenMatches("법인세법 시행령", "법인세법 시행령 접대비"), 2);
+  assert.equal(countNameTokenMatches("예금자보호법", "가지급금 인정이자"), 0);
+});
+
+test("countNameTokenMatches ignores spacing and punctuation differences", () => {
+  // 공백·조사 제거 후 부분 문자열로 판정하므로 "공정거래에관한"·"법률" 둘 다 잡힌다.
+  assert.equal(countNameTokenMatches("독점규제 및 공정거래에 관한 법률", "공정거래에관한 법률"), 2);
+  assert.equal(countNameTokenMatches("", "법인세법"), 0);
 });
