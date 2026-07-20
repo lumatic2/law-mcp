@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-21
-> 상태: horizon `general-legal-coverage` 진행 중 — LB1 완료(기준선 recall@3 44.0%), 다음 LB2
+> 상태: horizon `general-legal-coverage` 진행 중 — LB1·LB2 완료, 다음 LB3(누락 법원 5종)
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -29,16 +29,18 @@
 
 - Completed at: 2026-07-21
 - Summary: 골든셋 40건·채점 러너·기준선 recall@3 44.0% 확정
-<!-- harness:milestone id="LB2" status="active" priority="P0" -->
+<!-- harness:milestone id="LB2" status="completed" priority="P0" evidence="changesets/20260720-lb2-article-index + changesets/20260721-lb2-{article-match,two-mode-bench,verify-citation,title-weight-and-holdout} + evidence/bench/2026-07-21-curation-verdict.md" -->
 ### LB2 — 조문 단위 도달 + 랭킹 실질 개선
 - DoD: `search_law_articles` 실 API 도달 + dev recall@3 기준선 대비 상승 + 홀드아웃 1회 측정 기록
   + 검색 1회 지연 ≤3초 + 세무 회귀 6종 무변.
-- Evidence: `plans/2026-07-20-lb2-article-level-reach.md` + `evidence/bench/2026-07-20-lb2-holdout.json`
+- Evidence: changesets/20260720-lb2-article-index + changesets/20260721-lb2-{article-match,two-mode-bench,verify-citation,title-weight-and-holdout} + evidence/bench/2026-07-21-curation-verdict.md
 - Gap: 조문 단위 검색 타깃이 upstream 에 없어 "몇 조"에 답 못 하고, 그 때문에 랭킹 신호도 없다
   (research 2026-07-20 §3)
 - Scale: changesets>=4; surfaces: MCP 도구·실 API·bench·npm test; capability: 어느 법 몇 조인지 답한다
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-21
+- Summary: verify_citation 신설 + 2모드 측정(dev blind 44.0%/assisted 62.5%, holdout 60.0%/73.3%) + C안 조건부 판정
 <!-- harness:milestone id="LB3" status="pending" priority="P1" -->
 ### LB3 — 누락 법원(法源) 5종 도구화
 - DoD: 등록된 법원 도구가 각 실 API 1건 이상 도달 + 기여도 리포트 수치 제시 + 기여 0 법원 미등록

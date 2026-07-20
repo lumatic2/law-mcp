@@ -106,7 +106,8 @@
       ],
       "owner_session_uuid": "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b",
       "updated_at": "2026-07-21",
-      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "law-mcp 에 인용 검증 도구를 새로 붙이고, 검색 품질을 2가지 소비 모드로 나눠 측정했다 — 개선 가설 2개는 실측으로 기각하고 근거를 남겼으며, 큰 색인 작업(C안)은 지금 할 일이 아니라는 판정과 그 착수 조건을 확정했다."
     },
     "lb2-consumer-mode-citation": {
       "work_id": "lb2-consumer-mode-citation",
