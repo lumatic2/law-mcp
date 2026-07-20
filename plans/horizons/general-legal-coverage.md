@@ -36,7 +36,7 @@
 | # | ID | 제목 | 왜 milestone 규모인가 | plan doc | 승인 | 소비 리서치 |
 |---|---|---|---|---|---|---|
 | 1 | **LB1** | 정답 도달 측정 하네스 | 골든셋 데이터 + 러너 스크립트 + 기준선 리포트 = 독립 changeset 3, 통합검증=기준선 수치 산출 | `plans/2026-07-20-lb1-answer-reach-harness.md` | 대기 | probe §1 |
-| 2 | **LB2** | 조문 단위 도달 + 랭킹 실질 개선 | 조문 인덱스 구성 + 조문 검색 도구 + 검색 랭킹 반영 = 독립 changeset 3, 통합검증=LB1 골든셋 재측정 | `plans/2026-07-20-lb2-article-level-reach.md` | 대기 | probe §3 |
+| 2 | **LB2** | 조문 단위 도달 + 랭킹 실질 개선 | 조문 인덱스 구성 + 조문 검색 도구 + 검색 랭킹 반영 = 독립 changeset 3, 통합검증=LB1 골든셋 재측정 | `plans/2026-07-20-lb2-article-level-reach.md` | **정지(step-2 기각, 방향 재선택 대기)** | probe §3 + prior-art |
 | 3 | **LB3** | 누락 법원 5종 도구화 | 법령해석례·헌재결정례·행정심판재결례·자치법규·법령용어 어댑터 + 도구 노출 = 독립 changeset 3+, 통합검증=법원별 실 API 도달 | `plans/2026-07-20-lb3-missing-sources.md` | 대기 | probe §2 |
 | 4 | **LB4** | 설치 가능성 (배포·발견성) | 공개 범위·배포 채널이 **사용자 소유 결정** — 착수 시점에 plan 을 펼친다 | (LB4 착수 시 작성) | 보류 | probe §4 + 레지스트리 조사(미실시) |
 
@@ -71,5 +71,5 @@
 ## 링크
 
 - 위(Objective): `OBJECTIVE.md`
-- 리서치: `research/2026-07-20-general-legal-coverage-probe.md`
+- 리서치: `research/2026-07-20-general-legal-coverage-probe.md` · `research/2026-07-21-lb2-prior-art-candidate-generation.md`
 - 아래(Milestone plans): 위 번들 인덱스 표 참조
