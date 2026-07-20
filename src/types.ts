@@ -80,6 +80,18 @@ export interface SearchAdminRulesResult {
   warnings?: string[];
 }
 
+/** 법원(法源) 5종 공통 검색 결과 (LB3) */
+export interface SearchLegalSourceResult {
+  /** 사람이 읽는 법원명 (법령해석례·헌재결정례·행정심판재결례·자치법규·법령용어) */
+  source: string;
+  /** DRF target */
+  target: string;
+  query: string;
+  total: number;
+  items: Array<{ source_id: string; title: string | null; [key: string]: string | null }>;
+  warnings?: string[];
+}
+
 export interface GetAdminRuleResult {
   rule_id: string;
   행정규칙명?: string | null;

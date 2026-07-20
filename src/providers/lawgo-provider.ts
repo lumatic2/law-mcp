@@ -13,10 +13,20 @@ import type {
   GetPrecedentResult,
   SearchAdminRulesResult,
   SearchLawResult,
+  SearchLegalSourceResult,
   SearchPrecedentsResult,
 } from "../types.js";
 import type { LawProvider } from "./law-provider.js";
-import { searchWithLadder } from "./source-adapter.js";
+import {
+  SOURCE_DESCRIPTORS,
+  extractDetail,
+  extractRows,
+  mapRow,
+  searchWithLadder,
+  type SourceDescriptor,
+  type SourceDetail,
+  type SourceItem,
+} from "./source-adapter.js";
 
 const ARTICLE_NUMBER_KEYS = ["조문번호", "JO_NO", "article_no", "no"] as const;
 const ARTICLE_BRANCH_KEYS = ["조문가지번호", "JO_BRANCH", "branch_no", "가지번호"] as const;
@@ -935,5 +945,106 @@ export class LawGoProvider implements LawProvider {
       has_more: hasMore,
       warnings,
     };
+  }
+
+  // --- 법원(法源) 5종 공통 경로 (LB3 step-2) ---------------------------------
+  // 법원별로 메서드를 5벌 쓰지 않고 디스크립터로 파라미터화한다. 도구 등록은 step-3 의
+  // 기여도 게이트를 통과한 법원만 한다(도구 인플레 방지).
+
+  private async fetchSourceSearchOnce(
+    descriptor: SourceDescriptor,
+    query: string,
+    limit: number,
+    searchMode?: 1 | 2,
+  ): Promise<{ items: SourceItem[]; total: number; warnings: string[] }> {
+    const root = await fetchLawApi(LAW_SEARCH_BASE_URL, {
+      OC: LAW_API_OC,
+      target: descriptor.target,
+      type: "JSON",
+      query,
+      display: limit,
+      ...(searchMode ? { search: searchMode } : {}),
+    });
+
+    const extracted = extractRows(root, descriptor);
+    const items = extracted.rows
+      .slice(0, limit)
+      .map((row, index) => mapRow(row, descriptor, index))
+      .map((item) => {
+        const title = item.title;
+        return title === null ? item : { ...item, title: stripHtml(title) };
+      });
+
+    return { items, total: extracted.total, warnings: extracted.warnings };
+  }
+
+  /** 법원 검색 — 사다리는 법령·행정규칙과 동일한 공통 구현을 쓴다. */
+  async searchLegalSource(
+    target: string,
+    query: string,
+    options: { limit?: number } = {},
+  ): Promise<SearchLegalSourceResult> {
+    assertLawApiKey();
+    const descriptor = SOURCE_DESCRIPTORS[target];
+    if (!descriptor) {
+      throw createMcpError({
+        code: "INVALID_ARGUMENT",
+        message: `Unknown legal source target: ${target}`,
+        retryable: false,
+      });
+    }
+
+    const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
+    // 구조 경고(응답 키가 실측과 다름)는 사다리 어느 칸에서 나오든 결과에 실어 보낸다.
+    const structureWarnings = new Set<string>();
+
+    const result = await searchWithLadder(
+      query,
+      async (q, mode) => {
+        const once = await this.fetchSourceSearchOnce(descriptor, q, limit, mode);
+        once.warnings.forEach((warning) => structureWarnings.add(warning));
+        return { items: once.items, total: once.total };
+      },
+      {
+        primaryZeroWarning: `${descriptor.label}명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음.`,
+        bodySearchWarning: BODY_SEARCH_RANK_WARNING,
+        supportsBodySearch: descriptor.supportsBodySearch,
+        relaxQuery,
+        bridgeTerm,
+        formatBridgeWarning,
+        bridgeThenRelaxSearch,
+      },
+    );
+
+    return {
+      source: descriptor.label,
+      target: descriptor.target,
+      query: result.query,
+      total: result.total,
+      items: result.items,
+      warnings: [...result.warnings, ...structureWarnings],
+    };
+  }
+
+  /** 법원 단건 조회 — 문서 지정 파라미터는 타깃마다 다르므로 디스크립터가 못 박는다. */
+  async getLegalSource(target: string, sourceId: string): Promise<SourceDetail | null> {
+    assertLawApiKey();
+    const descriptor = SOURCE_DESCRIPTORS[target];
+    if (!descriptor) {
+      throw createMcpError({
+        code: "INVALID_ARGUMENT",
+        message: `Unknown legal source target: ${target}`,
+        retryable: false,
+      });
+    }
+
+    const root = await fetchLawApi(LAW_SERVICE_BASE_URL, {
+      OC: LAW_API_OC,
+      target: descriptor.target,
+      type: "JSON",
+      [descriptor.detail.idParam]: sourceId,
+    });
+
+    return extractDetail(root, descriptor, sourceId, (value) => stripHtml(value) ?? value);
   }
 }

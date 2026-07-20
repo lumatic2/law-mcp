@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   SOURCE_DESCRIPTORS,
+  extractDetail,
   extractRows,
   mapRow,
   searchWithLadder,
@@ -243,4 +244,104 @@ test("searchWithLadder reports zero results when every rung misses", async () =>
   });
 
   assert.deepEqual(result, { query: "아무것도없는쿼리", total: 0, items: [], warnings: [] });
+});
+
+// --- 단건 조회(extractDetail) — 검색과는 또 다른 컨테이너·필드 이름을 쓴다 ---------------
+
+test("extractDetail maps a flat detail response", () => {
+  const root = {
+    ExpcService: {
+      안건명: "부당해고기간의 임금 상당액",
+      안건번호: "10-0075",
+      해석기관명: "법제처",
+      질의요지: "질의 내용",
+      회답: "회답 내용",
+      이유: "이유 내용",
+    },
+  };
+
+  const detail = extractDetail(root, SOURCE_DESCRIPTORS.expc, "312859");
+  assert.equal(detail?.source_id, "312859");
+  assert.equal(detail?.source, "법령해석례");
+  assert.equal(detail?.안건번호, "10-0075");
+  assert.equal(detail?.회답, "회답 내용");
+  // 응답에 없는 필드는 키를 남기되 null 이다(호출자가 "없음"과 "안 봤음"을 구분할 수 있게).
+  assert.equal(detail?.해석일자, null);
+});
+
+// 행정심판재결례의 단건 컨테이너는 판례와 같은 `PrecService` 다 — 검색 컨테이너(`Decc`)와 다르다.
+test("extractDetail reads 행정심판재결례 from the PrecService container", () => {
+  const root = { PrecService: { 사건명: "정보공개 이행청구", 재결청: "경기도행정심판위원회" } };
+  const detail = extractDetail(root, SOURCE_DESCRIPTORS.decc, "261903");
+  assert.equal(detail?.사건명, "정보공개 이행청구");
+  assert.equal(detail?.재결청, "경기도행정심판위원회");
+});
+
+// 자치법규만 기본정보를 한 단계 아래에 중첩해 둔다.
+test("extractDetail looks one level into nested containers and reads 자치법규 articles", () => {
+  const root = {
+    LawService: {
+      자치법규기본정보: {
+        자치법규명: "가평군 전통시장 공영주차장 관리 운영 조례",
+        지자체기관명: "경기도 가평군",
+        공포일자: "20260420",
+      },
+      조문: {
+        조: [
+          {
+            // 자치법규의 조문번호는 문자열이 아니라 배열이다.
+            조문번호: ["000100", "000100"],
+            조제목: "목적",
+            조내용: "제1조(목적) 이 조례는 <개정 2025.4.9.> 목적으로 한다.",
+            조문여부: "Y",
+          },
+        ],
+      },
+    },
+  };
+
+  const detail = extractDetail(root, SOURCE_DESCRIPTORS.ordin, "2124591", (v) =>
+    v.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim());
+
+  assert.equal(detail?.자치법규명, "가평군 전통시장 공영주차장 관리 운영 조례");
+  assert.equal(detail?.articles?.length, 1);
+  assert.equal(detail?.articles?.[0].조문번호, "000100", "배열의 첫 값을 쓴다");
+  assert.equal(detail?.articles?.[0].조제목, "목적");
+  assert.ok(!detail?.articles?.[0].조내용?.includes("<개정"), "조내용의 태그가 벗겨진다");
+});
+
+// 조문이 1건이면 DRF 가 배열이 아니라 객체로 준다.
+test("extractDetail accepts a single article delivered as an object", () => {
+  const root = {
+    LawService: {
+      자치법규기본정보: { 자치법규명: "단조문 조례" },
+      조문: { 조: { 조문번호: ["000100"], 조제목: "목적", 조내용: "본문" } },
+    },
+  };
+  const detail = extractDetail(root, SOURCE_DESCRIPTORS.ordin, "1");
+  assert.equal(detail?.articles?.length, 1);
+});
+
+test("extractDetail decodes entities in the term definition", () => {
+  const root = { LsTrmService: { 법령용어명_한글: "퇴직소득", 법령용어정의: "금액을 말한다. &lt;신설 2015.2.3&gt;" } };
+  const detail = extractDetail(root, SOURCE_DESCRIPTORS.lstrm, "20750", (v) =>
+    v.replace(/&lt;/g, "<").replace(/&gt;/g, ">"));
+  assert.equal(detail?.법령용어정의, "금액을 말한다. <신설 2015.2.3>");
+});
+
+// Failure probe: 존재하지 않는 ID 는 빈 컨테이너를 주므로 null(→ NOT_FOUND)이어야 한다.
+test("extractDetail returns null for empty, missing, or field-less responses", () => {
+  for (const root of [null, undefined, {}, { ExpcService: {} }, { Other: { x: "1" } }]) {
+    assert.equal(extractDetail(root, SOURCE_DESCRIPTORS.expc, "999"), null);
+  }
+});
+
+// 모든 법원의 단건 조회 파라미터가 명시적으로 고정돼 있어야 한다 — `ordin` 을 ID 로 부르면
+// 200 과 함께 **다른 조례**가 돌아온다(2026-07-21 실측). 조용한 오답이라 테스트로 못 박는다.
+test("every source pins its detail lookup parameter", () => {
+  assert.equal(SOURCE_DESCRIPTORS.ordin.detail.idParam, "MST");
+  assert.equal(SOURCE_DESCRIPTORS.lstrm.detail.idParam, "trmSeqs");
+  for (const target of ["expc", "detc", "decc"]) {
+    assert.equal(SOURCE_DESCRIPTORS[target].detail.idParam, "ID");
+  }
 });

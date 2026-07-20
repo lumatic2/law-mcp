@@ -44,6 +44,22 @@ export type SourceDescriptor = {
   fields: SourceFieldSpec[];
   /** 본문(전문) 검색(search=2) 지원 여부 — 미지원이면 사다리에서 mode 2 를 쓰지 않는다 */
   supportsBodySearch: boolean;
+  /** 단건 조회(lawService.do) 사양 */
+  detail: SourceDetailSpec;
+};
+
+export type SourceDetailSpec = {
+  /** 단건 조회 응답의 컨테이너 키 (검색 응답과 다르다) */
+  container: string;
+  /**
+   * 문서를 지정하는 파라미터 이름. 타깃마다 다르고, **틀리면 조용히 다른 문서가 온다** —
+   * `ordin` 은 `MST` 가 맞고 `ID` 로 부르면 전혀 다른 자치법규가 200 으로 돌아온다(2026-07-21 실측:
+   * 가평군 조례를 요청했는데 창원시 하수도 조례가 왔다). 그래서 타깃별로 못 박는다.
+   */
+  idParam: "ID" | "MST" | "trmSeqs";
+  fields: SourceFieldSpec[];
+  /** 조문 배열을 가진 법원(자치법규)만 지정 */
+  articlesPath?: { container: string; rowKey: string };
 };
 
 export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
@@ -61,6 +77,20 @@ export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
       { as: "회신일자", from: ["회신일자"] },
     ],
     supportsBodySearch: true,
+    detail: {
+      container: "ExpcService",
+      idParam: "ID",
+      fields: [
+        { as: "안건명", from: ["안건명"] },
+        { as: "안건번호", from: ["안건번호"] },
+        { as: "해석기관명", from: ["해석기관명"] },
+        { as: "질의기관명", from: ["질의기관명"] },
+        { as: "해석일자", from: ["해석일자"] },
+        { as: "질의요지", from: ["질의요지"] },
+        { as: "회답", from: ["회답"] },
+        { as: "이유", from: ["이유"] },
+      ],
+    },
   },
   detc: {
     target: "detc",
@@ -74,6 +104,22 @@ export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
       { as: "종국일자", from: ["종국일자"] },
     ],
     supportsBodySearch: true,
+    detail: {
+      container: "DetcService",
+      idParam: "ID",
+      fields: [
+        { as: "사건명", from: ["사건명"] },
+        { as: "사건번호", from: ["사건번호"] },
+        { as: "사건종류명", from: ["사건종류명"] },
+        { as: "종국일자", from: ["종국일자"] },
+        { as: "판시사항", from: ["판시사항"] },
+        { as: "결정요지", from: ["결정요지"] },
+        { as: "심판대상조문", from: ["심판대상조문"] },
+        { as: "참조조문", from: ["참조조문"] },
+        { as: "참조판례", from: ["참조판례"] },
+        { as: "전문", from: ["전문"] },
+      ],
+    },
   },
   decc: {
     target: "decc",
@@ -90,6 +136,25 @@ export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
       { as: "재결구분명", from: ["재결구분명"] },
     ],
     supportsBodySearch: true,
+    detail: {
+      // 단건 조회 컨테이너가 판례와 같은 `PrecService` 다(검색은 `Decc`). 검색 응답의
+      // `행정심판재결례일련번호` 가 단건 응답에서는 `행정심판례일련번호` 로 이름이 또 다르다.
+      container: "PrecService",
+      idParam: "ID",
+      fields: [
+        { as: "사건명", from: ["사건명"] },
+        { as: "사건번호", from: ["사건번호"] },
+        { as: "재결청", from: ["재결청"] },
+        { as: "처분청", from: ["처분청"] },
+        { as: "의결일자", from: ["의결일자"] },
+        { as: "처분일자", from: ["처분일자"] },
+        { as: "재결례유형명", from: ["재결례유형명"] },
+        { as: "청구취지", from: ["청구취지"] },
+        { as: "주문", from: ["주문"] },
+        { as: "재결요지", from: ["재결요지"] },
+        { as: "이유", from: ["이유"] },
+      ],
+    },
   },
   ordin: {
     target: "ordin",
@@ -107,6 +172,22 @@ export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
       { as: "제개정구분명", from: ["제개정구분명"] },
     ],
     supportsBodySearch: true,
+    detail: {
+      container: "LawService",
+      // `ID` 가 아니라 `MST`(=검색이 준 자치법규일련번호). `ID` 로 부르면 다른 조례가 온다.
+      idParam: "MST",
+      fields: [
+        { as: "자치법규명", from: ["자치법규명"] },
+        { as: "지자체기관명", from: ["지자체기관명"] },
+        { as: "자치법규종류", from: ["자치법규종류"] },
+        { as: "공포일자", from: ["공포일자"] },
+        { as: "시행일자", from: ["시행일자"] },
+        { as: "제개정정보", from: ["제개정정보", "제개정구분명"] },
+        { as: "담당부서명", from: ["담당부서명"] },
+      ],
+      // 자치법규 조문은 법령의 `조문.조문단위` 가 아니라 `조문.조` 다(실측).
+      articlesPath: { container: "조문", rowKey: "조" },
+    },
   },
   lstrm: {
     target: "lstrm",
@@ -117,6 +198,18 @@ export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
     titleKeys: ["법령용어명"],
     fields: [{ as: "법령종류코드", from: ["법령종류코드"] }],
     supportsBodySearch: false,
+    detail: {
+      container: "LsTrmService",
+      // 용어는 ID 가 아니라 `trmSeqs` 로 조회한다.
+      idParam: "trmSeqs",
+      fields: [
+        { as: "법령용어명", from: ["법령용어명_한글", "법령용어명"] },
+        { as: "법령용어명_한자", from: ["법령용어명_한자"] },
+        { as: "법령용어정의", from: ["법령용어정의"] },
+        { as: "법령용어코드명", from: ["법령용어코드명"] },
+        { as: "출처", from: ["출처"] },
+      ],
+    },
   },
 };
 
@@ -227,6 +320,74 @@ export function mapRow(
     item[field.as] = pickString(row, field.from);
   }
   return item;
+}
+
+export type SourceDetail = {
+  source_id: string;
+  source: string;
+  /** 자치법규처럼 조문을 가진 법원만 채워진다 */
+  articles?: Array<{ 조문번호: string | null; 조제목: string | null; 조내용: string | null }>;
+  [key: string]: unknown;
+};
+
+/**
+ * 단건 조회 응답을 표준 상세로 바꾼다. 찾지 못하면 null(→ 도구가 NOT_FOUND 로 응답).
+ *
+ * 필드는 컨테이너 직속 → **한 단계 아래 중첩 객체** 순으로 찾는다. 자치법규가 기본정보를
+ * `LawService.자치법규기본정보` 안에 넣기 때문이다(다른 법원은 평평하다).
+ */
+export function extractDetail(
+  root: unknown,
+  descriptor: SourceDescriptor,
+  sourceId: string,
+  decode: (value: string) => string = (value) => value,
+): SourceDetail | null {
+  const rootObj = asObject(root);
+  const container = asObject(rootObj[descriptor.detail.container]);
+  if (Object.keys(container).length === 0) return null;
+
+  const nested = Object.values(container).map((value) => asObject(value));
+  const lookup = (keys: string[]): string | null => {
+    const direct = pickString(container, keys);
+    if (direct !== null) return direct;
+    for (const child of nested) {
+      const found = pickString(child, keys);
+      if (found !== null) return found;
+    }
+    return null;
+  };
+
+  const detail: SourceDetail = { source_id: sourceId, source: descriptor.label };
+  let hasAnyField = false;
+  for (const field of descriptor.detail.fields) {
+    const value = lookup(field.from);
+    if (value !== null) hasAnyField = true;
+    detail[field.as] = value === null ? null : decode(value);
+  }
+  if (!hasAnyField) return null;
+
+  const articlesPath = descriptor.detail.articlesPath;
+  if (articlesPath) {
+    const articleContainer = asObject(container[articlesPath.container]);
+    const rows = articleContainer[articlesPath.rowKey];
+    // 조문이 1건이면 배열이 아니라 객체로 온다(DRF 공통 습성).
+    const list = isObjectArray(rows) ? rows : Object.keys(asObject(rows)).length > 0 ? [asObject(rows)] : [];
+    detail.articles = list
+      .filter((row) => Object.keys(row).length > 0)
+      .map((row) => ({
+        // 자치법규의 조문번호는 문자열이 아니라 배열이다(["000100","000100"]) — 실측.
+        조문번호: Array.isArray(row.조문번호)
+          ? (pickString({ v: row.조문번호[0] }, ["v"]))
+          : pickString(row, ["조문번호"]),
+        조제목: pickString(row, ["조제목"]),
+        조내용: (() => {
+          const text = pickString(row, ["조내용"]);
+          return text === null ? null : decode(text);
+        })(),
+      }));
+  }
+
+  return detail;
 }
 
 export type LadderResult<T> = { items: T[]; total: number };
