@@ -51,7 +51,8 @@ function parseArgs(argv: string[]) {
   };
 }
 
-const articleCache = new ArticleIndexCache(40);
+// 회차마다 새로 만든다(반복 측정에서 캐시가 σ 를 0 으로 만드는 것을 막는다).
+let articleCache = new ArticleIndexCache(40);
 
 async function loadArticles(lawName: string, provider: LawGoProvider) {
   const cached = articleCache.get(lawName);
@@ -195,15 +196,20 @@ async function main() {
     return;
   }
 
-  const provider = new LawGoProvider();
   const assisted = args.mode === "assisted";
 
   // 반복 측정 — 2회차부터는 진행 로그를 줄이고 수치만 모은다.
+  //
+  // ⚠ 회차마다 provider 와 조문 캐시를 **새로 만든다.** 같은 인스턴스를 재사용하면 2회차부터
+  // 용어 연계 캐시가 히트해 결과가 기계적으로 동일해지고, σ=0 이라는 거짓 신호가 나온다
+  // (첫 구현에서 실제로 관측 — 5회 전부 60.0%). 우리가 재려는 것은 **upstream 비결정성**이라
+  // 캐시로 지워선 안 된다.
   const repeat = Math.max(1, args.repeat);
   const passes: ItemOutcome[][] = [];
   for (let round = 0; round < repeat; round += 1) {
     if (repeat > 1) console.log(`\n--- 반복 ${round + 1}/${repeat} ---`);
-    passes.push(await runPass(provider, items, assisted, repeat === 1 || round === 0));
+    articleCache = new ArticleIndexCache(40);
+    passes.push(await runPass(new LawGoProvider(), items, assisted, repeat === 1 || round === 0));
   }
   const outcomes = passes[0];
 

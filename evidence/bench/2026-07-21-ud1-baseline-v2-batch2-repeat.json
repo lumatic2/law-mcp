@@ -1,0 +1,22 @@
+{
+  "date": "2026-07-21",
+  "set": "golden-v2",
+  "split": "dev",
+  "mode": "blind",
+  "metric": "recall@3",
+  "stats": {
+    "n": 5,
+    "mean": 0.48,
+    "sd": 0,
+    "min": 0.48,
+    "max": 0.48,
+    "threshold_2sd": 0,
+    "values": [
+      0.48,
+      0.48,
+      0.48,
+      0.48,
+      0.48
+    ]
+  }
+}
