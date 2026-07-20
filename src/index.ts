@@ -389,7 +389,13 @@ server.registerTool(
 // 기여도 게이트 결과: 법원별 대표 쿼리에서 5종 전부 이름매칭 도달 ≥1 → 전부 등록한다.
 // 다만 법원마다 search/get 2개씩 노출하면 도구가 +10 개가 된다(plan 프리모템 시나리오 3).
 // `source` 를 파라미터로 받는 **도구 2개**로 5종을 모두 덮는다 — 표면은 9 → 11.
-const LEGAL_SOURCES = ["expc", "detc", "decc", "ordin", "lstrm"] as const;
+// UD3 step-1: 위원회 결정문 9종을 같은 도구 2개에 얹는다. `source` enum 만 늘고 **도구 개수는
+// 그대로**다 — 위원회를 도구로 풀면 +18 이 되고, 소비 LLM 의 선택 부담이 곧 품질 저하다.
+// 최종 목록은 step-3 기여도 게이트가 정한다(대표 쿼리에 못 닿는 자료원은 여기서 뺀다).
+const LEGAL_SOURCES = [
+  "expc", "detc", "decc", "ordin", "lstrm",
+  "nlrc", "ppc", "nhrck", "sfc", "kcc", "ecc", "oclt", "ftc", "baiPvcs",
+] as const;
 
 server.registerTool(
   "search_legal_source",
@@ -400,6 +406,11 @@ server.registerTool(
       + "expc=법령해석례 (MOLEG statutory interpretations), detc=헌재결정례 (Constitutional Court), "
       + "decc=행정심판재결례 (administrative appeals), ordin=자치법규 (local ordinances), "
       + "lstrm=법령용어 (statutory term dictionary). "
+      + "Committee/tribunal rulings — where much day-to-day practice is actually decided, not in court: "
+      + "nlrc=노동위원회 판정 (labor board; 39k rulings on 부당해고·구제신청 — the primary source for "
+      + "dismissal disputes), ppc=개인정보보호위원회, nhrck=국가인권위원회, sfc=증권선물위원회, "
+      + "kcc=방송통신위원회, ecc=중앙환경분쟁조정위원회, oclt=중앙토지수용위원회, ftc=공정거래위원회, "
+      + "baiPvcs=감사원 사전컨설팅 의견서. "
       + "Works best when the query is a topic/case name, since the primary match is on the document "
       + "title. If the title match returns 0 results the tool falls back to full-text search, then a "
       + "relaxed query — and a warning says so. Treat fallback results with suspicion: upstream "

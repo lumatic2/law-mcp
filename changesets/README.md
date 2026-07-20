@@ -16,6 +16,7 @@
 | 6 | [20260721-ud1-repeat-runner](20260721-ud1-repeat-runner/README.md) | 2026-07-21 | bench/run.ts(--set/--repeat/봉인), bench/scoring.ts(aggregateRepeats), test/bench-runner.test.ts (신규) | ✅ | done |
 | 7 | [20260721-ud1-baseline-v2](20260721-ud1-baseline-v2/README.md) | 2026-07-21 | bench/run.ts(회차별 캐시 재생성), evidence/bench/2026-07-21-ud1-baseline-v2.* | ✅ | done |
 | 8 | [20260721-ud2-aisearch-client](20260721-ud2-aisearch-client/README.md) | 2026-07-21 | src/ai-search.ts (신규), test/ai-search.test.ts (신규) | ✅ | done |
+| 9 | [20260721-ud3-committee-sources](20260721-ud3-committee-sources/README.md) | 2026-07-21 | src/providers/source-adapter.ts(위원회 9종 + 단건객체 수리), src/index.ts(source enum 5→14), test/source-adapter.test.ts | ✅ | done |
 
 ## 운영 원칙
 

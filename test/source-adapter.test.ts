@@ -345,3 +345,102 @@ test("every source pins its detail lookup parameter", () => {
     assert.equal(SOURCE_DESCRIPTORS[target].detail.idParam, "ID");
   }
 });
+
+// ── UD3 step-1: 위원회 결정문 9종 ──────────────────────────────────────────────
+
+test("위원회 9종이 전부 등록돼 있다", () => {
+  for (const target of ["nlrc", "ppc", "nhrck", "sfc", "kcc", "ecc", "oclt", "ftc", "baiPvcs"]) {
+    assert.ok(SOURCE_DESCRIPTORS[target], `${target} 미등록`);
+  }
+});
+
+/**
+ * 위원회 계열은 LB3 법원 5종과 달리 **명명 규칙이 일정하다**(2026-07-21 실측 9/9).
+ * 규칙이 깨지면 조용히 0건이 되므로 규칙 자체를 테스트로 잠근다 — 새 위원회를 추가할 때
+ * 실측 없이 추측으로 넣는 것도 이 테스트가 막는다.
+ */
+test("위원회 descriptor 는 실측된 명명 규칙을 따른다", () => {
+  const expected: Record<string, string> = {
+    nlrc: "Nlrc", ppc: "Ppc", nhrck: "Nhrck", sfc: "Sfc", kcc: "Kcc",
+    ecc: "Ecc", oclt: "Oclt", ftc: "Ftc", baiPvcs: "BaiPvcs",
+  };
+
+  for (const [target, container] of Object.entries(expected)) {
+    const d = SOURCE_DESCRIPTORS[target];
+    assert.equal(d.container, container, `${target} 검색 컨테이너`);
+    assert.equal(d.rowKey, target, `${target} 행 키`);
+    assert.equal(d.detail.container, `${container}Service`, `${target} 단건 컨테이너`);
+    assert.equal(d.detail.idParam, "ID", `${target} 조회 파라미터`);
+  }
+});
+
+// 조회 파라미터를 틀리면 LB3 `ordin` 처럼 조용히 다른 문서가 올 수 있다. 타깃별로 못 박는다.
+test("위원회는 결정문일련번호로 조회한다 — baiPvcs 만 예외", () => {
+  for (const target of ["nlrc", "ppc", "nhrck", "sfc", "kcc", "ecc", "oclt", "ftc"]) {
+    assert.deepEqual(SOURCE_DESCRIPTORS[target].idKeys, ["결정문일련번호"], target);
+  }
+  assert.deepEqual(SOURCE_DESCRIPTORS.baiPvcs.idKeys, ["감사원사전컨설팅일련번호"]);
+});
+
+// 노동위 판정은 이 milestone 의 핵심 자료원이라 필드까지 고정한다.
+test("nlrc 는 판정사항·판정요지·전문을 단건으로 준다", () => {
+  const fields = SOURCE_DESCRIPTORS.nlrc.detail.fields.map((f) => f.as);
+
+  for (const key of ["판정사항", "판정요지", "판정결과", "내용"]) {
+    assert.ok(fields.includes(key), `nlrc 단건에 ${key} 없음`);
+  }
+});
+
+test("위원회 검색 응답을 실측 구조대로 읽는다", () => {
+  const root = {
+    Nlrc: {
+      totalCnt: "39363",
+      nlrc: [
+        { id: "1", 사건번호: "2016부해OOO", 제목: "부당해고 구제신청", 결정문일련번호: "15259", 등록일: "20170101" },
+      ],
+    },
+  };
+
+  const { rows, total, warnings } = extractRows(root, SOURCE_DESCRIPTORS.nlrc);
+  assert.equal(total, 39363);
+  assert.equal(rows.length, 1);
+  assert.deepEqual(warnings, [], "선언된 키로 찾았으면 경고가 없어야 한다");
+});
+
+/**
+ * UD0 계열 결함 — 결과가 1건이면 배열이 아니라 객체로 온다(2026-07-21 실측).
+ * 이걸 못 읽으면 `limit: 1` 로 부른 모든 법원이 **조용히 0건**이 된다. LB3 이후 실제로 그랬고,
+ * 위원회 9종 스모크에서야 드러났다.
+ */
+test("행이 1건이면 배열이 아니라 객체로 오는 것을 읽는다", () => {
+  const single = {
+    Nlrc: {
+      totalCnt: "39363",
+      nlrc: { id: "1", 사건번호: "2016부해OOO", 제목: "부당해고 구제신청", 결정문일련번호: "15259" },
+    },
+  };
+
+  const { rows, total, warnings } = extractRows(single, SOURCE_DESCRIPTORS.nlrc);
+  assert.equal(rows.length, 1, "단건 객체를 1행으로 읽어야 한다");
+  assert.equal(total, 39363);
+  assert.deepEqual(warnings, [], "정상 구조이므로 경고 없음");
+});
+
+test("단건 객체 처리는 기존 법원에도 적용된다", () => {
+  const { rows } = extractRows(
+    { Expc: { totalCnt: "31", expc: { 법령해석례일련번호: "1", 안건명: "부당해고기간의 임금" } } },
+    SOURCE_DESCRIPTORS.expc,
+  );
+
+  assert.equal(rows.length, 1);
+});
+
+test("빈 객체는 행으로 세지 않는다", () => {
+  const { rows, total } = extractRows(
+    { Nlrc: { totalCnt: "0", nlrc: {} } },
+    SOURCE_DESCRIPTORS.nlrc,
+  );
+
+  assert.equal(rows.length, 0);
+  assert.equal(total, 0);
+});

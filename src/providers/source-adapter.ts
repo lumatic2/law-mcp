@@ -213,6 +213,116 @@ export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
   },
 };
 
+/**
+ * 위원회 결정문 9종 (UD3 step-1).
+ *
+ * LB3 의 법원 5종은 타깃마다 키가 제각각이라 하나하나 못 박아야 했다. 위원회 계열은 **규칙이
+ * 일정하다** — 2026-07-21 실측으로 9종 전부 확인:
+ *   컨테이너 = 타깃명 첫 글자 대문자(`nlrc` → `Nlrc`) · 행 키 = 타깃명 · 단건 컨테이너 = `<컨테이너>Service`
+ *   단건 조회 파라미터 = `ID`(= 검색이 준 `결정문일련번호`)
+ *
+ * 그래서 규칙을 팩토리로 쓴다. 다른 점은 **행마다 어떤 필드를 들고 있느냐**뿐이라 그것만 인자로 받는다.
+ *
+ * 조회 파라미터 실패 모드도 확인했다: `nlrc` 에 `MST` 나 없는 번호를 주면
+ * `{"Law":"일치하는 결정문이 없습니다..."}` 가 온다 — **`ordin` 처럼 조용히 다른 문서를 주지 않는다.**
+ * 그래도 파라미터는 못 박는다(upstream 이 언제 바뀔지 모르고, LB3 사고가 그렇게 났다).
+ */
+function committee(
+  target: string,
+  label: string,
+  container: string,
+  titleKeys: string[],
+  searchFields: string[],
+  detailFields: string[],
+  idKeys: string[] = ["결정문일련번호"],
+): SourceDescriptor {
+  return {
+    target,
+    label,
+    container,
+    rowKey: target,
+    idKeys,
+    titleKeys,
+    fields: searchFields.map((name) => ({ as: name, from: [name] })),
+    supportsBodySearch: true,
+    detail: {
+      container: `${container}Service`,
+      idParam: "ID",
+      fields: detailFields.map((name) => ({ as: name, from: [name] })),
+    },
+  };
+}
+
+/**
+ * 이 horizon 이 흡수하는 위원회 9종. 조사에서 응답을 확인한 것만 담았고, 실제 노출은
+ * step-3 기여도 게이트가 정한다(대표 쿼리에 못 닿는 자료원은 뺀다).
+ *
+ * `nlrc` 노동위원회 39,363건이 이 묶음의 핵심이다 — 우리 골든셋에서 노동 도메인이 계속 최저였는데,
+ * 부당해고·구제신청 실무는 법원 판례가 아니라 여기서 다뤄진다. 자료원 자체가 없었다.
+ */
+export const COMMITTEE_DESCRIPTORS: Record<string, SourceDescriptor> = {
+  nlrc: committee(
+    "nlrc", "노동위원회 판정", "Nlrc",
+    ["제목"],
+    ["사건번호", "등록일"],
+    ["사건번호", "제목", "담당부서", "기관명", "등록일", "판정사항", "판정요지", "판정결과", "내용"],
+  ),
+  ppc: committee(
+    "ppc", "개인정보보호위원회 결정", "Ppc",
+    ["안건명"],
+    ["의안번호", "의결일", "결정구분", "회의종류"],
+    // 단건 응답이 `의결서` 아래로 한 겹 들어간다 — extractDetail 이 한 단계는 내려가 찾는다.
+    ["안건번호", "의결연월일", "회의종류", "결정요지", "주문", "이유", "배경"],
+  ),
+  nhrck: committee(
+    "nhrck", "국가인권위원회 결정", "Nhrck",
+    ["사건명"],
+    ["사건번호", "위원회명", "의결일자"],
+    ["사건명", "의결일자", "분류명", "피해자", "피신청인", "주문", "결정요지", "판단요지", "이유"],
+  ),
+  sfc: committee(
+    "sfc", "증권선물위원회 의결", "Sfc",
+    ["안건명"],
+    ["의결번호", "기관명"],
+    ["안건명", "의결번호", "기관명", "조치대상자의인적사항", "조치내용", "조치이유"],
+  ),
+  kcc: committee(
+    "kcc", "방송통신위원회 의결", "Kcc",
+    ["안건명"],
+    ["안건번호", "의결일자"],
+    ["안건명", "안건번호", "사건번호", "기관명", "의결일자", "피심인", "주문", "이유"],
+  ),
+  ecc: committee(
+    "ecc", "중앙환경분쟁조정위원회 재정", "Ecc",
+    ["사건명"],
+    ["의결번호"],
+    ["사건명", "의결번호", "피신청인", "사건의개요", "당사자주장", "분쟁의경과", "사실조사결과", "평가의견", "주문", "이유"],
+  ),
+  oclt: committee(
+    "oclt", "중앙토지수용위원회 재결", "Oclt",
+    ["제목"],
+    [],
+    ["제목", "판단"],
+  ),
+  ftc: committee(
+    "ftc", "공정거래위원회 의결", "Ftc",
+    ["사건명"],
+    ["사건번호", "결정번호", "결정일자", "문서유형", "회의종류"],
+    ["사건명", "결정번호", "문서유형", "회의종류", "의결일자", "심의정보", "신청취지", "주문", "결정요지", "이유"],
+  ),
+  baiPvcs: committee(
+    "baiPvcs", "감사원 사전컨설팅 의견서", "BaiPvcs",
+    ["의견서명"],
+    ["접수번호", "신청기관명", "회신일자"],
+    ["의견서명", "접수번호", "신청기관명", "회답일자", "개요", "판단기준", "검토결과", "종합의견", "요지"],
+    // 이 타깃만 일련번호 필드명이 다르다.
+    ["감사원사전컨설팅일련번호"],
+  ),
+};
+
+// LB3 법원 5종 + UD3 위원회 9종. 실제 노출 목록은 `src/index.ts` 의 enum 이 정한다.
+Object.assign(SOURCE_DESCRIPTORS, COMMITTEE_DESCRIPTORS);
+
 export type SourceItem = {
   source_id: string;
   title: string | null;
@@ -241,6 +351,23 @@ function isObjectArray(value: unknown): value is Record<string, unknown>[] {
     && value.length > 0
     && value.every((entry) => entry !== null && typeof entry === "object" && !Array.isArray(entry))
   );
+}
+
+/**
+ * 결과가 **1건이면 배열이 아니라 객체로 온다** — DRF 전반의 특성이다(2026-07-21 실측:
+ * `nlrc`·`expc` 를 `display=1` 로 부르면 행이 단일 객체, `display=2` 면 배열).
+ *
+ * 이걸 놓치면 `limit: 1` 로 부른 모든 법원이 조용히 **0건**이 된다 — LB3 이후 실제로 그랬다.
+ * 검색이 실패한 게 아니라 우리가 못 읽은 것이라 경고조차 뜨지 않았다.
+ */
+function isRowSource(value: unknown): boolean {
+  if (isObjectArray(value)) return true;
+  return Object.keys(asObject(value)).length > 0;
+}
+
+function toRowArray(value: unknown): Record<string, unknown>[] {
+  const list = Array.isArray(value) ? value : [value];
+  return list.map(asObject).filter((row) => Object.keys(row).length > 0);
 }
 
 export type ExtractedRows = {
@@ -274,10 +401,10 @@ export function extractRows(root: unknown, descriptor: SourceDescriptor): Extrac
 
   for (const [containerKey, container] of containers) {
     let rowKey: string | null = null;
-    if (isObjectArray(container[descriptor.rowKey])) {
+    if (isRowSource(container[descriptor.rowKey])) {
       rowKey = descriptor.rowKey;
     } else {
-      rowKey = Object.keys(container).find((key) => isObjectArray(container[key])) ?? null;
+      rowKey = Object.keys(container).find((key) => isRowSource(container[key])) ?? null;
     }
     if (!rowKey) continue;
 
@@ -288,9 +415,7 @@ export function extractRows(root: unknown, descriptor: SourceDescriptor): Extrac
       );
     }
 
-    const rows = (container[rowKey] as Record<string, unknown>[]).filter(
-      (row) => Object.keys(asObject(row)).length > 0,
-    );
+    const rows = toRowArray(container[rowKey]);
     const totalRaw = pickString(container, ["totalCnt", "TotalCnt"]);
     const total = totalRaw ? Number(totalRaw) : rows.length;
     return { rows, total: Number.isFinite(total) ? total : rows.length, warnings };
