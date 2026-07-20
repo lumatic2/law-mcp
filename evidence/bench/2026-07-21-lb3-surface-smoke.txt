@@ -1,0 +1,23 @@
+도구 11개: search_law, get_law_article, search_precedents, get_precedent, search_admin_rules, get_admin_rule, batch_validate_legal_terms, suggest_term_patches, verify_citation, search_legal_source, get_legal_source
+
+[expc] "도로점용허가" -> 법령해석례 total=27 items=2
+   1위: 경상남도 - 숙박시설 진출입로 개설을 위한 연결허가 시 의제되는 도로점용허가의 허가면적(「도로법」 제52조제5항 등 관련)
+   get -> 필드 8개
+
+[detc] "명예훼손" -> 헌재결정례 total=2 items=2
+   1위: 명예훼손에 대한 반의사불벌죄 위헌확인
+   get -> 필드 5개
+
+[decc] "정보공개" -> 행정심판재결례 total=2442 items=2
+   1위: 2019경기행심○○○ 정보공개 이행청구
+   get -> 필드 9개
+
+[ordin] "주차장 조례" -> 자치법규 total=843 items=2
+   1위: 가평군 전통시장 공영주차장 관리 운영 조례
+   get -> 필드 8개, 조문 10건
+
+[lstrm] "공소시효" -> 법령용어 total=2 items=2
+   1위: 공소시효기간
+   get -> 필드 4개
+
+FAILPROBE 없는 ID: isError=true / ERROR: Legal source document not found: source=expc, source_id=99999999999

@@ -385,5 +385,80 @@ server.registerTool(
   },
 );
 
+// --- 법원(法源) 5종 (LB3 step-3) --------------------------------------------
+// 기여도 게이트 결과: 법원별 대표 쿼리에서 5종 전부 이름매칭 도달 ≥1 → 전부 등록한다.
+// 다만 법원마다 search/get 2개씩 노출하면 도구가 +10 개가 된다(plan 프리모템 시나리오 3).
+// `source` 를 파라미터로 받는 **도구 2개**로 5종을 모두 덮는다 — 표면은 9 → 11.
+const LEGAL_SOURCES = ["expc", "detc", "decc", "ordin", "lstrm"] as const;
+
+server.registerTool(
+  "search_legal_source",
+  {
+    title: "Search Legal Source",
+    description:
+      "Search Korean legal sources other than statutes and court precedents: "
+      + "expc=법령해석례 (MOLEG statutory interpretations), detc=헌재결정례 (Constitutional Court), "
+      + "decc=행정심판재결례 (administrative appeals), ordin=자치법규 (local ordinances), "
+      + "lstrm=법령용어 (statutory term dictionary). "
+      + "Works best when the query is a topic/case name, since the primary match is on the document "
+      + "title. If the title match returns 0 results the tool falls back to full-text search, then a "
+      + "relaxed query — and a warning says so. Treat fallback results with suspicion: upstream "
+      + "full-text results are ordered by 가나다 (alphabet), NOT by relevance. "
+      + "Note lstrm indexes terms *defined in statutes*, so common doctrinal words like 정당방위 "
+      + "return 0 results.",
+    inputSchema: {
+      source: z.enum(LEGAL_SOURCES).describe("검색할 법원(法源)"),
+      query: z.string().min(1),
+      limit: z.number().int().min(1).max(100).default(10),
+    },
+  },
+  async ({ source, query, limit }) => {
+    try {
+      const result = await provider.searchLegalSource(source, query, { limit });
+      return {
+        content: [{ type: "text", text: toText(result) }],
+        structuredContent: toStructuredContent(result),
+      };
+    } catch (error) {
+      return toMcpErrorResponse(error);
+    }
+  },
+);
+
+server.registerTool(
+  "get_legal_source",
+  {
+    title: "Get Legal Source",
+    description:
+      "Get the full document for a legal source item found via search_legal_source. Pass the same "
+      + "`source` and the `source_id` returned by the search. 자치법규 results additionally include "
+      + "an `articles` array (조문번호/조제목/조내용).",
+    inputSchema: {
+      source: z.enum(LEGAL_SOURCES).describe("조회할 법원(法源) — 검색에 쓴 값과 같아야 한다"),
+      source_id: z.string().min(1).describe("search_legal_source 가 돌려준 source_id"),
+    },
+  },
+  async ({ source, source_id }) => {
+    try {
+      const result = await provider.getLegalSource(source, source_id);
+      if (!result) {
+        return toMcpErrorResponse(
+          createMcpError({
+            code: "NOT_FOUND",
+            message: `Legal source document not found: source=${source}, source_id=${source_id}`,
+            retryable: false,
+          }),
+        );
+      }
+      return {
+        content: [{ type: "text", text: toText(result) }],
+        structuredContent: toStructuredContent(result),
+      };
+    } catch (error) {
+      return toMcpErrorResponse(error);
+    }
+  },
+);
+
 const transport = new StdioServerTransport();
 await server.connect(transport);

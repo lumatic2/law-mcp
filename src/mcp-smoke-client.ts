@@ -1,10 +1,15 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function main(): Promise<void> {
   const transport = new StdioClientTransport({
     command: "node",
-    args: ["C:\\Users\\1\\Projects\\law-mcp\\dist\\index.js"],
+    // 이 파일 기준 상대경로. 예전에는 다른 머신의 절대경로가 박혀 있어 이 레포에서 실행되지 않았다.
+    args: [path.resolve(__dirname, "../dist/index.js")],
   });
 
   const client = new Client({ name: "law-mcp-smoke-client", version: "0.1.0" });
