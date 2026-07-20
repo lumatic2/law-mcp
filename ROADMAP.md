@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-21
-> 상태: horizon `upstream-delivery` — UD1 완료, UD2 대기(F12 휴지 후 기준선 재측정이 선행)
+> 상태: horizon `upstream-delivery` — UD1·UD3 완료, **UD2 step-2 대기**(F12 휴지 후 기준선 재측정이 선행)
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -40,25 +40,27 @@
 - DoD: 교차 측정 dev A/B 에서 `aiSearch` 병합의 **순 이득 ≥3건** + **새로 깨지는 쿼리 0** + 쿼리 단위 승패 표
   + `aiSearch` 장애 시 graceful degrade(테스트 고정) + 조문이 **제품 응답으로 출하**되고 그 정확도가
   제품 경로 기준으로 측정됨(F4 해소) + 추가 호출 ≤1 · 지연 ≤3초 + 배포 사본 build + 실 MCP 스모크.
-- Evidence: (실행 시 기록)
+- Evidence: changesets/20260721-ud2-aisearch-client (step-1 완료 / step-2~4 대기)
 - Gap: 관련도 랭킹이 있는 엔드포인트가 따로 있었는데 5 milestone 동안 몰랐다. 92% vs 76% 격차이고
   응답이 조문 단위다 (research 2026-07-21 §★)
 - Scale: changesets>=4; surfaces: 검색 후보 생성·MCP 응답 스키마·bench·실 MCP; capability: upstream 최선 경로로 답한다
 - Plan: `plans/2026-07-21-ud2-aisearch-adoption.md`
 - Status: [ ]
 
-<!-- harness:milestone id="UD3" status="pending" priority="P1" evidence="" -->
+<!-- harness:milestone id="UD3" status="completed" priority="P1" evidence="changesets/20260721-ud3-committee-sources + changesets/20260721-ud3-delegated-articles + changesets/20260721-ud3-contribution-gate + evidence/bench/2026-07-21-ud3-contribution.md" -->
 ### UD3 — 미접근 자료원 흡수 (위원회 결정문 + 위임조문)
 - DoD: 위원회 결정문이 실 API 도달 + descriptor 마다 조회 파라미터가 테스트로 고정 +
   `get_law_article` 이 위임 하위 조문을 함께 반환 + **도구 표면 증가 ≤1** + 자료원별 대표 쿼리
   기여도 표 제시(미도달 자료원 미등록) + 배포 사본 build + 실 MCP 스모크.
-- Evidence: (실행 시 기록)
+- Evidence: changesets/20260721-ud3-committee-sources + changesets/20260721-ud3-delegated-articles + changesets/20260721-ud3-contribution-gate + evidence/bench/2026-07-21-ud3-contribution.md
 - Gap: 노동위원회 판정 39,363건이 통째로 사각지대다 — 노동 도메인 저점수의 원인이 용어 갭만이
   아니라 자료원 부재였다. `lsDelegated` 위임 점프도 미사용 (research 2026-07-21 §A-1·§A-2)
 - Scale: changesets>=3; surfaces: source descriptor·MCP 도구·실 API·npm test; capability: 랭킹으로 못 메우는 갭을 자료원으로 메운다
 - Plan: `plans/2026-07-21-ud3-untapped-sources.md`
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-21
+- Summary: 위원회 9종 흡수(기여도 9/9) + 위임조문 점프. 도구 11개 불변, source enum 5→14. limit:1 이면 0건이던 기존 결함도 수리
 ## Next Candidates
 - `dlytrm` 일상용어 재평가 (LB5 제외 근거가 부분적이었음 — 검색은 정상, 관계 조회만 불안정)
 - `specialDeccTt` 조세심판원 파라미터 재확인 (이 레포 최초 소비처와 직결)
