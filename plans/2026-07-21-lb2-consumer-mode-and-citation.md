@@ -3,7 +3,7 @@
 > 생성: 2026-07-21 · 갈래: tooling
 > milestone-레벨 durable plan doc.
 
-Status: approved (2026-07-21 · 위임 범위 A — horizon 전체 연쇄)
+Status: completed (2026-07-21 — 4/4 step + emergent leaf F4. 승인 시점 문구는 진행 로그 참조)
 Supersedes: plans/2026-07-20-lb2-article-level-reach.md
 
 ## Objective → horizon → milestone → step (위계)
@@ -131,4 +131,8 @@ Supersedes: plans/2026-07-20-lb2-article-level-reach.md
 
 ## 진행 로그 (append-only)
 
-- 2026-07-21 구 plan step-2 기각 → 선행 사례 조사 → 이 승계 plan 작성·승인
+- 2026-07-21 구 plan step-2 기각 → 선행 사례 조사 → 이 승계 plan 작성·승인(위임 범위 A)
+- 2026-07-21 step-1~4 완료 + emergent leaf F4(조문 제목 가중) 채택. LB2 완료 처리.
+- ⚠ 운영 메모: 승인 후 이 문서의 체크박스를 갱신해 승인 hash 가 깨졌다(harness 규약 위반 —
+  진행 상태의 정본은 `work.json`·changeset 이고 plan 은 승인 시점으로 동결해야 한다).
+  완료 시점에 receipt 를 재등록해 복구했다. 다음부터는 체크박스를 건드리지 않는다.
