@@ -41,16 +41,18 @@
 
 - Completed at: 2026-07-21
 - Summary: verify_citation 신설 + 2모드 측정(dev blind 44.0%/assisted 62.5%, holdout 60.0%/73.3%) + C안 조건부 판정
-<!-- harness:milestone id="LB3" status="pending" priority="P1" -->
+<!-- harness:milestone id="LB3" status="completed" priority="P1" evidence="changesets/20260720-lb3-source-adapter + changesets/20260720-lb3-source-tools + changesets/20260720-lb3-contribution-gate + evidence/bench/2026-07-21-lb3-contribution.md" -->
 ### LB3 — 누락 법원(法源) 5종 도구화
 - DoD: 등록된 법원 도구가 각 실 API 1건 이상 도달 + 기여도 리포트 수치 제시 + 기여 0 법원 미등록
   + 기존 도구 회귀 없음.
-- Evidence: `plans/2026-07-20-lb3-missing-sources.md` + `evidence/bench/2026-07-20-lb3-contribution.md`
+- Evidence: changesets/20260720-lb3-source-adapter + changesets/20260720-lb3-source-tools + changesets/20260720-lb3-contribution-gate + evidence/bench/2026-07-21-lb3-contribution.md
 - Gap: 법령해석례·헌재결정례·행정심판재결례·자치법규·법령용어 타깃이 전부 실재하는데 미지원
   (research 2026-07-20 §2)
 - Scale: changesets>=3; surfaces: MCP 도구·실 API·npm test; capability: 법령·판례 밖 법원에 도달
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-21
+- Summary: 법원 5종 도구화 — 공통 어댑터로 도구 2개에 담고(표면 9→11) 기여도 실측으로 게이트
 <!-- harness:milestone id="LB4" status="pending" priority="P2" -->
 ### LB4 — 설치 가능성 (배포·발견성)
 - DoD: 외부인이 README 만으로 설치 가능(빈 환경 1회 재현). 공개 범위·배포 채널은 사용자 소유 결정.
