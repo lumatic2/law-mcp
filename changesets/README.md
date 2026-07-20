@@ -15,6 +15,7 @@
 | 5 | [20260721-ud1-golden-v2](20260721-ud1-golden-v2/README.md) | 2026-07-21 | bench/golden-v2.json (신규), bench/verify-labels.ts(--set), test/golden-v2.test.ts (신규) | ✅ | done |
 | 6 | [20260721-ud1-repeat-runner](20260721-ud1-repeat-runner/README.md) | 2026-07-21 | bench/run.ts(--set/--repeat/봉인), bench/scoring.ts(aggregateRepeats), test/bench-runner.test.ts (신규) | ✅ | done |
 | 7 | [20260721-ud1-baseline-v2](20260721-ud1-baseline-v2/README.md) | 2026-07-21 | bench/run.ts(회차별 캐시 재생성), evidence/bench/2026-07-21-ud1-baseline-v2.* | ✅ | done |
+| 8 | [20260721-ud2-aisearch-client](20260721-ud2-aisearch-client/README.md) | 2026-07-21 | src/ai-search.ts (신규), test/ai-search.test.ts (신규) | ✅ | done |
 
 ## 운영 원칙
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "ud1-measurement-rebuild",
+  "active_work_id": "ud2-aisearch-adoption",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -327,7 +327,63 @@
       "owner_session_uuid": "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b",
       "updated_at": "2026-07-21",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
-      "completion_summary": "다음 개선이 진짜인지 판정할 수 있는 상태로 되돌렸다 — 새 평가 세트 40건을 실 API 근거로 라벨링하고, 홀드아웃 봉인을 코드로 강제했다. 그 과정에서 get_law_article 이 다른 법의 조문을 조용히 반환하던 결함을 찾아 고쳤다."
+      "completion_summary": "다음 개선이 진짜인지 판정할 수 있는 상태로 되돌렸다 — 새 평가 세트 40건을 실 API 근거로 라벨링하고, 홀드아웃 봉인을 코드로 강제했다. 그 과정에서 get_law_article 이 다른 법의 조문을 조용히 반환하던 결함을 찾아 고쳤다.",
+      "notified_at": "2026-07-20T18:53:22.433737+00:00"
+    },
+    "ud2-aisearch-adoption": {
+      "work_id": "ud2-aisearch-adoption",
+      "horizon_id": "upstream-delivery",
+      "milestone_id": "UD2",
+      "status": "active",
+      "plan_path": "plans/2026-07-21-ud2-aisearch-adoption.md",
+      "changeset_path": "changesets/20260721-ud2-aisearch-client",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1** aisearch-client — `aiSearch` 클라이언트 + 응답 계약 고정",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2** candidate-merge — 후보 생성 편입 + dev A/B",
+          "status": "pending"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3** article-shipping — 조문을 제품 경로로 출하 (F4 해소)",
+          "status": "pending"
+        },
+        {
+          "id": "step-4",
+          "label": "step-4** verdict — 종합 판정 + 배포",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-21",
+        "plan_sha256": "578a1b65923655ae8ff069abf9a862f55dc8427ff037c81f4c83c991cc9908c6"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b"
+      ],
+      "owner_session_uuid": "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b",
+      "updated_at": "2026-07-21",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
     }
   }
 }
