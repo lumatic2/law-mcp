@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "lb2-article-level-reach",
+  "active_work_id": "lb2-consumer-mode-citation",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -57,7 +57,7 @@
       "work_id": "lb2-article-level-reach",
       "horizon_id": "general-legal-coverage",
       "milestone_id": "LB2",
-      "status": "blocked",
+      "status": "superseded",
       "plan_path": "plans/2026-07-20-lb2-article-level-reach.md",
       "changeset_path": "changesets/20260720-lb2-article-index",
       "next_step": "step-1",
@@ -99,10 +99,63 @@
         "external_authority_required",
         "user_stopped"
       ],
-      "stop_reason": "decision_required",
-      "stop_detail": {
-        "summary": "law-mcp 검색 개선안(조문 재정렬)이 실측에서 기각됐다 — 정답 법령이 후보 목록에 아예 없어서 순서를 바꿔도 소용이 없다. 후보를 어떻게 만들지 세 방향 중 무엇으로 갈지 결정이 필요하다."
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b"
+      ],
+      "owner_session_uuid": "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b",
+      "updated_at": "2026-07-21",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+    },
+    "lb2-consumer-mode-citation": {
+      "work_id": "lb2-consumer-mode-citation",
+      "horizon_id": "general-legal-coverage",
+      "milestone_id": "LB2",
+      "status": "active",
+      "plan_path": "plans/2026-07-21-lb2-consumer-mode-and-citation.md",
+      "changeset_path": "changesets/20260721-lb2-two-mode-bench",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1** two-mode-bench — 벤치 2모드 확장 + dev 재측정",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2** verify-citation — 인용 검증 도구 신설",
+          "status": "pending"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3** curation-verdict — C안 필요 여부 판정",
+          "status": "pending"
+        },
+        {
+          "id": "step-4",
+          "label": "step-4** holdout — 홀드아웃 2모드 1회 측정",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-21",
+        "plan_sha256": "141d2f4c98ae6c77c1e8ab8d5085354b243c3c0fdee38ba07be623fb1be65ab7"
       },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
       "session_ids": [
         "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b"
       ],

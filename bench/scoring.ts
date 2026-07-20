@@ -39,7 +39,13 @@ export type ItemOutcome = {
   precHit: boolean;
   articleChecked: boolean;
   articleCorrect: boolean;
+  /** assisted 모드: 정답 조문이 상위 3 조문 안에 있었는가 */
+  articleCorrectAt3?: boolean;
   returned: string[];
+  /** assisted 모드에서 도구가 고른 조문(표시형) */
+  predictedArticles?: string[];
+  /** 측정 대상이 아닌 사유 (조문 라벨 없음 등) — 에러와 구분한다 */
+  skipped?: string;
   error?: string;
 };
 
@@ -57,6 +63,33 @@ export type Summary = {
 
 function ratio(part: number, whole: number): number {
   return whole === 0 ? 0 : Number((part / whole).toFixed(4));
+}
+
+export type AssistedSummary = {
+  total: number;
+  measured: number;
+  skipped: number;
+  errors: number;
+  accuracy_at_1: number;
+  accuracy_at_3: number;
+};
+
+/**
+ * assisted 모드 요약 — **조문 도달** 지표다. blind 의 recall(법령 찾기)과 성격이 달라
+ * 합산하지 않는다(계획 결정: 두 수치를 섞으면 "법령 찾기 성능"으로 오독된다).
+ */
+export function summarizeAssisted(outcomes: ItemOutcome[]): AssistedSummary {
+  const errors = outcomes.filter((o) => o.error).length;
+  const skipped = outcomes.filter((o) => !o.error && o.skipped).length;
+  const measured = outcomes.filter((o) => !o.error && !o.skipped && o.articleChecked);
+  return {
+    total: outcomes.length,
+    measured: measured.length,
+    skipped,
+    errors,
+    accuracy_at_1: ratio(measured.filter((o) => o.articleCorrect).length, measured.length),
+    accuracy_at_3: ratio(measured.filter((o) => o.articleCorrectAt3).length, measured.length),
+  };
 }
 
 /** 에러 항목은 scored 에서 빼되 total 에는 남긴다 — 실패를 0점으로 숨기지 않기 위함. */

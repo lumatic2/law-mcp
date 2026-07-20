@@ -6,6 +6,7 @@ import {
   normalizeName,
   parseArticleLabel,
   summarize,
+  summarizeAssisted,
   type ItemOutcome,
 } from "../bench/scoring.js";
 
@@ -85,4 +86,29 @@ test("summarize reports article accuracy only over checked items", () => {
 
   assert.equal(summary.article_checked, 2);
   assert.equal(summary.article_accuracy, 0.5);
+});
+
+test("summarizeAssisted separates measured, skipped and error items", () => {
+  const summary = summarizeAssisted([
+    outcome({ articleChecked: true, articleCorrect: true, articleCorrectAt3: true }),
+    outcome({ articleChecked: true, articleCorrectAt3: true }),
+    outcome({ articleChecked: true }),
+    outcome({ skipped: "조문 라벨 없음" }),
+    outcome({ error: "auth failed" }),
+  ]);
+
+  assert.equal(summary.total, 5);
+  assert.equal(summary.measured, 3);
+  assert.equal(summary.skipped, 1);
+  assert.equal(summary.errors, 1);
+  assert.equal(summary.accuracy_at_1, 0.3333);
+  assert.equal(summary.accuracy_at_3, 0.6667);
+});
+
+// 측정 대상이 하나도 없을 때 0으로 나누지 않는다(빈 홀드아웃·라벨 없는 split 방어)
+test("summarizeAssisted returns zero accuracy instead of NaN when nothing is measurable", () => {
+  const summary = summarizeAssisted([outcome({ skipped: "조문 라벨 없음" })]);
+  assert.equal(summary.measured, 0);
+  assert.equal(summary.accuracy_at_1, 0);
+  assert.equal(summary.accuracy_at_3, 0);
 });
