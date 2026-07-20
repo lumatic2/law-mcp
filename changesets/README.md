@@ -13,6 +13,7 @@
 | 3 | [20260712-ib2-term-bridge](20260712-ib2-term-bridge/README.md) | 2026-07-12 | term-bridge.ts (신규), lawgo-provider.ts, test/term-bridge.test.ts (신규) | ✅ | done |
 | 4 | [20260721-ud0-law-name-resolution](20260721-ud0-law-name-resolution/README.md) | 2026-07-21 | lawgo-provider.ts(resolveLawId·pickLawIdByName), test/law-name-resolution.test.ts (신규) | ✅ | done |
 | 5 | [20260721-ud1-golden-v2](20260721-ud1-golden-v2/README.md) | 2026-07-21 | bench/golden-v2.json (신규), bench/verify-labels.ts(--set), test/golden-v2.test.ts (신규) | ✅ | done |
+| 6 | [20260721-ud1-repeat-runner](20260721-ud1-repeat-runner/README.md) | 2026-07-21 | bench/run.ts(--set/--repeat/봉인), bench/scoring.ts(aggregateRepeats), test/bench-runner.test.ts (신규) | ✅ | done |
 
 ## 운영 원칙
 

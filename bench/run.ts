@@ -18,6 +18,7 @@ import {
   parseArticleLabel,
   summarize,
   summarizeAssisted,
+  aggregateRepeats,
   type ItemOutcome,
 } from "./scoring.js";
 
@@ -36,9 +37,12 @@ function parseArgs(argv: string[]) {
     return index >= 0 ? argv[index + 1] : undefined;
   };
   return {
+    set: get("--set") ?? "golden",
     split: get("--split") ?? "dev",
     label: get("--label"),
     limit: get("--limit") ? Number(get("--limit")) : undefined,
+    repeat: get("--repeat") ? Number(get("--repeat")) : 1,
+    holdoutSealBroken: argv.includes("--i-am-closing-the-horizon"),
     dryRun: argv.includes("--dry-run"),
     // blind = 자연어 쿼리로 법령을 찾는다(기존 기본값 — 기존 측정과 재현 비교 가능).
     // assisted = 법령명을 소비자가 준다고 가정하고 조문 도달만 잰다(선행 사례의 표준 소비 패턴).
@@ -149,10 +153,28 @@ async function scoreItem(provider: LawGoProvider, item: Item): Promise<ItemOutco
   }
 }
 
+/**
+ * 홀드아웃 봉인 (UD1 step-2).
+ *
+ * LB5 에서 홀드아웃 15건이 소진된 이유는 규약이 **문서에만** 있었기 때문이다("bench/README.md
+ * 참조"). 사람 기억에 맡기면 튜닝 중에 한 번 열게 되고, 그러면 그 세트는 죽는다.
+ * golden-v2 의 홀드아웃은 horizon close 시 1회만 연다 — 그 규약을 여기서 **코드로** 강제한다.
+ */
+export function assertHoldoutSeal(split: string, sealBroken: boolean): void {
+  if (split !== "holdout" || sealBroken) return;
+  throw new Error(
+    "홀드아웃은 봉인돼 있다 — horizon close 시 1회만 연다.\n" +
+      "  정말 닫는 시점이면 --i-am-closing-the-horizon 을 붙여라.\n" +
+      "  튜닝·A/B 중이라면 --split dev 를 써라(홀드아웃을 열면 그 세트는 죽는다).",
+  );
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
+  assertHoldoutSeal(args.split, args.holdoutSealBroken);
+
   const golden = JSON.parse(
-    readFileSync(new URL("./golden.json", import.meta.url), "utf8"),
+    readFileSync(new URL(`./${args.set}.json`, import.meta.url), "utf8"),
   ) as { items: Item[] };
 
   let items = golden.items.filter((i) => i.split === args.split);
@@ -175,10 +197,94 @@ async function main() {
 
   const provider = new LawGoProvider();
   const assisted = args.mode === "assisted";
+
+  // 반복 측정 — 2회차부터는 진행 로그를 줄이고 수치만 모은다.
+  const repeat = Math.max(1, args.repeat);
+  const passes: ItemOutcome[][] = [];
+  for (let round = 0; round < repeat; round += 1) {
+    if (repeat > 1) console.log(`\n--- 반복 ${round + 1}/${repeat} ---`);
+    passes.push(await runPass(provider, items, assisted, repeat === 1 || round === 0));
+  }
+  const outcomes = passes[0];
+
+  if (repeat > 1) {
+    const key = assisted ? "accuracy@3" : "recall@3";
+    const values = passes.map((p) =>
+      assisted ? summarizeAssisted(p).accuracy_at_3 : summarize(p).recall_at_3,
+    );
+    const stats = aggregateRepeats(values);
+    console.log(`\n=== 반복 측정 (${key}, n=${stats.n}) ===`);
+    console.log(`  평균     ${(stats.mean * 100).toFixed(1)}%`);
+    console.log(`  표준편차 ${stats.sd === null ? "n/a (n=1)" : `${(stats.sd * 100).toFixed(1)}%p`}`);
+    console.log(`  범위     ${(stats.min * 100).toFixed(1)}% ~ ${(stats.max * 100).toFixed(1)}%`);
+    console.log(
+      `  채택 문턱(2σ) ${stats.threshold_2sd === null ? "판정 불가" : `${(stats.threshold_2sd * 100).toFixed(1)}%p`}` +
+        ` — 이보다 작은 차이는 노이즈와 구분되지 않는다`,
+    );
+    console.log(`  각 회차: ${stats.values.map((v) => `${(v * 100).toFixed(1)}%`).join(" / ")}`);
+    const statsPath = resolve("evidence/bench", `${args.date}-${args.label ?? args.split}-repeat.json`);
+    mkdirSync(resolve("evidence/bench"), { recursive: true });
+    writeFileSync(
+      statsPath,
+      JSON.stringify({ date: args.date, set: args.set, split: args.split, mode: args.mode, metric: key, stats }, null, 2) + "\n",
+      "utf8",
+    );
+    console.log(`  → ${statsPath}`);
+  }
+
+  if (assisted) {
+    const summary = summarizeAssisted(outcomes);
+    const label = args.label ?? `${args.split}-assisted`;
+    const outPath = resolve("evidence/bench", `${args.date}-${label}.json`);
+    mkdirSync(resolve("evidence/bench"), { recursive: true });
+    writeFileSync(
+      outPath,
+      JSON.stringify({ date: args.date, set: args.set, split: args.split, mode: "assisted", summary, outcomes }, null, 2) + "\n",
+      "utf8",
+    );
+    console.log("\n=== 요약 (assisted — 조문 도달 지표. blind recall 과 합산 금지) ===");
+    console.log(`  accuracy@1      ${(summary.accuracy_at_1 * 100).toFixed(1)}%`);
+    console.log(`  accuracy@3      ${(summary.accuracy_at_3 * 100).toFixed(1)}%`);
+    console.log(`  측정 ${summary.measured}건 / 대상 아님 ${summary.skipped}건 / 에러 ${summary.errors}건`);
+    console.log(`  → ${outPath}`);
+    return;
+  }
+
+  const summary = summarize(outcomes);
+  const label = args.label ?? `${args.split}`;
+  const outPath = resolve("evidence/bench", `${args.date}-${label}.json`);
+  mkdirSync(resolve("evidence/bench"), { recursive: true });
+  writeFileSync(
+    outPath,
+    JSON.stringify({ date: args.date, set: args.set, split: args.split, summary, outcomes }, null, 2) + "\n",
+    "utf8",
+  );
+
+  console.log("\n=== 요약 ===");
+  console.log(`  recall@3        ${(summary.recall_at_3 * 100).toFixed(1)}%  (1차 지표)`);
+  console.log(`  recall@1        ${(summary.recall_at_1 * 100).toFixed(1)}%`);
+  console.log(`  판례 hit율      ${(summary.precedent_hit_rate * 100).toFixed(1)}%  (품질 지표 아님)`);
+  console.log(`  조문 정확도     ${summary.article_accuracy === null ? "미측정" : `${(summary.article_accuracy * 100).toFixed(1)}%`}`);
+  console.log(`  채점 ${summary.scored}건 / 에러 ${summary.errors}건`);
+  console.log(`  도메인별 recall@3: ${Object.entries(summary.by_domain).map(([k, v]) => `${k}=${(v.recall_at_3 * 100).toFixed(0)}%`).join(" ")}`);
+  console.log(`  → ${outPath}`);
+}
+
+async function runPass(
+  provider: LawGoProvider,
+  items: Item[],
+  assisted: boolean,
+  verbose: boolean,
+): Promise<ItemOutcome[]> {
   const outcomes: ItemOutcome[] = [];
   for (const [index, item] of items.entries()) {
     const outcome = assisted ? await scoreAssisted(provider, item) : await scoreItem(provider, item);
     outcomes.push(outcome);
+
+    if (!verbose) {
+      process.stdout.write(".");
+      continue;
+    }
 
     if (assisted) {
       const mark = outcome.error ? "ERR " : outcome.skipped ? "SKIP" : outcome.articleCorrect ? "OK@1" : outcome.articleCorrectAt3 ? "OK@3" : "MISS";
@@ -197,42 +303,12 @@ async function main() {
     }
   }
 
-  if (assisted) {
-    const summary = summarizeAssisted(outcomes);
-    const label = args.label ?? `${args.split}-assisted`;
-    const outPath = resolve("evidence/bench", `${args.date}-${label}.json`);
-    mkdirSync(resolve("evidence/bench"), { recursive: true });
-    writeFileSync(
-      outPath,
-      JSON.stringify({ date: args.date, split: args.split, mode: "assisted", summary, outcomes }, null, 2) + "\n",
-      "utf8",
-    );
-    console.log("\n=== 요약 (assisted — 조문 도달 지표. blind recall 과 합산 금지) ===");
-    console.log(`  accuracy@1      ${(summary.accuracy_at_1 * 100).toFixed(1)}%`);
-    console.log(`  accuracy@3      ${(summary.accuracy_at_3 * 100).toFixed(1)}%`);
-    console.log(`  측정 ${summary.measured}건 / 대상 아님 ${summary.skipped}건 / 에러 ${summary.errors}건`);
-    console.log(`  → ${outPath}`);
-    return;
-  }
 
-  const summary = summarize(outcomes);
-  const label = args.label ?? `${args.split}`;
-  const outPath = resolve("evidence/bench", `${args.date}-${label}.json`);
-  mkdirSync(resolve("evidence/bench"), { recursive: true });
-  writeFileSync(
-    outPath,
-    JSON.stringify({ date: args.date, split: args.split, summary, outcomes }, null, 2) + "\n",
-    "utf8",
-  );
-
-  console.log("\n=== 요약 ===");
-  console.log(`  recall@3        ${(summary.recall_at_3 * 100).toFixed(1)}%  (1차 지표)`);
-  console.log(`  recall@1        ${(summary.recall_at_1 * 100).toFixed(1)}%`);
-  console.log(`  판례 hit율      ${(summary.precedent_hit_rate * 100).toFixed(1)}%  (품질 지표 아님)`);
-  console.log(`  조문 정확도     ${summary.article_accuracy === null ? "미측정(LB2)" : `${(summary.article_accuracy * 100).toFixed(1)}%`}`);
-  console.log(`  채점 ${summary.scored}건 / 에러 ${summary.errors}건`);
-  console.log(`  도메인별 recall@3: ${Object.entries(summary.by_domain).map(([k, v]) => `${k}=${(v.recall_at_3 * 100).toFixed(0)}%`).join(" ")}`);
-  console.log(`  → ${outPath}`);
+  return outcomes;
 }
 
-main();
+// 테스트가 이 모듈을 import 할 때(assertHoldoutSeal 계약 검증) 러너가 돌면 안 된다 —
+// 직접 실행됐을 때만 main 을 부른다.
+if ((process.argv[1] ?? "").split("\\").join("/").endsWith("bench/run.ts")) {
+  main();
+}

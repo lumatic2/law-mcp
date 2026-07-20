@@ -121,3 +121,41 @@ export function summarize(outcomes: ItemOutcome[]): Summary {
     by_domain: byDomain,
   };
 }
+
+/**
+ * 반복 측정 집계 (UD1 step-2).
+ *
+ * 왜 필요한가: 같은 코드로 공식 러너를 두 번 돌려 72.0%/76.0% 가 나왔다(LB5). upstream 이
+ * 비결정적이라 1회 측정으로는 4%p 이하 차이를 판정할 수 없다. 표준편차를 붙여야
+ * "이득인가 노이즈인가"를 말할 수 있다.
+ *
+ * 표본표준편차(n-1)를 쓴다 — 우리는 모집단이 아니라 실행 표본을 잰다.
+ * n=1 이면 편차를 **0 이 아니라 null** 로 낸다. 0 은 "흔들리지 않았다"는 거짓 주장이 된다.
+ */
+export type RepeatStats = {
+  n: number;
+  mean: number;
+  sd: number | null;
+  min: number;
+  max: number;
+  /** 채택 문턱 — 이 값을 넘는 차이만 이득으로 인정한다. n=1 이면 판정 불가(null). */
+  threshold_2sd: number | null;
+  values: number[];
+};
+
+export function aggregateRepeats(values: number[]): RepeatStats {
+  if (values.length === 0) throw new Error("반복 측정값이 비어 있다");
+  const n = values.length;
+  const mean = values.reduce((a, b) => a + b, 0) / n;
+  const sd =
+    n < 2 ? null : Math.sqrt(values.reduce((acc, v) => acc + (v - mean) ** 2, 0) / (n - 1));
+  return {
+    n,
+    mean,
+    sd,
+    min: Math.min(...values),
+    max: Math.max(...values),
+    threshold_2sd: sd === null ? null : 2 * sd,
+    values,
+  };
+}
