@@ -50,7 +50,8 @@
       ],
       "owner_session_uuid": "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b",
       "updated_at": "2026-07-20",
-      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "law-mcp 검색 품질을 처음으로 수치화했다 — 비세무 5도메인 골든셋 40건과 채점 러너를 만들고 기준선 recall@3 44%를 확정했다(노동·형사가 각 20%로 최악)."
     }
   }
 }

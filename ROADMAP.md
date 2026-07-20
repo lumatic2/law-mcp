@@ -1,7 +1,7 @@
 # ROADMAP
 
-> 마지막 업데이트: 2026-07-12
-> 상태: issueback-repair-h8ta2 완료(2026-07-12) — active 없음, 새 후보는 소비자 issue-back 대기
+> 마지막 업데이트: 2026-07-21
+> 상태: horizon `general-legal-coverage` 진행 중 — LB1 완료(기준선 recall@3 44.0%), 다음 LB2
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -18,15 +18,17 @@
 
 ## Active Milestones
 
-<!-- harness:milestone id="LB1" status="active" priority="P0" -->
+<!-- harness:milestone id="LB1" status="completed" priority="P0" evidence="changesets/20260720-lb1-golden-set + changesets/20260720-lb1-bench-runner + changesets/20260720-lb1-baseline + evidence/bench/2026-07-20-baseline.json" -->
 ### LB1 — 정답 도달 측정 하네스
 - DoD: `npm run bench:golden -- --split dev` 가 실 API 로 완주해 recall@3 기준선을 파일로 남긴다.
   홀드아웃은 미측정 봉인. 검색 로직은 이 milestone 에서 변경하지 않는다.
-- Evidence: `plans/2026-07-20-lb1-answer-reach-harness.md` + `evidence/bench/2026-07-20-baseline.json`
+- Evidence: changesets/20260720-lb1-golden-set + changesets/20260720-lb1-bench-runner + changesets/20260720-lb1-baseline + evidence/bench/2026-07-20-baseline.json
 - Gap: 검색 품질이 인상뿐이라 개선을 주장·반증할 수 없다 (research 2026-07-20 §1)
 - Scale: changesets>=3; surfaces: bench 러너·실 API·npm test; capability: 검색 품질을 수치로 측정
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-21
+- Summary: 골든셋 40건·채점 러너·기준선 recall@3 44.0% 확정
 <!-- harness:milestone id="LB2" status="pending" priority="P0" -->
 ### LB2 — 조문 단위 도달 + 랭킹 실질 개선
 - DoD: `search_law_articles` 실 API 도달 + dev recall@3 기준선 대비 상승 + 홀드아웃 1회 측정 기록
