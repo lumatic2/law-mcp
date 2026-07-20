@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-21
-> 상태: horizon `general-legal-coverage` — LB1·LB2·LB3 완료. 남은 것은 닫는 기준 대조(품질 수치)
+> 상태: horizon `general-legal-coverage` — LB1·LB2·LB3 완료, LB5(품질 2축) 진행 중
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -54,6 +54,16 @@
 
 - Completed at: 2026-07-21
 - Summary: 법원 5종 도구화 — 공통 어댑터로 도구 2개에 담고(표면 9→11) 기여도 실측으로 게이트
+<!-- harness:milestone id="LB5" status="active" priority="P0" -->
+### LB5 — 용어 연계로 품질 2축(넓이·도달) 개선
+- DoD: dev blind recall@3 가 44.0% 대비 상승(A/B 근거 제시) + assisted acc@3 62.5% 대비 상승
+  + 무신호 쿼리 결과 무변 + 검색 1회 추가 호출 ≤2 + 홀드아웃 1회로 과적합 판정.
+- Evidence: `plans/2026-07-21-lb5-term-linkage.md` + `research/2026-07-21-lb5-term-linkage-probe.md`
+- Gap: 구어↔법문 용어 갭이 실패 주원인인데 그 매핑이 아예 없다. 법제처가 제공하는 용어 연계
+  색인(lstrmAI/lstrmRlt/lstrmRltJo)·법령약칭(lsAbrv)을 미사용 (research 2026-07-21)
+- Scale: changesets>=5; surfaces: 검색 후보 생성·조문 점수·bench 2모드; capability: 사람 말로 물어도 닿는다
+- Status: [ ]
+
 <!-- harness:milestone id="IB1" status="completed" priority="P0" evidence="changesets/20260712-ib1-h8ta2-repair + npm test 9/9 + 실 API 재현 4/4" -->
 ### IB1 — get_precedent NTS 소스 본문 도달 + 검색 결함 수리
 - DoD: ① 실패 5건(619683/618097/310830/325202/612611) 중 NTS 소스 판례의 본문(판시사항·판결요지

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "lb3-missing-sources",
+  "active_work_id": "lb5-term-linkage",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -215,6 +215,66 @@
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
       "completion_summary": "법제처가 가졌지만 우리가 못 쓰던 법원 5종(법령해석례·헌재결정례·행정심판재결례·자치법규·법령용어)에 도달했다. 응답 구조가 타깃마다 제각각이라 공통 어댑터로 흡수하고, 기여도를 실측해 도구는 2개만 늘렸다.",
       "notified_at": "2026-07-20T16:28:26.441306+00:00"
+    },
+    "lb5-term-linkage": {
+      "work_id": "lb5-term-linkage",
+      "horizon_id": "general-legal-coverage",
+      "milestone_id": "LB5",
+      "status": "active",
+      "plan_path": "plans/2026-07-21-lb5-term-linkage.md",
+      "changeset_path": "changesets/20260721-lb5-term-linkage-client",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1** term-linkage-client — 용어 연계 클라이언트 + 캐시",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2** candidate-boost — 넓이(①) 편입 + dev A/B",
+          "status": "pending"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3** article-hint — 도달(②) 편입 + dev 측정",
+          "status": "pending"
+        },
+        {
+          "id": "step-4",
+          "label": "step-4** abbrev — 법령 약칭 흡수 + 별도 세트 측정",
+          "status": "pending"
+        },
+        {
+          "id": "step-5",
+          "label": "step-5** holdout-and-verdict — 홀드아웃 1회 + 종합 판정",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-21",
+        "plan_sha256": "c0f07258340cc6589d4d5a88b6d36bb863d142fa50d07557158f0e171f36d239"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b"
+      ],
+      "owner_session_uuid": "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b",
+      "updated_at": "2026-07-21",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
     }
   }
 }
