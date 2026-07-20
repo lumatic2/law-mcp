@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "lb2-consumer-mode-citation",
+  "active_work_id": "lb3-missing-sources",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -145,6 +145,56 @@
         "approved_by": "user",
         "approved_at": "2026-07-21",
         "plan_sha256": "13eca8a23387cd36c9fbf4f225cbd56d823e13965f0138b0bebd8a8880927796"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b"
+      ],
+      "owner_session_uuid": "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b",
+      "updated_at": "2026-07-21",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+    },
+    "lb3-missing-sources": {
+      "work_id": "lb3-missing-sources",
+      "horizon_id": "general-legal-coverage",
+      "milestone_id": "LB3",
+      "status": "active",
+      "plan_path": "plans/2026-07-20-lb3-missing-sources.md",
+      "changeset_path": "changesets/20260720-lb3-source-adapter",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1** source-adapter — 공통 검색 어댑터 추출 + 타깃 확정",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2** source-tools — 법원별 search/get 도구 구현",
+          "status": "pending"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3** contribution-gate — 기여도 측정 후 선택적 노출",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-21",
+        "plan_sha256": "df903df5ccb3ce792b3c8b5ffacfc97dd1ed5377657ac69cb44df622807987b5"
       },
       "allowed_stop_reasons": [
         "completed",

@@ -4,6 +4,8 @@
 > execution mode: continuous
 > milestone-레벨 durable plan doc.
 
+Status: approved (2026-07-21 — 사용자 승인 범위 A(horizon 연쇄)에 포함. LB2 완료 후 이어서 착수)
+
 ## Objective → horizon → milestone → step (위계)
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가 된다 (← `OBJECTIVE.md`)

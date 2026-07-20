@@ -1,0 +1,406 @@
+{
+  "date": "2026-07-20",
+  "split": "dev",
+  "summary": {
+    "total": 25,
+    "scored": 25,
+    "errors": 0,
+    "recall_at_1": 0.4,
+    "recall_at_3": 0.44,
+    "precedent_hit_rate": 0.8,
+    "article_accuracy": null,
+    "article_checked": 0,
+    "by_domain": {
+      "부동산임대차": {
+        "total": 5,
+        "recall_at_3": 0.8
+      },
+      "노동": {
+        "total": 5,
+        "recall_at_3": 0.2
+      },
+      "계약민사": {
+        "total": 5,
+        "recall_at_3": 0.6
+      },
+      "형사": {
+        "total": 5,
+        "recall_at_3": 0.2
+      },
+      "가족": {
+        "total": 5,
+        "recall_at_3": 0.4
+      }
+    }
+  },
+  "outcomes": [
+    {
+      "query": "임대차 보증금 반환 청구",
+      "domain": "부동산임대차",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "공증인법",
+        "국세기본법",
+        "국세징수법"
+      ]
+    },
+    {
+      "query": "묵시적 갱신 계약 해지 통보 기간",
+      "domain": "부동산임대차",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "주택임대차보호법",
+        "약관의 규제에 관한 법률",
+        "전자금융거래법 시행령"
+      ]
+    },
+    {
+      "query": "전세권 설정 등기 말소",
+      "domain": "부동산임대차",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "부동산등기법",
+        "부동산등기규칙",
+        "가등기담보 등에 관한 법률"
+      ]
+    },
+    {
+      "query": "상가 권리금 회수 방해 손해배상",
+      "domain": "부동산임대차",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "상가건물 임대차보호법"
+      ]
+    },
+    {
+      "query": "임차인 계약갱신요구권 행사",
+      "domain": "부동산임대차",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "주택임대차보호법",
+        "공인중개사법 시행규칙",
+        "상가건물 임대차보호법"
+      ]
+    },
+    {
+      "query": "부당해고 구제신청 기간",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "병역법",
+        "선원법",
+        "의료법"
+      ]
+    },
+    {
+      "query": "연차휴가 미사용 수당 계산",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "임금채권보장법 시행규칙",
+        "조세특례제한법 시행규칙"
+      ]
+    },
+    {
+      "query": "해고예고 수당 지급 의무",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "선원법",
+        "근로기준법",
+        "고용보험법 시행령"
+      ]
+    },
+    {
+      "query": "퇴직금 중간정산 사유",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "선원법",
+        "법인세법",
+        "소득세법"
+      ]
+    },
+    {
+      "query": "연장근로 시간 한도",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "고용보험법",
+        "공직선거법",
+        "관광진흥법"
+      ]
+    },
+    {
+      "query": "계약 해제 원상회복 의무",
+      "domain": "계약민사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "광업법",
+        "가사소송법",
+        "공항시설법"
+      ]
+    },
+    {
+      "query": "손해배상 예정액 감액",
+      "domain": "계약민사",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "민법",
+        "법인세법",
+        "국가재정법"
+      ]
+    },
+    {
+      "query": "소멸시효 중단 사유",
+      "domain": "계약민사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "관세법",
+        "광업법",
+        "고용보험법"
+      ]
+    },
+    {
+      "query": "채권자대위권 행사 요건",
+      "domain": "계약민사",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "민법",
+        "지방세법",
+        "근로기준법"
+      ]
+    },
+    {
+      "query": "매도인 하자담보책임 기간",
+      "domain": "계약민사",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "민법",
+        "상법",
+        "관세법"
+      ]
+    },
+    {
+      "query": "정당방위 성립 요건",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "민법",
+        "관세법",
+        "전파법"
+      ]
+    },
+    {
+      "query": "음주운전 처벌 기준",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "병역법",
+        "선원법",
+        "보험업법"
+      ]
+    },
+    {
+      "query": "사기죄 구성요건",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "보험사기방지 특별법"
+      ]
+    },
+    {
+      "query": "사실적시 명예훼손 처벌",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "형법",
+        "군형법",
+        "공직선거법"
+      ]
+    },
+    {
+      "query": "공소시효 기간",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "공탁법",
+        "관세법",
+        "공탁규칙"
+      ]
+    },
+    {
+      "query": "재산분할 청구권 행사 기간",
+      "domain": "가족",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "관세법",
+        "가사소송법",
+        "공직선거법"
+      ]
+    },
+    {
+      "query": "친권자 변경 심판",
+      "domain": "가족",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "민법",
+        "소년법",
+        "국제사법"
+      ]
+    },
+    {
+      "query": "상속 한정승인 신고 기간",
+      "domain": "가족",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "건축법",
+        "가사소송법",
+        "가사소송규칙"
+      ]
+    },
+    {
+      "query": "유류분 반환 청구",
+      "domain": "가족",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "민법",
+        "해운법",
+        "국세기본법"
+      ]
+    },
+    {
+      "query": "협의이혼 숙려기간",
+      "domain": "가족",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "사법보좌관규칙"
+      ]
+    }
+  ]
+}

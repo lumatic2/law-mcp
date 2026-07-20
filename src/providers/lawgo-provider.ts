@@ -16,6 +16,7 @@ import type {
   SearchPrecedentsResult,
 } from "../types.js";
 import type { LawProvider } from "./law-provider.js";
+import { searchWithLadder } from "./source-adapter.js";
 
 const ARTICLE_NUMBER_KEYS = ["조문번호", "JO_NO", "article_no", "no"] as const;
 const ARTICLE_BRANCH_KEYS = ["조문가지번호", "JO_BRANCH", "branch_no", "가지번호"] as const;
@@ -625,65 +626,17 @@ export class LawGoProvider implements LawProvider {
     const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
     const display = Math.max(limit * 3, 30);
 
-    const primary = await this.fetchLawSearchOnce(query, limit, display);
-    if (primary.items.length > 0) {
-      return { query, total: primary.total, items: primary.items, warnings: [] };
-    }
-
-    // 법령명 매칭 0건 → 본문(전문) 검색(search=2)으로 재시도.
-    const bodySearch = await this.fetchLawSearchOnce(query, limit, display, 2);
-    if (bodySearch.items.length > 0) {
-      return {
-        query,
-        total: bodySearch.total,
-        items: bodySearch.items,
-        warnings: ["법령명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음.", BODY_SEARCH_RANK_WARNING],
-      };
-    }
-
-    // 본문 검색도 0건 + 다단어 쿼리면 마지막 토큰을 제거해 한 번 더 완화 재시도.
-    const relaxed = relaxQuery(query);
-    if (relaxed) {
-      const relaxedSearch = await this.fetchLawSearchOnce(relaxed, limit, display, 2);
-      if (relaxedSearch.items.length > 0) {
-        return {
-          query,
-          total: relaxedSearch.total,
-          items: relaxedSearch.items,
-          warnings: [`원 쿼리 0건 → '${relaxed}'로 재검색(본문 검색).`, BODY_SEARCH_RANK_WARNING],
-        };
-      }
-    }
-
-    // 기존 폴백까지 전부 0건 + 쿼리에 개정 신·구 용어가 있으면 대응 용어로 1회 치환해
-    // 본문(전문) 검색으로 마지막 재시도(용어 자체가 없으면 동작 불변).
-    const bridged = bridgeTerm(query);
-    if (bridged) {
-      const bridgeSearch = await this.fetchLawSearchOnce(bridged.replaced, limit, display, 2);
-      if (bridgeSearch.items.length > 0) {
-        return {
-          query,
-          total: bridgeSearch.total,
-          items: bridgeSearch.items,
-          warnings: [formatBridgeWarning(bridged, query), BODY_SEARCH_RANK_WARNING],
-        };
-      }
-
-      // 브리지 치환 쿼리조차 0건이면(다단어 신용어 쿼리 등) 마지막 토큰부터 점진 완화해 재시도.
-      const bridgeRelax = await bridgeThenRelaxSearch(query, bridged, (q) =>
-        this.fetchLawSearchOnce(q, limit, display, 2),
-      );
-      if (bridgeRelax) {
-        return {
-          query,
-          total: bridgeRelax.total,
-          items: bridgeRelax.items,
-          warnings: [bridgeRelax.warning, BODY_SEARCH_RANK_WARNING],
-        };
-      }
-    }
-
-    return { query, total: 0, items: [], warnings: [] };
+    // 사다리(이름 → 본문 → 완화 → 브리지 → 브리지+완화)는 `searchWithLadder` 공통 구현이다.
+    // 행정규칙과 같은 사다리를 쓰게 해 ib3 #6 식 비대칭이 재발하지 않게 한다(LB3 step-1).
+    return searchWithLadder(query, (q, mode) => this.fetchLawSearchOnce(q, limit, display, mode), {
+      primaryZeroWarning: "법령명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음.",
+      bodySearchWarning: BODY_SEARCH_RANK_WARNING,
+      supportsBodySearch: true,
+      relaxQuery,
+      bridgeTerm,
+      formatBridgeWarning,
+      bridgeThenRelaxSearch,
+    });
   }
 
   /**
@@ -909,63 +862,17 @@ export class LawGoProvider implements LawProvider {
     assertLawApiKey();
     const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
 
-    const primary = await this.fetchAdminRuleSearchOnce(query, limit);
-    if (primary.items.length > 0) {
-      return { query, total: primary.total, items: primary.items, warnings: [] };
-    }
-
-    // 행정규칙명 매칭 0건 → 본문(전문) 검색(search=2)으로 재시도.
-    const bodySearch = await this.fetchAdminRuleSearchOnce(query, limit, 2);
-    if (bodySearch.items.length > 0) {
-      return {
-        query,
-        total: bodySearch.total,
-        items: bodySearch.items,
-        warnings: ["행정규칙명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음.", BODY_SEARCH_RANK_WARNING],
-      };
-    }
-
-    // 이하 3단은 searchLaw 와 대칭 (2026-07-20 #6 — 행정규칙만 사다리가 2칸이라
-    // '기업업무추진비 손금불산입 기준' 류 다단어 쿼리가 구제 없이 0건으로 끝났다).
-    const relaxed = relaxQuery(query);
-    if (relaxed) {
-      const relaxedSearch = await this.fetchAdminRuleSearchOnce(relaxed, limit, 2);
-      if (relaxedSearch.items.length > 0) {
-        return {
-          query,
-          total: relaxedSearch.total,
-          items: relaxedSearch.items,
-          warnings: [`원 쿼리 0건 → '${relaxed}'로 재검색(본문 검색).`, BODY_SEARCH_RANK_WARNING],
-        };
-      }
-    }
-
-    const bridged = bridgeTerm(query);
-    if (bridged) {
-      const bridgeSearch = await this.fetchAdminRuleSearchOnce(bridged.replaced, limit, 2);
-      if (bridgeSearch.items.length > 0) {
-        return {
-          query,
-          total: bridgeSearch.total,
-          items: bridgeSearch.items,
-          warnings: [formatBridgeWarning(bridged, query), BODY_SEARCH_RANK_WARNING],
-        };
-      }
-
-      const bridgeRelax = await bridgeThenRelaxSearch(query, bridged, (q) =>
-        this.fetchAdminRuleSearchOnce(q, limit, 2),
-      );
-      if (bridgeRelax) {
-        return {
-          query,
-          total: bridgeRelax.total,
-          items: bridgeRelax.items,
-          warnings: [bridgeRelax.warning, BODY_SEARCH_RANK_WARNING],
-        };
-      }
-    }
-
-    return { query, total: 0, items: [], warnings: [] };
+    // 사다리는 searchLaw 와 **같은 공통 구현**을 쓴다 — 복제본이 두 벌이라 한쪽만 2칸이던 것이
+    // 2026-07-20 #6 결함이었다(LB3 step-1 에서 추출).
+    return searchWithLadder(query, (q, mode) => this.fetchAdminRuleSearchOnce(q, limit, mode), {
+      primaryZeroWarning: "행정규칙명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음.",
+      bodySearchWarning: BODY_SEARCH_RANK_WARNING,
+      supportsBodySearch: true,
+      relaxQuery,
+      bridgeTerm,
+      formatBridgeWarning,
+      bridgeThenRelaxSearch,
+    });
   }
 
   async getAdminRule(
