@@ -66,9 +66,33 @@ function pickString(obj: Record<string, unknown>, keys: string[]): string | null
   return null;
 }
 
+const NAMED_HTML_ENTITIES: Record<string, string> = {
+  nbsp: " ",
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+  middot: "·",
+  ensp: " ",
+  emsp: " ",
+  thinsp: " ",
+};
+
+/**
+ * HTML 엔티티를 원문자로 되돌린다. 태그만 벗기면 NTS 변환 HTML 의 `&nbsp;` 가 판례 전문에 그대로
+ * 남아 인용문에 섞여 들어간다(2026-07-20 실표면 관측: get_precedent(612611) 전문).
+ */
+export function decodeHtmlEntities(value: string): string {
+  return value
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex: string) => String.fromCodePoint(Number.parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dec: string) => String.fromCodePoint(Number(dec)))
+    .replace(/&([a-z]+);/gi, (match, name: string) => NAMED_HTML_ENTITIES[name.toLowerCase()] ?? match);
+}
+
 function stripHtml(value: string | null): string | null {
   if (!value) return value;
-  return value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return decodeHtmlEntities(value.replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
 }
 
 function normalizeLawName(value: string): string {

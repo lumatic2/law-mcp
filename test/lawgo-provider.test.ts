@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   bridgeThenRelaxSearch,
   countNameTokenMatches,
+  decodeHtmlEntities,
   extractNtstDcmIdFromLocation,
   isNtsPlaceholderContent,
   mapNtsPrecedentDetail,
@@ -192,4 +193,37 @@ test("countNameTokenMatches ignores spacing and punctuation differences", () => 
   // 공백·조사 제거 후 부분 문자열로 판정하므로 "공정거래에관한"·"법률" 둘 다 잡힌다.
   assert.equal(countNameTokenMatches("독점규제 및 공정거래에 관한 법률", "공정거래에관한 법률"), 2);
   assert.equal(countNameTokenMatches("", "법인세법"), 0);
+});
+
+test("decodeHtmlEntities restores named, decimal and hex entities", () => {
+  assert.equal(decodeHtmlEntities("주 문&nbsp;&nbsp;상고를 기각한다."), "주 문  상고를 기각한다.");
+  assert.equal(decodeHtmlEntities("법인세법 제19조&amp;제20조"), "법인세법 제19조&제20조");
+  assert.equal(decodeHtmlEntities("&#48277;&#51064;세법"), "법인세법");
+  assert.equal(decodeHtmlEntities("&#xAC00;지급금"), "가지급금");
+});
+
+test("decodeHtmlEntities leaves unknown entities untouched", () => {
+  assert.equal(decodeHtmlEntities("A &unknownentity; B"), "A &unknownentity; B");
+  assert.equal(decodeHtmlEntities("100% 순수"), "100% 순수");
+});
+
+// 실표면 관측 재현: NTS 변환 HTML 전문에 &nbsp; 가 남아 인용문에 섞이던 결함.
+test("mapNtsPrecedentDetail full text has no leftover HTML entities", () => {
+  const actionData = {
+    dcmDVO: {
+      ntstDcmTtl: "제목",
+      ntstDcmGistCntn: "요지",
+      ntstDcmCntn: "판결 내용은 붙임과 같습니다.",
+      dsbdHpnnNo: "대법원-2025-두-34068",
+    },
+    dcmRltnStttList: [],
+    dcmHwpEditorDVOList: [
+      { dcmFleSn: "1", dcmFleTy: "html", dcmFleByte: "<html><body>변론종결&nbsp;2025. 9. 25.&nbsp;&nbsp;주 문</body></html>" },
+    ],
+  };
+
+  const result = mapNtsPrecedentDetail(actionData, "612611", "200000000000014819");
+
+  assert.equal(result.판례내용, "변론종결 2025. 9. 25. 주 문");
+  assert.equal(result.판례내용?.includes("&nbsp;"), false);
 });
