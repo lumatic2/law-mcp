@@ -6,6 +6,11 @@ export interface SearchLawItem {
   effective_date?: string | null;
   law_mst?: string | null;
   match_type: LawMatchType;
+  /**
+   * 법령용어 연계가 지목한 조문 (예: ["제23조", "제28조"]). 쿼리의 쟁점어가 실제로 쓰인
+   * 조문이라 "어느 법 몇 조" 로 바로 이어진다. 연계 신호가 있을 때만 채워진다.
+   */
+  linked_articles?: string[];
 }
 
 export interface LawSummary extends SearchLawItem {}

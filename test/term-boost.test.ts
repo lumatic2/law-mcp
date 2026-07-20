@@ -127,3 +127,14 @@ test("term boost failure never breaks the search itself", async () => {
   const result = await provider.searchLaw("부당해고 구제신청 기간", { limit: 3 });
   assert.equal(result.items[0].law_name, "예금자보호법");
 });
+
+// 연계가 지목한 조문을 응답에 실어 보낸다 — 소비 LLM 이 "어느 법 몇 조"를 한 번에 받는다.
+// (조문 *점수 재정렬* 은 LB5 step-3 에서 기각됐다. 이건 재정렬이 아니라 정보 전달이다.)
+test("term boost ships the linked article numbers with the promoted law", async () => {
+  const provider = providerWithLinkage([{ name: "근로기준법", id: "999", articles: ["23", "28"] }]);
+
+  const result = await provider.searchLaw("부당해고 구제신청 기간", { limit: 3 });
+
+  assert.deepEqual(result.items[0].linked_articles, ["제23조", "제28조"]);
+  assert.equal(result.items[1].linked_articles, undefined, "연계 없는 항목은 필드를 달지 않는다");
+});

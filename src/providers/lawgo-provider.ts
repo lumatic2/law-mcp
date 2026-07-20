@@ -731,10 +731,16 @@ export class LawGoProvider implements LawProvider {
     const promoted: SearchLawResult["items"] = [];
     for (const law of candidates) {
       const existing = base.items.find((item) => normalized(item.law_name) === normalized(law.lawName));
-      promoted.push(existing ?? {
-        law_id: law.lawId as string,
-        law_name: law.lawName,
-        match_type: "contains" as const,
+      // 연계가 지목한 조문을 그대로 실어 보낸다 — 소비 LLM 이 "어느 법 몇 조"까지 한 번에 받는다.
+      // 이 정보는 이미 손에 있고(추가 호출 0), 없으면 조문 도달은 여전히 별도 추론이 된다.
+      const linkedArticles = law.articles.slice(0, 5).map((article) => article.display);
+      promoted.push({
+        ...(existing ?? {
+          law_id: law.lawId as string,
+          law_name: law.lawName,
+          match_type: "contains" as const,
+        }),
+        linked_articles: linkedArticles,
       });
     }
 
