@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "active_work_id": "lb1-answer-reach-harness",
+  "works": {
+    "lb1-answer-reach-harness": {
+      "work_id": "lb1-answer-reach-harness",
+      "horizon_id": "general-legal-coverage",
+      "milestone_id": "LB1",
+      "status": "active",
+      "plan_path": "plans/2026-07-20-lb1-answer-reach-harness.md",
+      "changeset_path": "changesets/20260720-lb1-golden-set",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1** golden-set — 골든셋 데이터 작성",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2** bench-runner — 채점 러너 구현",
+          "status": "pending"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3** baseline — 기준선 실측·기록",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-20",
+        "plan_sha256": "1e94da53411bfa7874969fcfa7ed4a8a1f57e41424e6c121967b63fd7c84aee4"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b"
+      ],
+      "owner_session_uuid": "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b",
+      "updated_at": "2026-07-20",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+    }
+  }
+}

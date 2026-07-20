@@ -4,6 +4,8 @@
 > execution mode: continuous
 > milestone-레벨 durable plan doc. Claude/Codex 가 이 문서만 읽고 이어받는 단일 장부.
 
+Status: approved (2026-07-20 · 위임 범위 A — horizon 전체 연쇄)
+
 ## Objective → horizon → milestone → step (위계)
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가 된다 (← `OBJECTIVE.md`)

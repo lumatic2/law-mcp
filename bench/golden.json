@@ -1,0 +1,331 @@
+{
+  "version": 1,
+  "created": "2026-07-20",
+  "milestone": "LB1",
+  "note": "정답 라벨은 근거 필수(source). 홀드아웃은 LB2 완료 시점 1회만 측정 — bench/README.md 규약 참조.",
+  "items": [
+    {
+      "query": "임대차 보증금 반환 청구",
+      "domain": "부동산임대차",
+      "expected_laws": ["주택임대차보호법", "민법"],
+      "expected_article": "주택임대차보호법 제3조의2",
+      "split": "dev",
+      "source": "주택임대차보호법 제3조의2(보증금의 회수) — 대항요건·확정일자 임차인의 우선변제권"
+    },
+    {
+      "query": "묵시적 갱신 계약 해지 통보 기간",
+      "domain": "부동산임대차",
+      "expected_laws": ["주택임대차보호법"],
+      "expected_article": "주택임대차보호법 제6조의2",
+      "split": "dev",
+      "source": "주택임대차보호법 제6조의2(묵시적 갱신의 경우 계약의 해지) — 통지 후 3개월 경과 시 효력"
+    },
+    {
+      "query": "전세권 설정 등기 말소",
+      "domain": "부동산임대차",
+      "expected_laws": ["부동산등기법", "민법"],
+      "split": "dev",
+      "source": "부동산등기법 등기 말소 절차 + 민법 전세권(제303조 이하). 2026-07-20 실 API 프로브에서 부동산등기법 상위 도달 확인"
+    },
+    {
+      "query": "상가 권리금 회수 방해 손해배상",
+      "domain": "부동산임대차",
+      "expected_laws": ["상가건물 임대차보호법"],
+      "expected_article": "상가건물 임대차보호법 제10조의4",
+      "split": "dev",
+      "source": "상가건물 임대차보호법 제10조의4(권리금 회수기회 보호 등) — 방해 시 손해배상책임"
+    },
+    {
+      "query": "임차인 계약갱신요구권 행사",
+      "domain": "부동산임대차",
+      "expected_laws": ["주택임대차보호법", "상가건물 임대차보호법"],
+      "expected_article": "주택임대차보호법 제6조의3",
+      "split": "dev",
+      "source": "주택임대차보호법 제6조의3(계약갱신 요구 등)"
+    },
+    {
+      "query": "차임 증액 청구 한도",
+      "domain": "부동산임대차",
+      "expected_laws": ["주택임대차보호법"],
+      "expected_article": "주택임대차보호법 제7조",
+      "split": "holdout",
+      "source": "주택임대차보호법 제7조(차임 등의 증감청구권)"
+    },
+    {
+      "query": "임대인 수선의무 범위",
+      "domain": "부동산임대차",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제623조",
+      "split": "holdout",
+      "source": "민법 제623조(임대인의 의무) — 사용·수익에 필요한 상태를 유지할 의무"
+    },
+    {
+      "query": "주택 임차권등기명령 신청",
+      "domain": "부동산임대차",
+      "expected_laws": ["주택임대차보호법"],
+      "expected_article": "주택임대차보호법 제3조의3",
+      "split": "holdout",
+      "source": "주택임대차보호법 제3조의3(임차권등기명령)"
+    },
+
+    {
+      "query": "부당해고 구제신청 기간",
+      "domain": "노동",
+      "expected_laws": ["근로기준법", "노동위원회법"],
+      "expected_article": "근로기준법 제28조",
+      "split": "dev",
+      "source": "근로기준법 제28조(부당해고등의 구제신청) — 부당해고 등이 있었던 날부터 3개월 이내"
+    },
+    {
+      "query": "연차휴가 미사용 수당 계산",
+      "domain": "노동",
+      "expected_laws": ["근로기준법"],
+      "expected_article": "근로기준법 제60조",
+      "split": "dev",
+      "source": "근로기준법 제60조(연차 유급휴가)"
+    },
+    {
+      "query": "해고예고 수당 지급 의무",
+      "domain": "노동",
+      "expected_laws": ["근로기준법"],
+      "expected_article": "근로기준법 제26조",
+      "split": "dev",
+      "source": "근로기준법 제26조(해고의 예고) — 30일 전 예고 또는 30일분 통상임금"
+    },
+    {
+      "query": "퇴직금 중간정산 사유",
+      "domain": "노동",
+      "expected_laws": ["근로자퇴직급여 보장법"],
+      "expected_article": "근로자퇴직급여 보장법 제8조",
+      "split": "dev",
+      "source": "근로자퇴직급여 보장법 제8조(퇴직금제도의 설정 등) 제2항 — 중간정산 사유는 시행령 위임"
+    },
+    {
+      "query": "연장근로 시간 한도",
+      "domain": "노동",
+      "expected_laws": ["근로기준법"],
+      "expected_article": "근로기준법 제53조",
+      "split": "dev",
+      "source": "근로기준법 제53조(연장 근로의 제한) — 주 12시간 한도"
+    },
+    {
+      "query": "직장 내 괴롭힘 신고 조치 의무",
+      "domain": "노동",
+      "expected_laws": ["근로기준법"],
+      "expected_article": "근로기준법 제76조의3",
+      "split": "holdout",
+      "source": "근로기준법 제76조의3(직장 내 괴롭힘 발생 시 조치)"
+    },
+    {
+      "query": "최저임금 미달 지급 벌칙",
+      "domain": "노동",
+      "expected_laws": ["최저임금법"],
+      "expected_article": "최저임금법 제28조",
+      "split": "holdout",
+      "source": "최저임금법 제28조(벌칙) — 최저임금액보다 적은 임금 지급 시"
+    },
+    {
+      "query": "업무상 재해 요양급여 신청",
+      "domain": "노동",
+      "expected_laws": ["산업재해보상보험법"],
+      "expected_article": "산업재해보상보험법 제41조",
+      "split": "holdout",
+      "source": "산업재해보상보험법 제41조(요양급여의 신청)"
+    },
+
+    {
+      "query": "계약 해제 원상회복 의무",
+      "domain": "계약민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제548조",
+      "split": "dev",
+      "source": "민법 제548조(해제의 효과, 원상회복의무)"
+    },
+    {
+      "query": "손해배상 예정액 감액",
+      "domain": "계약민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제398조",
+      "split": "dev",
+      "source": "민법 제398조(배상액의 예정) 제2항 — 부당히 과다한 경우 법원이 감액"
+    },
+    {
+      "query": "소멸시효 중단 사유",
+      "domain": "계약민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제168조",
+      "split": "dev",
+      "source": "민법 제168조(소멸시효의 중단사유) — 청구·압류·승인"
+    },
+    {
+      "query": "채권자대위권 행사 요건",
+      "domain": "계약민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제404조",
+      "split": "dev",
+      "source": "민법 제404조(채권자대위권)"
+    },
+    {
+      "query": "매도인 하자담보책임 기간",
+      "domain": "계약민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제582조",
+      "split": "dev",
+      "source": "민법 제582조(전2조의 권리행사기간) — 하자를 안 날로부터 6개월"
+    },
+    {
+      "query": "부당이득 반환 범위 선의 수익자",
+      "domain": "계약민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제748조",
+      "split": "holdout",
+      "source": "민법 제748조(수익자의 반환범위) — 선의 수익자는 현존이익 한도"
+    },
+    {
+      "query": "보증인 최고 검색의 항변권",
+      "domain": "계약민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제437조",
+      "split": "holdout",
+      "source": "민법 제437조(보증인의 최고, 검색의 항변)"
+    },
+    {
+      "query": "이행지체 중 손해배상 책임",
+      "domain": "계약민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제392조",
+      "split": "holdout",
+      "source": "민법 제392조(이행지체 중의 손해배상)"
+    },
+
+    {
+      "query": "정당방위 성립 요건",
+      "domain": "형사",
+      "expected_laws": ["형법"],
+      "expected_article": "형법 제21조",
+      "split": "dev",
+      "source": "형법 제21조(정당방위)"
+    },
+    {
+      "query": "음주운전 처벌 기준",
+      "domain": "형사",
+      "expected_laws": ["도로교통법"],
+      "expected_article": "도로교통법 제148조의2",
+      "split": "dev",
+      "source": "도로교통법 제148조의2(벌칙) — 혈중알코올농도 구간별 처벌"
+    },
+    {
+      "query": "사기죄 구성요건",
+      "domain": "형사",
+      "expected_laws": ["형법"],
+      "expected_article": "형법 제347조",
+      "split": "dev",
+      "source": "형법 제347조(사기)"
+    },
+    {
+      "query": "사실적시 명예훼손 처벌",
+      "domain": "형사",
+      "expected_laws": ["형법"],
+      "expected_article": "형법 제307조",
+      "split": "dev",
+      "source": "형법 제307조(명예훼손) 제1항 — 사실적시"
+    },
+    {
+      "query": "공소시효 기간",
+      "domain": "형사",
+      "expected_laws": ["형사소송법"],
+      "expected_article": "형사소송법 제249조",
+      "split": "dev",
+      "source": "형사소송법 제249조(공소시효의 기간)"
+    },
+    {
+      "query": "구속 전 피의자 심문",
+      "domain": "형사",
+      "expected_laws": ["형사소송법"],
+      "expected_article": "형사소송법 제201조의2",
+      "split": "holdout",
+      "source": "형사소송법 제201조의2(구속영장 청구와 피의자 심문)"
+    },
+    {
+      "query": "상습 절도 가중처벌",
+      "domain": "형사",
+      "expected_laws": ["형법"],
+      "expected_article": "형법 제332조",
+      "split": "holdout",
+      "source": "형법 제332조(상습범)"
+    },
+    {
+      "query": "심신미약 형 감경",
+      "domain": "형사",
+      "expected_laws": ["형법"],
+      "expected_article": "형법 제10조",
+      "split": "holdout",
+      "source": "형법 제10조(심신장애인) 제2항 — 심신미약 임의적 감경"
+    },
+
+    {
+      "query": "재산분할 청구권 행사 기간",
+      "domain": "가족",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제839조의2",
+      "split": "dev",
+      "source": "민법 제839조의2(재산분할청구권) 제3항 — 이혼한 날부터 2년"
+    },
+    {
+      "query": "친권자 변경 심판",
+      "domain": "가족",
+      "expected_laws": ["민법", "가사소송법"],
+      "expected_article": "민법 제909조",
+      "split": "dev",
+      "source": "민법 제909조(친권자) 제6항 — 자의 복리를 위한 친권자 변경"
+    },
+    {
+      "query": "상속 한정승인 신고 기간",
+      "domain": "가족",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제1019조",
+      "split": "dev",
+      "source": "민법 제1019조(승인, 포기의 기간) — 상속개시 있음을 안 날로부터 3개월"
+    },
+    {
+      "query": "유류분 반환 청구",
+      "domain": "가족",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제1115조",
+      "split": "dev",
+      "source": "민법 제1115조(유류분의 보전)"
+    },
+    {
+      "query": "협의이혼 숙려기간",
+      "domain": "가족",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제836조의2",
+      "split": "dev",
+      "source": "민법 제836조의2(이혼의 절차) — 안내 후 숙려기간"
+    },
+    {
+      "query": "인지청구의 소",
+      "domain": "가족",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제863조",
+      "split": "holdout",
+      "source": "민법 제863조(인지청구의 소)"
+    },
+    {
+      "query": "양육비 이행명령 불이행 제재",
+      "domain": "가족",
+      "expected_laws": ["가사소송법", "양육비 이행확보 및 지원에 관한 법률"],
+      "expected_article": "가사소송법 제68조",
+      "split": "holdout",
+      "source": "가사소송법 제68조(특별한 의무불이행에 대한 제재) — 양육비 이행명령 위반 감치"
+    },
+    {
+      "query": "이혼 위자료 청구",
+      "domain": "가족",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제843조",
+      "split": "holdout",
+      "source": "민법 제843조(준용규정) — 재판상 이혼 시 제806조(위자료) 준용"
+    }
+  ]
+}
