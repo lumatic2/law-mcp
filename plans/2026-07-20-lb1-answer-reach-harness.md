@@ -4,7 +4,7 @@
 > execution mode: continuous
 > milestone-레벨 durable plan doc. Claude/Codex 가 이 문서만 읽고 이어받는 단일 장부.
 
-Status: approved (2026-07-20 · 위임 범위 A — horizon 전체 연쇄)
+Status: completed (2026-07-21 — 3/3 step, 기준선 recall@3 44.0%)
 
 ## Objective → horizon → milestone → step (위계)
 
@@ -58,21 +58,21 @@ Status: approved (2026-07-20 · 위임 범위 A — horizon 전체 연쇄)
 
 ## Step 트리
 
-- [ ] **step-1** golden-set — 골든셋 데이터 작성
+- [x] **step-1** golden-set — 골든셋 데이터 작성
   - Artifact: `bench/golden.json`(40항목, dev 26/holdout 14) + `bench/README.md`(라벨 규약·홀드아웃 규칙)
   - Files: write `bench/golden.json`·`bench/README.md` / read `research/2026-07-20-general-legal-coverage-probe.md`
   - Dependencies: 없음
   - Verify: `node -e` 로 JSON 파싱 + 스키마 필드 완전성(모든 항목에 query·domain·expected_laws·split·source) 확인, dev/holdout 비율 출력
   - Failure probe: `expected_laws` 가 빈 항목·`source` 없는 항목이 있으면 실패로 보고(라벨 근거 누락 검출)
   - Commit: `changesets/20260720-lb1-golden-set/`
-- [ ] **step-2** bench-runner — 채점 러너 구현
+- [x] **step-2** bench-runner — 채점 러너 구현
   - Artifact: `bench/run.ts` + `package.json` 에 `bench:golden` 스크립트 + 채점 로직 단위테스트
   - Files: write `bench/run.ts`·`test/bench-scoring.test.ts`·`package.json` / read `src/providers/lawgo-provider.ts`
   - Dependencies: step-1
   - Verify: `npm test`(채점 로직 단위테스트 통과 — 정규화 일치·recall@k 계산·조문 비교) + `npm run bench:golden -- --split dev --dry-run` 이 API 호출 없이 항목 수를 출력
   - Failure probe: 정답이 0건인 가짜 항목·API 에러 응답을 주입해 러너가 크래시 없이 0점 처리하고 사유를 리포트하는지 확인
   - Commit: `changesets/20260720-lb1-bench-runner/`
-- [ ] **step-3** baseline — 기준선 실측·기록
+- [x] **step-3** baseline — 기준선 실측·기록
   - Artifact: `evidence/bench/2026-07-20-baseline.json` + `evidence/bench/README.md` 요약표
   - Files: write `evidence/bench/*` / read `bench/*`
   - Dependencies: step-2

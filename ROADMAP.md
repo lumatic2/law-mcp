@@ -29,7 +29,7 @@
 
 - Completed at: 2026-07-21
 - Summary: 골든셋 40건·채점 러너·기준선 recall@3 44.0% 확정
-<!-- harness:milestone id="LB2" status="pending" priority="P0" -->
+<!-- harness:milestone id="LB2" status="active" priority="P0" -->
 ### LB2 — 조문 단위 도달 + 랭킹 실질 개선
 - DoD: `search_law_articles` 실 API 도달 + dev recall@3 기준선 대비 상승 + 홀드아웃 1회 측정 기록
   + 검색 1회 지연 ≤3초 + 세무 회귀 6종 무변.

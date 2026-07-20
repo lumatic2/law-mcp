@@ -4,6 +4,8 @@
 > execution mode: continuous
 > milestone-레벨 durable plan doc.
 
+Status: approved (2026-07-21 · 위임 범위 A — horizon 전체 연쇄, LB1 완료 후 자동 승격)
+
 ## Objective → horizon → milestone → step (위계)
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가 된다 (← `OBJECTIVE.md`)
@@ -55,7 +57,7 @@
 
 ## Step 트리
 
-- [ ] **step-1** article-index — 법령 조문 분해 + 캐시
+- [x] **step-1** article-index — 법령 조문 분해 + 캐시
   - Artifact: `src/article-index.ts`(조문 배열 파싱·LRU 캐시) + 단위테스트
   - Files: write `src/article-index.ts`·`test/article-index.test.ts` / read `src/providers/lawgo-provider.ts`
   - Dependencies: 없음
@@ -108,4 +110,5 @@
 
 ## 진행 로그 (append-only)
 
-- 2026-07-20 plan 작성 (승인 대기)
+- 2026-07-20 plan 작성
+- 2026-07-21 승인·착수 (LB1 기준선 recall@3 44.0% 확보 후 연쇄 승격)
