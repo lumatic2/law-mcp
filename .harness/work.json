@@ -319,10 +319,8 @@
         "external_authority_required",
         "user_stopped"
       ],
-      "stop_reason": "decision_required",
-      "stop_detail": {
-        "summary": "평가 세트 라벨을 검증하려다 기존 도구의 결함을 찾았습니다 — '민법 제245조'를 물으면 새마을금고법 조문이 돌아옵니다. LB5 용어 부스트가 법령명 정확일치를 밀어낸 탓이고, 이걸 먼저 고치지 않으면 라벨 검증 자체가 불가능합니다. 고치고 갈지 결정이 필요합니다."
-      },
+      "stop_reason": null,
+      "stop_detail": {},
       "session_ids": [
         "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b"
       ],
