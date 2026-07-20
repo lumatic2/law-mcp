@@ -213,7 +213,8 @@
       "owner_session_uuid": "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b",
       "updated_at": "2026-07-21",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
-      "completion_summary": "법제처가 가졌지만 우리가 못 쓰던 법원 5종(법령해석례·헌재결정례·행정심판재결례·자치법규·법령용어)에 도달했다. 응답 구조가 타깃마다 제각각이라 공통 어댑터로 흡수하고, 기여도를 실측해 도구는 2개만 늘렸다."
+      "completion_summary": "법제처가 가졌지만 우리가 못 쓰던 법원 5종(법령해석례·헌재결정례·행정심판재결례·자치법규·법령용어)에 도달했다. 응답 구조가 타깃마다 제각각이라 공통 어댑터로 흡수하고, 기여도를 실측해 도구는 2개만 늘렸다.",
+      "notified_at": "2026-07-20T16:28:26.441306+00:00"
     }
   }
 }

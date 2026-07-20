@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-21
-> 상태: horizon `general-legal-coverage` 진행 중 — LB1·LB2 완료, 다음 LB3(누락 법원 5종)
+> 상태: horizon `general-legal-coverage` — LB1·LB2·LB3 완료. 남은 것은 닫는 기준 대조(품질 수치)
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -11,7 +11,8 @@
 <!-- harness:goal id="general-legal-coverage" status="active" -->
 ### 범용 법률 커버리지 → `plans/horizons/general-legal-coverage.md`
 세무 특화(실은 희귀어 특화) 도구를 법 일반 도구로. 실측 갭: 비세무 13쿼리 정답 포함률 31%,
-법원 5종 미지원, 조문 단위 도달 불가, 외부 설치 불가. 무감독 분량: 최소 3 무감독 세션.
+법원 5종 미지원, 조문 단위 도달 불가. 무감독 분량: 최소 3 무감독 세션.
+배포·공개(구 LB4)는 2026-07-21 범위에서 제외 — 착수 신호는 사용자 발화다(품질 수치가 아니라).
 
 (직전 horizon `issueback-repair-h8ta2` 완료 2026-07-12 — 결함 4건 수리 + ib1b 전문 도달.
 후속 유지보수 ib3·ib4 로 Issue-back Queue #6·#7 및 엔티티 결함까지 소진. 상세는 docs/BACKLOG.md)
@@ -53,14 +54,6 @@
 
 - Completed at: 2026-07-21
 - Summary: 법원 5종 도구화 — 공통 어댑터로 도구 2개에 담고(표면 9→11) 기여도 실측으로 게이트
-<!-- harness:milestone id="LB4" status="pending" priority="P2" -->
-### LB4 — 설치 가능성 (배포·발견성)
-- DoD: 외부인이 README 만으로 설치 가능(빈 환경 1회 재현). 공개 범위·배포 채널은 사용자 소유 결정.
-- Evidence: (착수 시 plan 작성 — `plans/<date>-lb4-*.md`)
-- Gap: private 레포·npm 미배포·MCP 설정 예시 없음·OC 발급 안내 없음 (research 2026-07-20 §4)
-- Scale: changesets>=2; surfaces: README·패키지·설치 재현; capability: 누구나 붙일 수 있다
-- Status: [ ]
-
 <!-- harness:milestone id="IB1" status="completed" priority="P0" evidence="changesets/20260712-ib1-h8ta2-repair + npm test 9/9 + 실 API 재현 4/4" -->
 ### IB1 — get_precedent NTS 소스 본문 도달 + 검색 결함 수리
 - DoD: ① 실패 5건(619683/618097/310830/325202/612611) 중 NTS 소스 판례의 본문(판시사항·판결요지
@@ -76,7 +69,7 @@
 - Completed at: 2026-07-12
 - Summary: 결함 4건 수리: NTS 폴백(5/5 요지 도달)·본문검색·완화재시도·부분반환, 게이트 독립 재현 PASS
 ## Next Candidates
-- (없음 — 현 horizon LB1~LB4 소진 후 재검토)
+- (없음 — 현 horizon LB1~LB3 소진. 닫는 기준 미달 축(정답 포함률·조문 정확도)이 다음 입력)
 
 ## Archive Pointer
 완료 이력은 `docs/BACKLOG.md` 참조. ROADMAP.md 는 150줄 이하 current horizon 만 유지한다. milestone 완료·compact 는 `/harness` 가 처리한다.
