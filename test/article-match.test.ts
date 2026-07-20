@@ -26,9 +26,12 @@ test("scoreArticles ranks articles by matched token count", () => {
 
   assert.equal(result.matched_articles, 1);
   assert.equal(result.covered_tokens, 2);
-  assert.equal(result.score, 4, "한 조문에 2토큰 → 2² = 4");
+  // 제28조는 본문 2토큰 + 제목("부당해고등의 구제신청") 2토큰 → (2 + 2×3)² = 64.
+  // F4(제목 가중) 도입 전에는 4였다 — 의도된 변경.
+  assert.equal(result.score, 64);
   assert.equal(result.top[0].display, "제28조");
-  assert.equal(result.top[0].matched_tokens, 2);
+  // 본문 2 + 제목 2 (F4 이후) — 제목 매칭도 matched_tokens 에 합산된다.
+  assert.equal(result.top[0].matched_tokens, 4);
   assert.ok(result.top[0].excerpt.includes("부당해고"));
 });
 
@@ -66,4 +69,28 @@ test("rerankByArticleScore sorts by score and keeps original order as tiebreak",
     rerankByArticleScore(candidates, (c) => scores[c]),
     ["B", "D", "C", "A"],
   );
+});
+
+// F4 (2026-07-21 실측): 제목이 곧 쟁점명인 경우가 많아 제목 매칭은 본문 매칭보다 강한 신호다.
+// "사실적시 명예훼손 처벌"이 제목 "명예훼손"인 조문을 못 집고 제1·14·18조를 예측한 실패의 수정.
+test("scoreArticles weights a title match above body-only matches", () => {
+  const articles = [
+    article("1", "명예훼손 이라는 낱말이 본문에 한 번 나오는 조문", "목적"),
+    article("307", "공연히 사실을 적시하여 사람의 명예를 훼손한 자는", "명예훼손"),
+  ];
+
+  const result = scoreArticles(articles, "명예훼손 처벌");
+
+  assert.equal(result.top[0].display, "제307조", "제목 매칭 조문이 1위");
+  assert.ok(result.score > 0);
+});
+
+test("scoreArticles still ranks body matches when no title matches", () => {
+  const articles = [
+    article("10", "전혀 다른 내용", "제목없음"),
+    article("20", "정당방위 성립 여부를 정한다", null),
+  ];
+
+  const result = scoreArticles(articles, "정당방위 성립");
+  assert.equal(result.top[0].display, "제20조");
 });

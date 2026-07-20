@@ -1,0 +1,475 @@
+{
+  "date": "2026-07-21",
+  "split": "dev",
+  "mode": "assisted",
+  "summary": {
+    "total": 25,
+    "measured": 24,
+    "skipped": 1,
+    "errors": 0,
+    "accuracy_at_1": 0.5,
+    "accuracy_at_3": 0.625
+  },
+  "outcomes": [
+    {
+      "query": "임대차 보증금 반환 청구",
+      "domain": "부동산임대차",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "주택임대차보호법"
+      ],
+      "predictedArticles": [
+        "제3조의2",
+        "제4조",
+        "제14조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "묵시적 갱신 계약 해지 통보 기간",
+      "domain": "부동산임대차",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "주택임대차보호법"
+      ],
+      "predictedArticles": [
+        "제6조의2",
+        "제6조의3",
+        "제6조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "전세권 설정 등기 말소",
+      "domain": "부동산임대차",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [],
+      "skipped": "조문 라벨 없음"
+    },
+    {
+      "query": "상가 권리금 회수 방해 손해배상",
+      "domain": "부동산임대차",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "상가건물 임대차보호법"
+      ],
+      "predictedArticles": [
+        "제10조의4",
+        "제10조의3",
+        "제10조의5"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "임차인 계약갱신요구권 행사",
+      "domain": "부동산임대차",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "주택임대차보호법"
+      ],
+      "predictedArticles": [
+        "제6조의3",
+        "제3조의2",
+        "제3조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "부당해고 구제신청 기간",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "근로기준법"
+      ],
+      "predictedArticles": [
+        "제28조",
+        "제30조",
+        "제23조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "연차휴가 미사용 수당 계산",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "근로기준법"
+      ],
+      "predictedArticles": [
+        "제46조",
+        "제58조",
+        "제48조"
+      ],
+      "articleCorrectAt3": false
+    },
+    {
+      "query": "해고예고 수당 지급 의무",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "근로기준법"
+      ],
+      "predictedArticles": [
+        "제43조",
+        "제46조",
+        "제37조"
+      ],
+      "articleCorrectAt3": false
+    },
+    {
+      "query": "퇴직금 중간정산 사유",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "근로자퇴직급여 보장법"
+      ],
+      "predictedArticles": [
+        "제8조",
+        "제9조",
+        "제10조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "연장근로 시간 한도",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "근로기준법"
+      ],
+      "predictedArticles": [
+        "제53조",
+        "제59조",
+        "제69조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "계약 해제 원상회복 의무",
+      "domain": "계약민사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제548조",
+        "제674조의3",
+        "제727조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "손해배상 예정액 감액",
+      "domain": "계약민사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제236조",
+        "제315조",
+        "제390조"
+      ],
+      "articleCorrectAt3": false
+    },
+    {
+      "query": "소멸시효 중단 사유",
+      "domain": "계약민사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제168조",
+        "제296조",
+        "제247조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "채권자대위권 행사 요건",
+      "domain": "계약민사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제405조",
+        "제404조",
+        "제382조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "매도인 하자담보책임 기간",
+      "domain": "계약민사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제580조",
+        "제570조",
+        "제571조"
+      ],
+      "articleCorrectAt3": false
+    },
+    {
+      "query": "정당방위 성립 요건",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "형법"
+      ],
+      "predictedArticles": [
+        "제1조",
+        "제21조",
+        "제13조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "음주운전 처벌 기준",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "도로교통법"
+      ],
+      "predictedArticles": [
+        "제50조의3",
+        "제80조의2",
+        "제160조"
+      ],
+      "articleCorrectAt3": false
+    },
+    {
+      "query": "사기죄 구성요건",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "형법"
+      ],
+      "predictedArticles": [],
+      "articleCorrectAt3": false
+    },
+    {
+      "query": "사실적시 명예훼손 처벌",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "형법"
+      ],
+      "predictedArticles": [
+        "제1조",
+        "제29조",
+        "제38조"
+      ],
+      "articleCorrectAt3": false
+    },
+    {
+      "query": "공소시효 기간",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "형사소송법"
+      ],
+      "predictedArticles": [
+        "제249조",
+        "제253조의2",
+        "제262조의4"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "재산분할 청구권 행사 기간",
+      "domain": "가족",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제839조의3",
+        "제839조의2",
+        "제766조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "친권자 변경 심판",
+      "domain": "가족",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제909조",
+        "제9조",
+        "제11조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "상속 한정승인 신고 기간",
+      "domain": "가족",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제1029조",
+        "제1030조",
+        "제1039조"
+      ],
+      "articleCorrectAt3": false
+    },
+    {
+      "query": "유류분 반환 청구",
+      "domain": "가족",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제1115조",
+        "제190조",
+        "제213조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "협의이혼 숙려기간",
+      "domain": "가족",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [],
+      "articleCorrectAt3": false
+    }
+  ]
+}

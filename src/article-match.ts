@@ -56,9 +56,16 @@ function excerptAround(text: string, token: string): string {
 }
 
 /**
+ * 조문 제목 매칭 1건의 가중치. 제목은 곧 쟁점명인 경우가 많아(제307조 "명예훼손",
+ * 제839조의2 "재산분할청구권") 본문 매칭보다 훨씬 강한 신호다 — 2026-07-21 assisted 실측에서
+ * 제목을 버린 탓에 "사실적시 명예훼손 처벌" 이 제1·14·18조를 예측했다.
+ */
+const TITLE_WEIGHT = 3;
+
+/**
  * 한 법령의 조문 배열을 쿼리로 채점한다.
  *
- * score = Σ(조문별 matched_tokens²) — 제곱은 "여러 토큰이 *한 조문에* 몰린 경우"를
+ * score = Σ(조문별 (본문 매칭 + 제목 매칭×3)²) — 제곱은 "여러 토큰이 *한 조문에* 몰린 경우"를
  * "토큰이 여러 조문에 흩어진 경우"보다 높게 본다. 쟁점은 보통 한 조문에 모여 있고,
  * 흩어진 매칭은 우연일 가능성이 크다.
  */
@@ -68,30 +75,42 @@ export function scoreArticles(articles: IndexedArticle[], query: string, topN = 
     return { score: 0, matched_articles: 0, covered_tokens: 0, top: [] };
   }
 
-  const hits: ArticleHit[] = [];
+  const hits: Array<ArticleHit & { weight: number }> = [];
   const covered = new Set<string>();
   let score = 0;
 
   for (const article of articles) {
     const matched = tokens.filter((token) => article.text.includes(token));
-    if (matched.length === 0) continue;
-    matched.forEach((token) => covered.add(token));
-    score += matched.length ** 2;
+    // 제목은 띄어쓰기를 지우고 비교한다 — 법령 제목은 "연장 근로의 제한" 처럼 띄어 쓰지만
+    // 사용자는 "연장근로" 로 붙여 쓴다(2026-07-21 실측 실패 원인).
+    const bareTitle = article.title ? article.title.replace(/\s+/g, "") : null;
+    const titleMatched = bareTitle
+      ? tokens.filter((token) => bareTitle.includes(token.replace(/\s+/g, "")))
+      : [];
+    if (matched.length === 0 && titleMatched.length === 0) continue;
+
+    [...matched, ...titleMatched].forEach((token) => covered.add(token));
+    const weight = matched.length + titleMatched.length * TITLE_WEIGHT;
+    score += weight ** 2;
     hits.push({
       article_no: article.article_no,
       display: article.display,
       title: article.title,
-      matched_tokens: matched.length,
-      excerpt: excerptAround(article.text, matched[0]),
+      matched_tokens: matched.length + titleMatched.length,
+      excerpt: titleMatched.length > 0
+        ? excerptAround(article.text, titleMatched[0])
+        : excerptAround(article.text, matched[0]),
+      weight,
     });
   }
 
   hits.sort((left, right) => {
-    if (left.matched_tokens !== right.matched_tokens) return right.matched_tokens - left.matched_tokens;
+    if (left.weight !== right.weight) return right.weight - left.weight;
     return Number(parseInt(left.article_no, 10)) - Number(parseInt(right.article_no, 10));
   });
 
-  return { score, matched_articles: hits.length, covered_tokens: covered.size, top: hits.slice(0, topN) };
+  const top = hits.slice(0, topN).map(({ weight: _weight, ...hit }) => hit);
+  return { score, matched_articles: hits.length, covered_tokens: covered.size, top };
 }
 
 /**

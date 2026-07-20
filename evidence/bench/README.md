@@ -42,3 +42,16 @@
 LB2(조문 단위 도달)의 가설이 이 관찰과 정확히 맞물린다 — 조문 본문까지 내려가면 "정당방위"가
 형법 제21조 본문에 있으므로, 법령명 문자열에 의존하지 않는 경로가 생긴다. 목표는 horizon
 닫는 기준의 **≥70%**.
+
+## 2026-07-21 추가 측정
+
+| 날짜 | label | split | 모드 | 수치 |
+|---|---|---|---|---|
+| 07-21 | `dev-assisted` | dev(25) | assisted | acc@1 50.0% / acc@3 58.3% |
+| 07-21 | `dev-assisted-titleweight` | dev(25) | assisted | acc@1 45.8% / acc@3 58.3% — F4 1차(기각) |
+| 07-21 | `dev-assisted-titleweight-v2` | dev(25) | assisted | **acc@1 50.0% / acc@3 62.5%** — F4 채택본 |
+| 07-21 | `holdout-blind` | holdout(15) | blind | **recall@3 60.0%** / recall@1 46.7% |
+| 07-21 | `holdout-assisted` | holdout(15) | assisted | **acc@1 66.7% / acc@3 73.3%** |
+
+> 홀드아웃 봉인은 2026-07-21 LB2 완료 시점에 해제됐다(계획대로 1회씩). 홀드아웃이 dev 보다 높아
+> **과적합은 없다** — 다만 두 split 의 난이도가 다르다는 뜻이므로 split 간 비교로 개선을 주장하지 않는다.

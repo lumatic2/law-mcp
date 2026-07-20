@@ -89,7 +89,7 @@ Supersedes: plans/2026-07-20-lb2-article-level-reach.md
     `not_found`, 제목 불일치(형법 제21조 "사기") `title_mismatch`, 없는 법령 `law_not_found`
   - Failure probe: upstream 장애 시 `ok` 로 오판하지 않고 오류를 그대로 드러내는지(거짓 안심 방지)
   - Commit: `changesets/20260721-lb2-verify-citation/`
-- [ ] **step-3** curation-verdict — C안 필요 여부 판정
+- [x] **step-3** curation-verdict — C안 필요 여부 판정
   - Artifact: `evidence/bench/2026-07-21-curation-verdict.md` — assisted/blind 수치 대비 C안 기대이득·비용 추정
   - Files: write `evidence/bench/*` / read `evidence/bench/*`·`research/2026-07-21-*`
   - Dependencies: step-1, step-2
@@ -97,7 +97,7 @@ Supersedes: plans/2026-07-20-lb2-article-level-reach.md
     조건이 관측 가능하게 적힘
   - Failure probe: 판정을 뒷받침할 수치가 없으면 "판정 불가 + 무엇을 더 재야 하는가"로 정직하게 닫는지
   - Commit: `changesets/20260721-lb2-curation-verdict/`
-- [ ] **step-4** holdout — 홀드아웃 2모드 1회 측정
+- [x] **step-4** holdout — 홀드아웃 2모드 1회 측정
   - Artifact: `evidence/bench/2026-07-21-lb2-holdout.json` + 완료 리포트
   - Files: write `evidence/bench/*` / read `bench/golden.json`(holdout)
   - Dependencies: step-3
