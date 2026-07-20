@@ -17,6 +17,13 @@ import type {
   SearchPrecedentsResult,
 } from "../types.js";
 import type { LawProvider } from "./law-provider.js";
+import { tokenizeQuery } from "../article-match.js";
+import {
+  TermLinkageCache,
+  lookupTermLinkage,
+  type LinkageFetcher,
+  type TermLinkage,
+} from "../term-linkage.js";
 import {
   SOURCE_DESCRIPTORS,
   extractDetail,
@@ -56,6 +63,17 @@ type ArticleReference = {
 };
 
 type MatchType = "exact" | "prefix" | "contains";
+
+/** 용어 연계 부스트 파라미터 — A/B 실측용으로 열어 둔다(기본값은 dev 측정으로 확정). */
+export type TermBoostConfig = {
+  enabled?: boolean;
+  /** 상위로 올릴 연계 법령 수 */
+  maxLaws?: number;
+  /** 이 연계 조문 수 미만인 법령은 무시 */
+  minLinks?: number;
+  /** 연계를 시도할 쿼리 토큰 수(비용: 토큰당 최대 2 호출) */
+  maxTerms?: number;
+};
 
 function asObject(value: unknown): Record<string, unknown> {
   if (value && typeof value === "object") return value as Record<string, unknown>;
@@ -563,6 +581,24 @@ function findArticleInRoot(
  * - 법령 상세: DRF/lawService.do
  */
 export class LawGoProvider implements LawProvider {
+  private readonly linkageCache = new TermLinkageCache(200);
+
+  /** 용어 연계 조회 경로. 테스트에서 fixture 를 주입할 수 있게 생성자로 받는다. */
+  private readonly linkageFetcher: LinkageFetcher;
+
+  constructor(linkageFetcher?: LinkageFetcher) {
+    this.linkageFetcher = linkageFetcher ?? {
+      searchTerm: async (term: string) =>
+        fetchLawApi(LAW_SEARCH_BASE_URL, {
+          OC: LAW_API_OC, target: "lstrmAI", type: "JSON", query: term, display: 5,
+        }),
+      fetchLinkedArticles: async (mst: string) =>
+        fetchLawApi(LAW_SERVICE_BASE_URL, {
+          OC: LAW_API_OC, target: "lstrmRltJo", type: "JSON", MST: mst,
+        }),
+    };
+  }
+
   /**
    * lawSearch.do(target=law) 1회 호출 + 파싱. search=2 는 본문(전문) 검색 모드.
    */
@@ -631,14 +667,17 @@ export class LawGoProvider implements LawProvider {
     return { items, total: Number.isFinite(total) ? total : items.length };
   }
 
-  async searchLaw(query: string, options: { limit?: number } = {}): Promise<SearchLawResult> {
+  async searchLaw(
+    query: string,
+    options: { limit?: number; termBoost?: TermBoostConfig } = {},
+  ): Promise<SearchLawResult> {
     assertLawApiKey();
     const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
     const display = Math.max(limit * 3, 30);
 
     // 사다리(이름 → 본문 → 완화 → 브리지 → 브리지+완화)는 `searchWithLadder` 공통 구현이다.
     // 행정규칙과 같은 사다리를 쓰게 해 ib3 #6 식 비대칭이 재발하지 않게 한다(LB3 step-1).
-    return searchWithLadder(query, (q, mode) => this.fetchLawSearchOnce(q, limit, display, mode), {
+    const base = await searchWithLadder(query, (q, mode) => this.fetchLawSearchOnce(q, limit, display, mode), {
       primaryZeroWarning: "법령명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음.",
       bodySearchWarning: BODY_SEARCH_RANK_WARNING,
       supportsBodySearch: true,
@@ -647,6 +686,71 @@ export class LawGoProvider implements LawProvider {
       formatBridgeWarning,
       bridgeThenRelaxSearch,
     });
+
+    return this.boostWithTermLinkage(query, base, limit, options.termBoost);
+  }
+
+  /**
+   * 용어 연계 후보 부스트 (LB5 step-2).
+   *
+   * 본문검색은 관련도순이 아니라 가나다순이라(#7), 이름에 안 걸리는 쿼리는 사실상 무작위 목록을
+   * 받는다. 용어 연계는 **그 용어가 실제로 쓰인 조문의 법령**을 주므로 그 목록보다 강한 신호다.
+   *
+   * 원칙 — **신호가 있을 때만 움직인다**: 연계가 비면 `base` 를 **그대로**(같은 객체) 돌려준다.
+   * ib3 에서 신호 없이 재정렬했다가 법인세법이 1위→5위로 밀린 실패의 교훈.
+   */
+  private async boostWithTermLinkage(
+    query: string,
+    base: SearchLawResult,
+    limit: number,
+    config: TermBoostConfig = {},
+  ): Promise<SearchLawResult> {
+    const { enabled = true, maxLaws = 2, minLinks = 1, maxTerms = 1 } = config;
+    if (!enabled) return base;
+
+    // 긴 토큰일수록 쟁점어일 확률이 높다("부당해고 구제신청 기간" → 부당해고).
+    const tokens = tokenizeQuery(query).sort((left, right) => right.length - left.length);
+    if (tokens.length === 0) return base;
+
+    let linkage: TermLinkage | null = null;
+    for (const token of tokens.slice(0, Math.max(1, maxTerms))) {
+      const found = await lookupTermLinkage(token, this.linkageFetcher, this.linkageCache);
+      if (found.laws.length > 0) { linkage = found; break; }
+    }
+    if (!linkage) return base;
+
+    const candidates = linkage.laws
+      .filter((law) => law.lawId !== null && law.linkCount >= minLinks)
+      .slice(0, maxLaws);
+    if (candidates.length === 0) return base;
+
+    // 이미 결과에 있는 법령은 중복 추가하지 않고 **앞으로 끌어올린다**.
+    const normalized = (value: string) => normalizeLawName(value);
+    const promotedNames = new Set(candidates.map((law) => normalized(law.lawName)));
+
+    const promoted: SearchLawResult["items"] = [];
+    for (const law of candidates) {
+      const existing = base.items.find((item) => normalized(item.law_name) === normalized(law.lawName));
+      promoted.push(existing ?? {
+        law_id: law.lawId as string,
+        law_name: law.lawName,
+        match_type: "contains" as const,
+      });
+    }
+
+    const rest = base.items.filter((item) => !promotedNames.has(normalized(item.law_name)));
+    const items = [...promoted, ...rest].slice(0, limit);
+
+    return {
+      query: base.query,
+      total: base.total,
+      items,
+      warnings: [
+        ...(base.warnings ?? []),
+        `'${linkage.term}' 법령용어 연계로 ${candidates.map((law) => `${law.lawName}(${law.linkCount}조문)`).join(", ")}`
+          + " 을(를) 상위로 올림 — 용어가 실제로 쓰인 조문 기준이며, 쟁점의 의미와 다를 수 있음.",
+      ],
+    };
   }
 
   /**

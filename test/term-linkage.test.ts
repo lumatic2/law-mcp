@@ -187,3 +187,33 @@ test("TermLinkageCache evicts the least recently used entry", () => {
   assert.ok(cache.get("c"));
   assert.equal(cache.size, 2);
 });
+
+// 연계 행의 `조문연계용어링크` 에 법령ID가 들어 있어 **추가 호출 없이** 법령ID를 얻는다.
+// 이게 없으면 법령명을 다시 검색해야 해서 비용 예산(추가 호출 ≤2)을 넘긴다.
+test("extractLinkage harvests the law id from the row link without extra calls", () => {
+  const root = {
+    lstrmRltJoService: {
+      법령용어: {
+        연계법령: [
+          {
+            법령명: "정보통신망 이용촉진 및 정보보호 등에 관한 법률",
+            조번호: "0044", 조가지번호: "00", 용어구분: "선정용어",
+            조문연계용어링크: "/DRF/lawService.do?OC=test&target=joRltLstrm&type=XML&ID=000030&JO=004400",
+          },
+        ],
+      },
+    },
+  };
+
+  const linkage = extractLinkage(root, "명예훼손");
+  assert.equal(linkage.laws[0].lawId, "000030");
+  assert.equal(linkage.laws[0].articles[0].lawId, "000030");
+  assert.equal(linkage.laws[0].articles[0].display, "제44조");
+});
+
+test("extractLinkage tolerates rows without a usable link", () => {
+  const root = {
+    lstrmRltJoService: { 법령용어: { 연계법령: { 법령명: "민법", 조번호: "0839", 조가지번호: "02" } } },
+  };
+  assert.equal(extractLinkage(root, "재산분할청구권").laws[0].lawId, null);
+});

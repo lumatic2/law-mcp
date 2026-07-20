@@ -6,16 +6,20 @@
  *   - `lstrmRltJo`  : 그 용어가 **실제로 쓰인 조문** 목록(법령명 + 조번호 + 조문내용).
  *
  * 이 모듈은 "구어 → 법문" 갭을 메우는 **추가 후보 생성기**다. 기존 검색을 대체하지 않는다 —
- * 2026-07-21 실측에서 골든셋 실패 용어 8건 중 3건만 적중했다(적중 시엔 조문번호까지 정확).
+ * 2026-07-21 실측(대표 용어 8건)에서 6건이 정답 법령에 닿았고 그 6건은 정답 조문까지 포함했다.
  *
- * 주의: 이 색인은 개념이 아니라 **낱말이 쓰인 자리**를 가리킨다. "숙려기간"은 자본시장법
- * 시행령으로도 간다(다른 의미). 그래서 호출자는 `linkCount` 를 신뢰도 대리 지표로 쓴다 —
- * 실측에서 적중 3건은 연계 5~26건, miss 3건은 전부 1건이었다.
+ * 주의: 이 색인은 개념이 아니라 **낱말이 쓰인 자리**를 가리킨다. "숙려기간"은 민법이 아니라
+ * 자본시장법 시행령·보호출산법을 가리킨다(다른 의미의 숙려기간). 신호가 있는데 틀린 이 경우가
+ * 가장 위험하므로, 호출자는 연계 결과를 **기존 결과를 밀어내지 않는 추가 후보**로만 써야 한다.
+ * `linkCount`(그 법령에서 용어가 쓰인 조문 수)를 신뢰도 신호로 쓸 수 있으나 만능은 아니다 —
+ * 정당방위는 형법 연계가 1건뿐인데도 정답이다(문턱 1 로 자르면 정답을 버린다).
  */
 
 export type LinkedArticle = {
   /** 법령명 (예: 근로기준법) */
   lawName: string;
+  /** 법령ID — 연계 행의 `조문연계용어링크`(`ID=000030&JO=000402`)에서 뽑는다. 추가 호출 없이 얻는다. */
+  lawId: string | null;
   /** 사람이 읽는 조문 표기 (예: 제23조, 제839조의2) */
   display: string;
   /** 조 본번호 */
@@ -28,6 +32,7 @@ export type LinkedArticle = {
 
 export type LawLinkage = {
   lawName: string;
+  lawId: string | null;
   /** 이 법령에서 그 용어가 쓰인 조문 수 — 신뢰도 대리 지표 */
   linkCount: number;
   articles: LinkedArticle[];
@@ -89,6 +94,17 @@ export function pickExactTermMst(root: unknown, term: string): string | null {
   return null;
 }
 
+/**
+ * 연계 행이 들고 있는 법령ID. `조문연계용어링크` 가 `...&ID=000030&JO=000402` 형태라
+ * **추가 upstream 호출 없이** 법령ID를 얻는다 — 이게 없으면 법령명을 다시 검색해야 해서
+ * 비용 예산(검색 1회당 추가 호출 ≤2)을 넘긴다. 2026-07-21 실측으로 이 ID 가
+ * `get_law_article` 경로에서 그대로 통하는 것을 확인했다(ID=000030 + 제44조 → 정보통신망법 제44조).
+ */
+function extractLawId(row: Record<string, unknown>): string | null {
+  const link = pickString(row, "조문연계용어링크");
+  return link?.match(/[?&]ID=([0-9A-Za-z]+)/)?.[1] ?? null;
+}
+
 /** "0099" + 가지 "02" → 제99조의2 */
 function formatArticle(articleNo: number, branch: number): string {
   return branch > 0 ? `제${articleNo}조의${branch}` : `제${articleNo}조`;
@@ -101,6 +117,7 @@ export function extractLinkage(root: unknown, term: string): TermLinkage {
   if (rows.length === 0) return { ...EMPTY, term };
 
   const byLaw = new Map<string, LinkedArticle[]>();
+  const lawIds = new Map<string, string>();
   for (const row of rows) {
     const lawName = pickString(row, "법령명");
     const rawNo = pickString(row, "조번호");
@@ -110,11 +127,15 @@ export function extractLinkage(root: unknown, term: string): TermLinkage {
     if (!Number.isFinite(articleNo) || articleNo <= 0) continue;
     const branch = Number(pickString(row, "조가지번호") ?? "0") || 0;
 
+    const lawId = extractLawId(row);
+    if (lawId && !lawIds.has(lawName)) lawIds.set(lawName, lawId);
+
     const list = byLaw.get(lawName) ?? [];
     // 같은 조문이 여러 번 오는 경우가 있어 중복을 제거한다.
     if (!list.some((entry) => entry.articleNo === articleNo && entry.branch === branch)) {
       list.push({
         lawName,
+        lawId,
         display: formatArticle(articleNo, branch),
         articleNo,
         branch,
@@ -127,6 +148,7 @@ export function extractLinkage(root: unknown, term: string): TermLinkage {
   const laws: LawLinkage[] = [...byLaw.entries()]
     .map(([lawName, articles]) => ({
       lawName,
+      lawId: lawIds.get(lawName) ?? null,
       linkCount: articles.length,
       articles: articles.sort((left, right) => left.articleNo - right.articleNo || left.branch - right.branch),
     }))
