@@ -4,7 +4,7 @@
 > execution mode: continuous
 > milestone-레벨 durable plan doc.
 
-Status: approved (2026-07-21 — 사용자 '진행'. 위임 범위 A=horizon 연쇄)
+Status: completed (2026-07-21 — 5/5 step. 채택 1·기각 2. 상세는 changesets/20260721-lb5-*)
 
 ## Objective → horizon → milestone → step (위계)
 
@@ -128,3 +128,6 @@ Status: approved (2026-07-21 — 사용자 '진행'. 위임 범위 A=horizon 연
 - 2026-07-21 plan 작성 — 리서치 `2026-07-21-lb5-term-linkage-probe.md` 선행
 - 2026-07-21 사용자 승인 "진행" — 범위 A(horizon 연쇄), 홀드아웃 조건부 1회 후 은퇴.
   이후 이 문서는 동결한다(체크박스·진행 상태는 work.json·changeset 이 정본).
+- 2026-07-21 완료. step-2 채택(blind recall@3 44%→76% dev / 73.3% holdout), step-3 조문 재정렬
+  기각·`linked_articles` 출하, step-4 약칭 기각(upstream 이 이미 19/20 처리), step-5 홀드아웃
+  마지막 1회 사용 후 은퇴. 계획이 세운 "연계 건수 문턱" 가설도 실측으로 기각했다.

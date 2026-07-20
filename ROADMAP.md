@@ -54,16 +54,18 @@
 
 - Completed at: 2026-07-21
 - Summary: 법원 5종 도구화 — 공통 어댑터로 도구 2개에 담고(표면 9→11) 기여도 실측으로 게이트
-<!-- harness:milestone id="LB5" status="active" priority="P0" -->
+<!-- harness:milestone id="LB5" status="completed" priority="P0" evidence="changesets/20260721-lb5-term-linkage-client + changesets/20260721-lb5-candidate-boost + changesets/20260721-lb5-article-hint + changesets/20260721-lb5-abbrev + changesets/20260721-lb5-holdout-verdict + evidence/bench/2026-07-21-lb5-holdout-verdict.md" -->
 ### LB5 — 용어 연계로 품질 2축(넓이·도달) 개선
 - DoD: dev blind recall@3 가 44.0% 대비 상승(A/B 근거 제시) + assisted acc@3 62.5% 대비 상승
   + 무신호 쿼리 결과 무변 + 검색 1회 추가 호출 ≤2 + 홀드아웃 1회로 과적합 판정.
-- Evidence: `plans/2026-07-21-lb5-term-linkage.md` + `research/2026-07-21-lb5-term-linkage-probe.md`
+- Evidence: changesets/20260721-lb5-term-linkage-client + changesets/20260721-lb5-candidate-boost + changesets/20260721-lb5-article-hint + changesets/20260721-lb5-abbrev + changesets/20260721-lb5-holdout-verdict + evidence/bench/2026-07-21-lb5-holdout-verdict.md
 - Gap: 구어↔법문 용어 갭이 실패 주원인인데 그 매핑이 아예 없다. 법제처가 제공하는 용어 연계
   색인(lstrmAI/lstrmRlt/lstrmRltJo)·법령약칭(lsAbrv)을 미사용 (research 2026-07-21)
 - Scale: changesets>=5; surfaces: 검색 후보 생성·조문 점수·bench 2모드; capability: 사람 말로 물어도 닿는다
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-21
+- Summary: 용어 연계 부스트로 blind recall@3 44%→76%(dev)/73.3%(holdout), 가설 2개 기각
 <!-- harness:milestone id="IB1" status="completed" priority="P0" evidence="changesets/20260712-ib1-h8ta2-repair + npm test 9/9 + 실 API 재현 4/4" -->
 ### IB1 — get_precedent NTS 소스 본문 도달 + 검색 결함 수리
 - DoD: ① 실패 5건(619683/618097/310830/325202/612611) 중 NTS 소스 판례의 본문(판시사항·판결요지

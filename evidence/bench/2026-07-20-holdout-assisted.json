@@ -1,0 +1,300 @@
+{
+  "date": "2026-07-20",
+  "split": "holdout",
+  "mode": "assisted",
+  "summary": {
+    "total": 15,
+    "measured": 15,
+    "skipped": 0,
+    "errors": 0,
+    "accuracy_at_1": 0.6667,
+    "accuracy_at_3": 0.7333
+  },
+  "outcomes": [
+    {
+      "query": "차임 증액 청구 한도",
+      "domain": "부동산임대차",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "주택임대차보호법"
+      ],
+      "predictedArticles": [
+        "제7조",
+        "제10조의2",
+        "제7조의2"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "임대인 수선의무 범위",
+      "domain": "부동산임대차",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제309조",
+        "제623조",
+        "제624조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "주택 임차권등기명령 신청",
+      "domain": "부동산임대차",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "주택임대차보호법"
+      ],
+      "predictedArticles": [
+        "제3조의3",
+        "제3조의4",
+        "제8조의2"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "직장 내 괴롭힘 신고 조치 의무",
+      "domain": "노동",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "근로기준법"
+      ],
+      "predictedArticles": [
+        "제76조의3",
+        "제76조의2",
+        "제93조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "최저임금 미달 지급 벌칙",
+      "domain": "노동",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "최저임금법"
+      ],
+      "predictedArticles": [
+        "제28조",
+        "제6조",
+        "제6조의2"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "업무상 재해 요양급여 신청",
+      "domain": "노동",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "산업재해보상보험법"
+      ],
+      "predictedArticles": [
+        "제37조",
+        "제91조의2",
+        "제91조의12"
+      ],
+      "articleCorrectAt3": false
+    },
+    {
+      "query": "부당이득 반환 범위 선의 수익자",
+      "domain": "계약민사",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제748조",
+        "제749조",
+        "제514조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "보증인 최고 검색의 항변권",
+      "domain": "계약민사",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제437조",
+        "제438조",
+        "제433조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "이행지체 중 손해배상 책임",
+      "domain": "계약민사",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제392조",
+        "제395조",
+        "제236조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "구속 전 피의자 심문",
+      "domain": "형사",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "형사소송법"
+      ],
+      "predictedArticles": [
+        "제201조의2",
+        "제198조의2",
+        "제214조의2"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "상습 절도 가중처벌",
+      "domain": "형사",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "형법"
+      ],
+      "predictedArticles": [
+        "제203조",
+        "제246조",
+        "제264조"
+      ],
+      "articleCorrectAt3": false
+    },
+    {
+      "query": "심신미약 형 감경",
+      "domain": "형사",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "형법"
+      ],
+      "predictedArticles": [
+        "제53조",
+        "제54조",
+        "제55조"
+      ],
+      "articleCorrectAt3": false
+    },
+    {
+      "query": "인지청구의 소",
+      "domain": "가족",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제863조",
+        "제864조",
+        "제909조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "양육비 이행명령 불이행 제재",
+      "domain": "가족",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "가사소송법"
+      ],
+      "predictedArticles": [
+        "제68조",
+        "제67조",
+        "제64조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "이혼 위자료 청구",
+      "domain": "가족",
+      "split": "holdout",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "민법"
+      ],
+      "predictedArticles": [
+        "제752조",
+        "제834조",
+        "제835조"
+      ],
+      "articleCorrectAt3": false
+    }
+  ]
+}
