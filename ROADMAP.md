@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-21
-> 상태: horizon `upstream-delivery` 개설 — UD1 착수 예정
+> 상태: horizon `upstream-delivery` — UD1 완료, UD2 대기(F12 휴지 후 기준선 재측정이 선행)
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -21,21 +21,23 @@
 
 ## Active Milestones
 
-<!-- harness:milestone id="UD1" status="pending" priority="P0" evidence="" -->
+<!-- harness:milestone id="UD1" status="completed" priority="P0" evidence="changesets/20260721-ud0-law-name-resolution + changesets/20260721-ud1-golden-v2 + changesets/20260721-ud1-repeat-runner + changesets/20260721-ud1-baseline-v2 + evidence/bench/2026-07-21-ud1-baseline-v2.md" -->
 ### UD1 — 측정 기반 재건
 - DoD: 신규 평가 세트 40건(dev 25/holdout 15)이 실 API 근거로 라벨링되고, 러너가 반복 측정
   신뢰구간을 출력하며, 홀드아웃 봉인이 **코드로 강제**된다. 신 세트 dev 기준선이 σ 와 함께 기록되고
   이후 A/B 채택 문턱(2σ)이 수치로 확정된다. `src/` 무변경.
-- Evidence: (실행 시 기록)
+- Evidence: changesets/20260721-ud0-law-name-resolution + changesets/20260721-ud1-golden-v2 + changesets/20260721-ud1-repeat-runner + changesets/20260721-ud1-baseline-v2 + evidence/bench/2026-07-21-ud1-baseline-v2.md
 - Gap: 홀드아웃 15건은 LB5 에서 소진·은퇴했고 측정 노이즈(±1건, 4%p)가 정량화되지 않았다.
   이 상태로는 다음 개선이 진짜인지 판정할 수 없다 (F3 + LB5 홀드아웃 판정서)
 - Scale: changesets>=3; surfaces: bench 러너·실 API·npm test; capability: 개선을 판정할 수 있다
 - Plan: `plans/2026-07-21-ud1-measurement-rebuild.md`
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-21
+- Summary: 신 평가 세트 40건 실 API 라벨링 + 홀드아웃 봉인 코드화 + 기준선 48.0%. 검증 중 get_law_article 회귀 적발·수리(UD0)
 <!-- harness:milestone id="UD2" status="pending" priority="P0" evidence="" -->
 ### UD2 — `aiSearch` 편입 + A/B 판정
-- DoD: dev A/B 에서 `aiSearch` 병합이 **2σ 초과** 상승 + **새로 깨지는 쿼리 0** + 쿼리 단위 승패 표
+- DoD: 교차 측정 dev A/B 에서 `aiSearch` 병합의 **순 이득 ≥3건** + **새로 깨지는 쿼리 0** + 쿼리 단위 승패 표
   + `aiSearch` 장애 시 graceful degrade(테스트 고정) + 조문이 **제품 응답으로 출하**되고 그 정확도가
   제품 경로 기준으로 측정됨(F4 해소) + 추가 호출 ≤1 · 지연 ≤3초 + 배포 사본 build + 실 MCP 스모크.
 - Evidence: (실행 시 기록)

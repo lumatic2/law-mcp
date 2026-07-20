@@ -2,3 +2,4 @@
 {"actual_changesets": 2, "declared_min": 4, "milestone_id": "LB2", "ts": "2026-07-21", "verdict": "inflation-candidate"}
 {"actual_changesets": 3, "declared_min": 3, "milestone_id": "LB3", "ts": "2026-07-21", "verdict": "ok"}
 {"actual_changesets": 1, "declared_min": 5, "milestone_id": "LB5", "ts": "2026-07-21", "verdict": "inflation-candidate"}
+{"actual_changesets": 4, "declared_min": 3, "milestone_id": "UD1", "ts": "2026-07-21", "verdict": "ok"}

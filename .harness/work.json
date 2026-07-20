@@ -282,7 +282,7 @@
       "work_id": "ud1-measurement-rebuild",
       "horizon_id": "upstream-delivery",
       "milestone_id": "UD1",
-      "status": "active",
+      "status": "completed",
       "plan_path": "plans/2026-07-21-ud1-measurement-rebuild.md",
       "changeset_path": "changesets/20260721-ud1-golden-v2",
       "next_step": "step-1",
@@ -326,7 +326,8 @@
       ],
       "owner_session_uuid": "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b",
       "updated_at": "2026-07-21",
-      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "다음 개선이 진짜인지 판정할 수 있는 상태로 되돌렸다 — 새 평가 세트 40건을 실 API 근거로 라벨링하고, 홀드아웃 봉인을 코드로 강제했다. 그 과정에서 get_law_article 이 다른 법의 조문을 조용히 반환하던 결함을 찾아 고쳤다."
     }
   }
 }
