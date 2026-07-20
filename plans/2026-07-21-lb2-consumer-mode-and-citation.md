@@ -81,7 +81,7 @@ Supersedes: plans/2026-07-20-lb2-article-level-reach.md
   - Failure probe: `expected_article` 없는 항목·조문 인덱스가 빈 법령에서 assisted 채점이 크래시 없이
     "측정 대상 아님"으로 분류되는지 확인
   - Commit: `changesets/20260721-lb2-two-mode-bench/`
-- [ ] **step-2** verify-citation — 인용 검증 도구 신설
+- [x] **step-2** verify-citation — 인용 검증 도구 신설
   - Artifact: MCP 도구 `verify_citation` + 분류 4종 + 단위테스트
   - Files: write `src/citation-verify.ts`·`src/index.ts`·`src/types.ts`·`test/citation-verify.test.ts` / read `src/article-index.ts`
   - Dependencies: step-1

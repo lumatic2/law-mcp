@@ -1,6 +1,10 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import axios from "axios";
 import * as z from "zod";
+import { ArticleIndexCache, extractArticles } from "./article-index.js";
+import { pickExactLawId, verifyCitation } from "./citation-verify.js";
+import { LAW_API_OC, LAW_SERVICE_BASE_URL } from "./config.js";
 import { evaluateLegalRuleIssues, groupLegalRuleIssuesByTerm } from "./legal-rules.js";
 import { createMcpError, toMcpErrorResponse } from "./mcp-error.js";
 import { LawGoProvider } from "./providers/lawgo-provider.js";
@@ -312,6 +316,65 @@ server.registerTool(
         includeDictionary: include_dictionary,
         customReplacements: custom_replacements,
       });
+      return {
+        content: [{ type: "text", text: toText(result) }],
+        structuredContent: toStructuredContent(result),
+      };
+    } catch (error) {
+      return toMcpErrorResponse(error);
+    }
+  },
+);
+
+const citationArticleCache = new ArticleIndexCache(20);
+
+/**
+ * 인용 검증용 조문 인덱스 로더. 법령을 못 찾거나 조회에 실패하면 null 을 돌려
+ * `law_not_found` 로 판정되게 한다 — upstream 장애를 `ok` 로 오판하지 않기 위함.
+ */
+async function loadArticlesForCitation(lawName: string) {
+  const cached = citationArticleCache.get(lawName);
+  if (cached) return cached;
+
+  // 완전일치만 채택한다 — 폴백이 준 "비슷한" 법령으로 대조하면 거짓 ok 가 나온다(2026-07-21 실측).
+  const search = await provider.searchLaw(lawName, { limit: 5 });
+  const lawId = pickExactLawId(search.items, lawName);
+  if (!lawId) return null;
+
+  const response = await axios.get<unknown>(LAW_SERVICE_BASE_URL, {
+    params: { OC: LAW_API_OC, target: "law", type: "JSON", ID: lawId },
+    timeout: 20_000,
+    validateStatus: () => true,
+  });
+  if (response.status >= 400) return null;
+
+  const articles = extractArticles(response.data as Record<string, unknown>);
+  if (articles.length === 0) return null;
+  citationArticleCache.set(lawName, articles);
+  return articles;
+}
+
+server.registerTool(
+  "verify_citation",
+  {
+    title: "Verify Legal Citation",
+    description:
+      "Check whether a cited Korean statute article actually exists, and whether the cited article "
+      + "title matches the real one. Use this to catch hallucinated citations like \"형법 제9999조\" or "
+      + "a real article number paired with a made-up title. Returns one of: ok, not_found (article "
+      + "number does not exist — nearby article numbers are suggested), title_mismatch (article exists "
+      + "but its real title differs), law_not_found (the statute itself could not be resolved, which "
+      + "also covers upstream lookup failure — never treated as ok).",
+    inputSchema: {
+      law_name: z.string().min(1).describe("법령명 (예: 형법, 근로기준법)"),
+      article: z.string().min(1).describe("조문 (예: 제21조, 21조, 제839조의2)"),
+      cited_title: z.string().optional().describe("인용된 조문 제목 — 주면 제목 일치까지 검증한다"),
+    },
+  },
+  async ({ law_name, article, cited_title }) => {
+    try {
+      const articles = await loadArticlesForCitation(law_name);
+      const result = verifyCitation(articles, law_name, article, cited_title);
       return {
         content: [{ type: "text", text: toText(result) }],
         structuredContent: toStructuredContent(result),
