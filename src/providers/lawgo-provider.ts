@@ -5,6 +5,7 @@ import {
   LAW_SEARCH_BASE_URL,
   LAW_SERVICE_BASE_URL,
 } from "../config.js";
+import { DelegationCache, lookupDelegations, type DelegationFetcher } from "../delegated.js";
 import { createMcpError } from "../mcp-error.js";
 import { bridgeTerm, formatBridgeWarning, type TermBridgeMatch } from "../term-bridge.js";
 import type {
@@ -598,7 +599,14 @@ export class LawGoProvider implements LawProvider {
   /** 용어 연계 조회 경로. 테스트에서 fixture 를 주입할 수 있게 생성자로 받는다. */
   private readonly linkageFetcher: LinkageFetcher;
 
-  constructor(linkageFetcher?: LinkageFetcher) {
+  private readonly delegationCache = new DelegationCache();
+  private readonly delegationFetcher: DelegationFetcher;
+
+  constructor(linkageFetcher?: LinkageFetcher, delegationFetcher?: DelegationFetcher) {
+    this.delegationFetcher = delegationFetcher ?? ((lawId: string) =>
+      fetchLawApi(LAW_SERVICE_BASE_URL, {
+        OC: LAW_API_OC, target: "lsDelegated", type: "JSON", ID: lawId,
+      }));
     this.linkageFetcher = linkageFetcher ?? {
       searchTerm: async (term: string) =>
         fetchLawApi(LAW_SEARCH_BASE_URL, {
@@ -814,13 +822,44 @@ export class LawGoProvider implements LawProvider {
     try {
       const root = await fetchLawArticleRoot(resolvedLawId, "ID", joParam);
       const exactById = findArticleInRoot(root, requestedArticle, normalizedArticleNo, lawId, articleNo);
-      if (exactById) return exactById;
+      if (exactById) return this.attachDelegations(exactById, resolvedLawId, requestedArticle);
     } catch (error) {
       if (shouldStopLawFetchFallback(error)) throw error;
     }
 
     const fallbackRoot = await fetchLawArticleRoot(resolvedLawId, "MST", joParam);
-    return findArticleInRoot(fallbackRoot, requestedArticle, normalizedArticleNo, lawId, articleNo);
+    const found = findArticleInRoot(fallbackRoot, requestedArticle, normalizedArticleNo, lawId, articleNo);
+    return found ? this.attachDelegations(found, resolvedLawId, requestedArticle) : null;
+  }
+
+  /**
+   * 조문 응답에 **그 조문이 위임한 하위 법령 조문**을 덧붙인다 (UD3 step-2).
+   *
+   * "대통령령으로 정하는 바에 따라"가 실제로 어느 시행령 몇 조인지를 upstream 이 이미 계산해
+   * 뒀는데(`lsDelegated`), 지금까지 우리 도구는 그 점프를 못 했다.
+   *
+   * 보조 정보이므로 **실패는 조용히 흡수**하고(`lookupDelegations` 가 빈 배열을 돌려준다),
+   * 위임이 없으면 **필드를 아예 달지 않는다**(빈 배열 오염 금지).
+   */
+  private async attachDelegations(
+    result: GetLawArticleResult,
+    resolvedLawId: string,
+    requestedArticle: ArticleReference | null,
+  ): Promise<GetLawArticleResult> {
+    const article = requestedArticle
+      ? (requestedArticle.branch > 0
+        ? `제${requestedArticle.main}조의${requestedArticle.branch}`
+        : `제${requestedArticle.main}조`)
+      : null;
+    if (!article) return result;
+
+    const delegated = await lookupDelegations(
+      resolvedLawId,
+      article,
+      this.delegationFetcher,
+      this.delegationCache,
+    );
+    return delegated.length > 0 ? { ...result, delegated_to: delegated } : result;
   }
 
   private async fetchPrecedentSearchOnce(

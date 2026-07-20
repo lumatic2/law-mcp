@@ -34,6 +34,17 @@ export interface GetLawArticleResult {
   article_no: string;
   title?: string | null;
   content: string;
+  /**
+   * 이 조문의 "대통령령으로 정하는" 이 실제로 가리키는 하위 법령 조문 (UD3 step-2).
+   * upstream(`lsDelegated`)이 이미 계산해 둔 값이다. 위임이 없으면 **필드 자체가 없다**.
+   */
+  delegated_to?: Array<{
+    law: string;
+    kind: string | null;
+    article: string;
+    title: string | null;
+    phrase: string | null;
+  }>;
   warnings?: string[];
 }
 
