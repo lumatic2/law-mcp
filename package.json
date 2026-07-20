@@ -8,7 +8,9 @@
     "dev": "tsx src/index.ts",
     "smoke": "tsx src/smoke.ts",
     "smoke:mcp": "tsx src/mcp-smoke-client.ts",
-    "test": "tsx --test test/**/*.test.ts"
+    "test": "tsx --test test/**/*.test.ts",
+    "bench:golden": "tsx bench/run.ts",
+    "bench:verify-labels": "tsx bench/verify-labels.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.4",

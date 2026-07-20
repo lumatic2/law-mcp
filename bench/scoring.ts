@@ -1,0 +1,90 @@
+/**
+ * 채점 로직 (LB1 step-2). 러너(run.ts)에서 분리해 단위테스트 가능하게 둔다.
+ * 법령명 비교는 공백·문장부호를 제거한 정규화 후 완전일치 — 부분일치를 쓰면
+ * "민법"이 "민법 시행령"·"국제사법" 같은 이름에 걸려 점수가 부풀려진다.
+ */
+
+export function normalizeName(value: string): string {
+  return value.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
+}
+
+/** 정답 법령 중 하나라도 상위 k에 있으면 hit (복수 정답 허용 — bench/README.md 채점 규약). */
+export function isHitAtK(returnedLawNames: string[], expectedLaws: string[], k: number): boolean {
+  const top = returnedLawNames.slice(0, k).map(normalizeName);
+  return expectedLaws.some((expected) => top.includes(normalizeName(expected)));
+}
+
+/**
+ * "민법 제839조의2" 같은 조문 라벨을 법령명/조문번호로 분해한다.
+ * 형식이 아니면 null — 러너는 이 항목을 조문 채점에서 제외한다.
+ */
+export function parseArticleLabel(label: string): { law: string; article: string } | null {
+  const matched = label.trim().match(/^(.+?)\s+(제\d+조(?:의\d+)?)$/);
+  if (!matched) return null;
+  return { law: matched[1].trim(), article: matched[2] };
+}
+
+/** 조문 번호 일치 — "제28조"·"28조"·"28" 표기 차이를 흡수한다. */
+export function isSameArticle(left: string, right: string): boolean {
+  const canonical = (value: string) => value.replace(/\s+/g, "").replace(/^제/, "").replace(/조$/, "");
+  return canonical(left) === canonical(right);
+}
+
+export type ItemOutcome = {
+  query: string;
+  domain: string;
+  split: string;
+  hit1: boolean;
+  hit3: boolean;
+  precHit: boolean;
+  articleChecked: boolean;
+  articleCorrect: boolean;
+  returned: string[];
+  error?: string;
+};
+
+export type Summary = {
+  total: number;
+  scored: number;
+  errors: number;
+  recall_at_1: number;
+  recall_at_3: number;
+  precedent_hit_rate: number;
+  article_accuracy: number | null;
+  article_checked: number;
+  by_domain: Record<string, { total: number; recall_at_3: number }>;
+};
+
+function ratio(part: number, whole: number): number {
+  return whole === 0 ? 0 : Number((part / whole).toFixed(4));
+}
+
+/** 에러 항목은 scored 에서 빼되 total 에는 남긴다 — 실패를 0점으로 숨기지 않기 위함. */
+export function summarize(outcomes: ItemOutcome[]): Summary {
+  const scored = outcomes.filter((o) => !o.error);
+  const byDomain: Record<string, { total: number; recall_at_3: number }> = {};
+  for (const outcome of scored) {
+    const bucket = (byDomain[outcome.domain] ??= { total: 0, recall_at_3: 0 });
+    bucket.total += 1;
+    if (outcome.hit3) bucket.recall_at_3 += 1;
+  }
+  for (const key of Object.keys(byDomain)) {
+    byDomain[key].recall_at_3 = ratio(byDomain[key].recall_at_3, byDomain[key].total);
+  }
+
+  const articleChecked = scored.filter((o) => o.articleChecked);
+
+  return {
+    total: outcomes.length,
+    scored: scored.length,
+    errors: outcomes.length - scored.length,
+    recall_at_1: ratio(scored.filter((o) => o.hit1).length, scored.length),
+    recall_at_3: ratio(scored.filter((o) => o.hit3).length, scored.length),
+    precedent_hit_rate: ratio(scored.filter((o) => o.precHit).length, scored.length),
+    article_accuracy: articleChecked.length
+      ? ratio(articleChecked.filter((o) => o.articleCorrect).length, articleChecked.length)
+      : null,
+    article_checked: articleChecked.length,
+    by_domain: byDomain,
+  };
+}

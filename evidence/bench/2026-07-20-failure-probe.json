@@ -1,0 +1,41 @@
+{
+  "date": "2026-07-20",
+  "split": "dev",
+  "summary": {
+    "total": 2,
+    "scored": 0,
+    "errors": 2,
+    "recall_at_1": 0,
+    "recall_at_3": 0,
+    "precedent_hit_rate": 0,
+    "article_accuracy": null,
+    "article_checked": 0,
+    "by_domain": {}
+  },
+  "outcomes": [
+    {
+      "query": "임대차 보증금 반환 청구",
+      "domain": "부동산임대차",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [],
+      "error": "법제처 API 호출 실패: HTTP 404"
+    },
+    {
+      "query": "묵시적 갱신 계약 해지 통보 기간",
+      "domain": "부동산임대차",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [],
+      "error": "법제처 API 호출 실패: HTTP 404"
+    }
+  ]
+}
