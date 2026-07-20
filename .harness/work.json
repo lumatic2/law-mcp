@@ -275,7 +275,8 @@
       "owner_session_uuid": "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b",
       "updated_at": "2026-07-21",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
-      "completion_summary": "사람이 쓰는 말로 물어도 맞는 법에 닿게 만들었다 — 법제처 용어 연계 색인을 붙여 정답 포함률이 44%에서 73~76%로 올랐고, 이득 없는 가설 2개는 근거를 남기고 버렸다."
+      "completion_summary": "사람이 쓰는 말로 물어도 맞는 법에 닿게 만들었다 — 법제처 용어 연계 색인을 붙여 정답 포함률이 44%에서 73~76%로 올랐고, 이득 없는 가설 2개는 근거를 남기고 버렸다.",
+      "notified_at": "2026-07-20T17:25:40.595022+00:00"
     }
   }
 }
