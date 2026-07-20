@@ -1,87 +1,66 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-21
-> 상태: horizon `general-legal-coverage` — LB1·LB2·LB3 완료, LB5(품질 2축) 진행 중
+> 상태: horizon `upstream-delivery` 개설 — UD1 착수 예정
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
 
 ## Current Horizon
 
-<!-- harness:goal id="general-legal-coverage" status="active" -->
-### 범용 법률 커버리지 → `plans/horizons/general-legal-coverage.md`
-세무 특화(실은 희귀어 특화) 도구를 법 일반 도구로. 실측 갭: 비세무 13쿼리 정답 포함률 31%,
-법원 5종 미지원, 조문 단위 도달 불가. 무감독 분량: 최소 3 무감독 세션.
-배포·공개(구 LB4)는 2026-07-21 범위에서 제외 — 착수 신호는 사용자 발화다(품질 수치가 아니라).
+<!-- harness:goal id="upstream-delivery" status="active" -->
+### 법제처가 가진 능력을 그대로 전달 → `plans/horizons/upstream-delivery.md`
+축 전환: "우리가 랭킹을 만든다" → "upstream 이 가진 것을 손실 없이 전달한다". 근거는 전수 조사
+(`research/2026-07-21-lawgo-api-survey.md`) — 법제처 `aiSearch` 가 무튜닝 dev 92% 로 우리 튜닝
+76% 를 이기고 조문까지 준다. 우리가 쓰는 것 8종 / 문서가 나열하는 것 191건.
+무감독 분량: 최소 3 무감독 세션. 공개 배포·npm 은 범위 밖(착수 신호는 사용자 발화).
 
-(직전 horizon `issueback-repair-h8ta2` 완료 2026-07-12 — 결함 4건 수리 + ib1b 전문 도달.
-후속 유지보수 ib3·ib4 로 Issue-back Queue #6·#7 및 엔티티 결함까지 소진. 상세는 docs/BACKLOG.md)
+(직전 horizon `general-legal-coverage` 완료 2026-07-21 — LB1·LB2·LB3·LB5. 정답 포함률 31%→76%,
+법원 5종 도구화. 닫는 기준 4개 중 3개 달성, 미달 1개(조문 축)는 이 horizon 으로 이관.
+상세는 `archive/horizons/general-legal-coverage.md` · `docs/BACKLOG.md`)
 
 ## Active Milestones
 
-<!-- harness:milestone id="LB1" status="completed" priority="P0" evidence="changesets/20260720-lb1-golden-set + changesets/20260720-lb1-bench-runner + changesets/20260720-lb1-baseline + evidence/bench/2026-07-20-baseline.json" -->
-### LB1 — 정답 도달 측정 하네스
-- DoD: `npm run bench:golden -- --split dev` 가 실 API 로 완주해 recall@3 기준선을 파일로 남긴다.
-  홀드아웃은 미측정 봉인. 검색 로직은 이 milestone 에서 변경하지 않는다.
-- Evidence: changesets/20260720-lb1-golden-set + changesets/20260720-lb1-bench-runner + changesets/20260720-lb1-baseline + evidence/bench/2026-07-20-baseline.json
-- Gap: 검색 품질이 인상뿐이라 개선을 주장·반증할 수 없다 (research 2026-07-20 §1)
-- Scale: changesets>=3; surfaces: bench 러너·실 API·npm test; capability: 검색 품질을 수치로 측정
-- Status: [x]
+<!-- harness:milestone id="UD1" status="pending" priority="P0" evidence="" -->
+### UD1 — 측정 기반 재건
+- DoD: 신규 평가 세트 40건(dev 25/holdout 15)이 실 API 근거로 라벨링되고, 러너가 반복 측정
+  신뢰구간을 출력하며, 홀드아웃 봉인이 **코드로 강제**된다. 신 세트 dev 기준선이 σ 와 함께 기록되고
+  이후 A/B 채택 문턱(2σ)이 수치로 확정된다. `src/` 무변경.
+- Evidence: (실행 시 기록)
+- Gap: 홀드아웃 15건은 LB5 에서 소진·은퇴했고 측정 노이즈(±1건, 4%p)가 정량화되지 않았다.
+  이 상태로는 다음 개선이 진짜인지 판정할 수 없다 (F3 + LB5 홀드아웃 판정서)
+- Scale: changesets>=3; surfaces: bench 러너·실 API·npm test; capability: 개선을 판정할 수 있다
+- Plan: `plans/2026-07-21-ud1-measurement-rebuild.md`
+- Status: [ ]
 
-- Completed at: 2026-07-21
-- Summary: 골든셋 40건·채점 러너·기준선 recall@3 44.0% 확정
-<!-- harness:milestone id="LB2" status="completed" priority="P0" evidence="changesets/20260720-lb2-article-index + changesets/20260721-lb2-{article-match,two-mode-bench,verify-citation,title-weight-and-holdout} + evidence/bench/2026-07-21-curation-verdict.md" -->
-### LB2 — 조문 단위 도달 + 랭킹 실질 개선
-- DoD: `search_law_articles` 실 API 도달 + dev recall@3 기준선 대비 상승 + 홀드아웃 1회 측정 기록
-  + 검색 1회 지연 ≤3초 + 세무 회귀 6종 무변.
-- Evidence: changesets/20260720-lb2-article-index + changesets/20260721-lb2-{article-match,two-mode-bench,verify-citation,title-weight-and-holdout} + evidence/bench/2026-07-21-curation-verdict.md
-- Gap: 조문 단위 검색 타깃이 upstream 에 없어 "몇 조"에 답 못 하고, 그 때문에 랭킹 신호도 없다
-  (research 2026-07-20 §3)
-- Scale: changesets>=4; surfaces: MCP 도구·실 API·bench·npm test; capability: 어느 법 몇 조인지 답한다
-- Status: [x]
+<!-- harness:milestone id="UD2" status="pending" priority="P0" evidence="" -->
+### UD2 — `aiSearch` 편입 + A/B 판정
+- DoD: dev A/B 에서 `aiSearch` 병합이 **2σ 초과** 상승 + **새로 깨지는 쿼리 0** + 쿼리 단위 승패 표
+  + `aiSearch` 장애 시 graceful degrade(테스트 고정) + 조문이 **제품 응답으로 출하**되고 그 정확도가
+  제품 경로 기준으로 측정됨(F4 해소) + 추가 호출 ≤1 · 지연 ≤3초 + 배포 사본 build + 실 MCP 스모크.
+- Evidence: (실행 시 기록)
+- Gap: 관련도 랭킹이 있는 엔드포인트가 따로 있었는데 5 milestone 동안 몰랐다. 92% vs 76% 격차이고
+  응답이 조문 단위다 (research 2026-07-21 §★)
+- Scale: changesets>=4; surfaces: 검색 후보 생성·MCP 응답 스키마·bench·실 MCP; capability: upstream 최선 경로로 답한다
+- Plan: `plans/2026-07-21-ud2-aisearch-adoption.md`
+- Status: [ ]
 
-- Completed at: 2026-07-21
-- Summary: verify_citation 신설 + 2모드 측정(dev blind 44.0%/assisted 62.5%, holdout 60.0%/73.3%) + C안 조건부 판정
-<!-- harness:milestone id="LB3" status="completed" priority="P1" evidence="changesets/20260720-lb3-source-adapter + changesets/20260720-lb3-source-tools + changesets/20260720-lb3-contribution-gate + evidence/bench/2026-07-21-lb3-contribution.md" -->
-### LB3 — 누락 법원(法源) 5종 도구화
-- DoD: 등록된 법원 도구가 각 실 API 1건 이상 도달 + 기여도 리포트 수치 제시 + 기여 0 법원 미등록
-  + 기존 도구 회귀 없음.
-- Evidence: changesets/20260720-lb3-source-adapter + changesets/20260720-lb3-source-tools + changesets/20260720-lb3-contribution-gate + evidence/bench/2026-07-21-lb3-contribution.md
-- Gap: 법령해석례·헌재결정례·행정심판재결례·자치법규·법령용어 타깃이 전부 실재하는데 미지원
-  (research 2026-07-20 §2)
-- Scale: changesets>=3; surfaces: MCP 도구·실 API·npm test; capability: 법령·판례 밖 법원에 도달
-- Status: [x]
+<!-- harness:milestone id="UD3" status="pending" priority="P1" evidence="" -->
+### UD3 — 미접근 자료원 흡수 (위원회 결정문 + 위임조문)
+- DoD: 위원회 결정문이 실 API 도달 + descriptor 마다 조회 파라미터가 테스트로 고정 +
+  `get_law_article` 이 위임 하위 조문을 함께 반환 + **도구 표면 증가 ≤1** + 자료원별 대표 쿼리
+  기여도 표 제시(미도달 자료원 미등록) + 배포 사본 build + 실 MCP 스모크.
+- Evidence: (실행 시 기록)
+- Gap: 노동위원회 판정 39,363건이 통째로 사각지대다 — 노동 도메인 저점수의 원인이 용어 갭만이
+  아니라 자료원 부재였다. `lsDelegated` 위임 점프도 미사용 (research 2026-07-21 §A-1·§A-2)
+- Scale: changesets>=3; surfaces: source descriptor·MCP 도구·실 API·npm test; capability: 랭킹으로 못 메우는 갭을 자료원으로 메운다
+- Plan: `plans/2026-07-21-ud3-untapped-sources.md`
+- Status: [ ]
 
-- Completed at: 2026-07-21
-- Summary: 법원 5종 도구화 — 공통 어댑터로 도구 2개에 담고(표면 9→11) 기여도 실측으로 게이트
-<!-- harness:milestone id="LB5" status="completed" priority="P0" evidence="changesets/20260721-lb5-term-linkage-client + changesets/20260721-lb5-candidate-boost + changesets/20260721-lb5-article-hint + changesets/20260721-lb5-abbrev + changesets/20260721-lb5-holdout-verdict + evidence/bench/2026-07-21-lb5-holdout-verdict.md" -->
-### LB5 — 용어 연계로 품질 2축(넓이·도달) 개선
-- DoD: dev blind recall@3 가 44.0% 대비 상승(A/B 근거 제시) + assisted acc@3 62.5% 대비 상승
-  + 무신호 쿼리 결과 무변 + 검색 1회 추가 호출 ≤2 + 홀드아웃 1회로 과적합 판정.
-- Evidence: changesets/20260721-lb5-term-linkage-client + changesets/20260721-lb5-candidate-boost + changesets/20260721-lb5-article-hint + changesets/20260721-lb5-abbrev + changesets/20260721-lb5-holdout-verdict + evidence/bench/2026-07-21-lb5-holdout-verdict.md
-- Gap: 구어↔법문 용어 갭이 실패 주원인인데 그 매핑이 아예 없다. 법제처가 제공하는 용어 연계
-  색인(lstrmAI/lstrmRlt/lstrmRltJo)·법령약칭(lsAbrv)을 미사용 (research 2026-07-21)
-- Scale: changesets>=5; surfaces: 검색 후보 생성·조문 점수·bench 2모드; capability: 사람 말로 물어도 닿는다
-- Status: [x]
-
-- Completed at: 2026-07-21
-- Summary: 용어 연계 부스트로 blind recall@3 44%→76%(dev)/73.3%(holdout), 가설 2개 기각
-<!-- harness:milestone id="IB1" status="completed" priority="P0" evidence="changesets/20260712-ib1-h8ta2-repair + npm test 9/9 + 실 API 재현 4/4" -->
-### IB1 — get_precedent NTS 소스 본문 도달 + 검색 결함 수리
-- DoD: ① 실패 5건(619683/618097/310830/325202/612611) 중 NTS 소스 판례의 본문(판시사항·판결요지
-  또는 판례내용 텍스트)이 `get_precedent`로 도달하거나, 구조적 불가 시 대체 경로(자동 폴백 +
-  구체 안내)가 구현·검증됨 ② `search_law`/`search_admin_rules` 본문 키워드 검색 지원(law.go.kr
-  DRF search=2 등) — "가지급금" 류 쿼리가 법인세법 계열 도달 ③ 다단어 자연어 쿼리 0건 시 완화
-  재시도 폴백(경고 포함) ④ 대형 admin rule 부분 반환 옵션 또는 문서화. 전부 실 API 스모크로 검증
-- Evidence: changesets/20260712-ib1-h8ta2-repair + npm test 9/9 + 실 API 재현 4/4
-- Gap: ai-accounting-firm H8 TA2 조세불복 의견서 실험에서 판례 인용이 제목 수준으로 제한 —
-  판례 검색 기능의 실효성 붕괴 (docs/BACKLOG.md Issue-back Queue #1~#4)
-- Status: [x]
-
-- Completed at: 2026-07-12
-- Summary: 결함 4건 수리: NTS 폴백(5/5 요지 도달)·본문검색·완화재시도·부분반환, 게이트 독립 재현 PASS
 ## Next Candidates
-- (없음 — 현 horizon LB1~LB3 소진. 닫는 기준 미달 축(정답 포함률·조문 정확도)이 다음 입력)
+- `dlytrm` 일상용어 재평가 (LB5 제외 근거가 부분적이었음 — 검색은 정상, 관계 조회만 불안정)
+- `specialDeccTt` 조세심판원 파라미터 재확인 (이 레포 최초 소비처와 직결)
+- `eflaw` 시행일 법령 · 별표 3종 · `lsStmd`/`thdCmp` 법령 관계도
 
 ## Archive Pointer
 완료 이력은 `docs/BACKLOG.md` 참조. ROADMAP.md 는 150줄 이하 current horizon 만 유지한다. milestone 완료·compact 는 `/harness` 가 처리한다.
@@ -90,3 +69,5 @@
 "왜 X sync 방식을 씀?", "왜 Y host 는 candidate 로 둠?" 같은 선택은 `docs/adr/` 에 ADR 로.
 - 2026-07-12: 첫 실 horizon 은 ai-accounting-firm issue-back 수리로 개설 (kifrs-rag 선례 준용 —
   새 horizon 은 사용처 결함만 입력으로 연다).
+- 2026-07-21: 전수 조사를 **선행**해 horizon 을 연다. 직전 두 horizon 은 착수 후에 "이미 있는
+  upstream 기능"을 발견했고(LB3 법원 5종·LB5 용어 색인), 그 부채를 조사로 갚은 뒤 이 horizon 을 열었다.

@@ -1,6 +1,6 @@
 # HORIZON — 범용 법률 커버리지 (general-legal-coverage)
 
-> 생성: 2026-07-20 · ROADMAP marker: `harness:goal id="general-legal-coverage"` · 상태: active
+> 생성: 2026-07-20 · 종료: 2026-07-21 · ROADMAP marker: `harness:goal id="general-legal-coverage"` · 상태: **closed**
 > cascade 중간(Horizon). 위계: Objective(`OBJECTIVE.md`) → **Horizon**(이 문서) → Milestone(`plans/<date>-<milestone-id>-<slug>.md`) → Step.
 > 진행 상태의 정본은 `ROADMAP.md` marker — 이 문서의 체크박스는 milestone boundary 에서만 동기화.
 
@@ -86,9 +86,31 @@
 **조문 선택 코드(`scoreArticles`)가 어떤 MCP 도구에도 연결돼 있지 않다**는 것이다 — 지표가
 출하되지 않는 경로를 재고 있었다. 조문 축을 닫으려면 그 연결이 선행돼야 한다(F4).
 
-## Objective 임팩트 (close 시 기록 — §B3 완료 hook 5)
+## Objective 임팩트 (close 2026-07-21)
 
-- (close 시 작성)
+- **도달**: 비세무 정답 포함률 31% → 73~76%. 이 horizon 이 시작할 때 이 축은 *숫자 자체가 없었다*.
+- **넓이**: 법령·판례·행정규칙 3종 → 8종(법령해석례·헌재결정례·행정심판재결례·자치법규·법령용어 추가),
+  도구는 +2 만(9→11).
+- **함정 없음**: 사람이 쓰는 말("부당해고 구제신청 기간")로 물어도 닿는다 — 용어 연계 부스트.
+- **닫는 기준 4개 중 3개 달성.** 기준 2(조문 정답률)만 미달이며, 원인은 품질이 아니라 **측정 대상이
+  출하되지 않는 코드였다**(`scoreArticles` 무연결, F4). 이 미달은 다음 horizon 으로 이관한다.
+
+## 종료 사유 — 전제가 뒤집혔다 (2026-07-21)
+
+이 horizon 의 모든 milestone 은 **"upstream 에 관련도 랭킹이 없다, 그러니 우리가 만든다"** 를
+전제로 했다. 종료 시점의 전수 조사(`research/2026-07-21-lawgo-api-survey.md`)에서 그 전제가
+틀렸음이 드러났다 — 법제처 `aiSearch` 가 **무튜닝으로 dev 92%**(우리 76%)이고 조문까지 준다.
+
+이 horizon 은 실패가 아니다. 측정 하네스·법원 어댑터·용어 연계는 그대로 남고, 다음 horizon 이
+그 위에서 **전제를 바꿔** 이어간다 → `plans/horizons/upstream-delivery.md`.
+
+## 남긴 부채 (다음 horizon 의 입력)
+
+- **F3** 측정 노이즈 미정량 — 같은 코드 2회 실행이 72.0%/76.0%(±1건). 4%p 이하 판정 불가.
+- **F4** `scoreArticles` 미출하 — 조문 지표가 제품 경로를 재지 않는다.
+- **홀드아웃 은퇴** — LB5 에서 마지막 1회 소진. 새 세트 없이는 과적합 판정 불가.
+- 조사가 뒤집은 판단: LB3 "법원 5종"은 전수가 아니었고(위원회 12종 등 잔존), LB5 의 `dlytrm`
+  제외 근거는 부분적이었다.
 
 ## 링크
 

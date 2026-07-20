@@ -74,7 +74,23 @@
 
 ## Completed
 
-- (아직 없음)
+### horizon `general-legal-coverage` (2026-07-20 ~ 2026-07-21, closed)
+세무 특화(실은 희귀어 특화) 도구를 법 일반 도구로. 닫는 기준 4개 중 3개 달성.
+상세 → `archive/horizons/general-legal-coverage.md`, plan doc 은 `archive/plans/`.
+
+- **LB1 정답 도달 측정 하네스** (2026-07-21) — 비세무 5도메인 골든셋 40건(dev 25/holdout 15)·채점
+  러너·기준선 recall@3 44.0% 확정. 검색 품질을 처음으로 수치화. Evidence: `evidence/bench/2026-07-20-baseline.json`.
+- **LB2 조문 단위 도달 + 랭킹 개선** (2026-07-21) — `verify_citation` 신설, 2모드 측정 도입
+  (dev blind 44.0%/assisted 62.5%). 개선 가설 2개 기각, 대형 색인(C안)은 조건부 보류 판정.
+  Evidence: `evidence/bench/2026-07-21-curation-verdict.md`.
+- **LB3 누락 법원 5종 도구화** (2026-07-21) — 법령해석례·헌재결정례·행정심판재결례·자치법규·법령용어.
+  응답 구조가 타깃마다 제각각이라 공통 어댑터(`source-adapter.ts`)로 흡수, 도구는 +2 만(9→11).
+  Evidence: `evidence/bench/2026-07-21-lb3-contribution.md`. 남은 gap: 이게 전수가 아니었다(위원회 12종 등).
+- **LB5 용어 연계로 품질 2축 개선** (2026-07-21) — 법제처 용어 연계 색인 편입으로 blind recall@3
+  44%→76%(dev)/73.3%(holdout), 새로 깨진 쿼리 0. 가설 2개 기각(조문 재정렬·법령 약칭).
+  Evidence: `evidence/bench/2026-07-21-lb5-holdout-verdict.md`. 남은 gap: F3 노이즈 미정량·F4 `scoreArticles` 미출하·홀드아웃 은퇴.
+- **LB4 (배포·공개·발견성)** — 2026-07-21 사용자 확정으로 **범위에서 제거**. 착수 신호는 품질 수치가
+  아니라 사용자 발화다. probe §4 는 그때 재사용한다.
 
 ## Deferred
 
