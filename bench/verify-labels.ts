@@ -18,9 +18,14 @@ type Item = {
 };
 
 const p = new LawGoProvider();
-const golden = JSON.parse(readFileSync(new URL("./golden.json", import.meta.url), "utf8")) as {
+
+// --set <이름> 으로 검증 대상 세트를 고른다(기본 golden). UD1 에서 golden-v2 가 생겼다.
+const setArg = process.argv.indexOf("--set");
+const setName = setArg >= 0 ? process.argv[setArg + 1] : "golden";
+const golden = JSON.parse(readFileSync(new URL(`./${setName}.json`, import.meta.url), "utf8")) as {
   items: Item[];
 };
+console.log(`세트: ${setName}.json (${golden.items.length}건)\n`);
 
 function parseArticle(label: string): { law: string; article: string } | null {
   const m = label.match(/^(.+?)\s+(제\d+조(?:의\d+)?)$/);

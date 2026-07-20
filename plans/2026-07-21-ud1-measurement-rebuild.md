@@ -4,6 +4,8 @@
 > execution mode: continuous
 > milestone-레벨 durable plan doc.
 
+
+Status: approved (2026-07-21 사용자 "ㄱㄱ" — horizon upstream-delivery 전체 연쇄 승인)
 ## Objective → horizon → milestone → step (위계)
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중

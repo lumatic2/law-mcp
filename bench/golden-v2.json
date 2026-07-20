@@ -1,0 +1,331 @@
+{
+  "version": 2,
+  "created": "2026-07-21",
+  "milestone": "UD1",
+  "note": "구 bench/golden.json 은 LB1~LB5 튜닝에 소진돼 신뢰할 수 없다(F5). 이 세트가 horizon upstream-delivery 의 판정 정본이다. 정답 라벨은 근거 필수(source). 홀드아웃 15건은 horizon close 시 1회만 열며, 러너가 --i-am-closing-the-horizon 없이는 거부한다. 구 세트와 쿼리 중복 금지(테스트로 고정).",
+  "items": [
+    {
+      "query": "임금체불 지연이자",
+      "domain": "노동",
+      "expected_laws": ["근로기준법"],
+      "expected_article": "근로기준법 제37조",
+      "split": "dev",
+      "source": "근로기준법 제37조(미지급 임금에 대한 지연이자) — 퇴직일 후 14일 경과 시 지연이자"
+    },
+    {
+      "query": "육아휴직 신청 요건과 기간",
+      "domain": "노동",
+      "expected_laws": ["남녀고용평등과 일ㆍ가정 양립 지원에 관한 법률"],
+      "expected_article": "남녀고용평등과 일ㆍ가정 양립 지원에 관한 법률 제19조",
+      "split": "dev",
+      "source": "남녀고용평등법 제19조(육아휴직)"
+    },
+    {
+      "query": "근로계약서 미교부 처벌",
+      "domain": "노동",
+      "expected_laws": ["근로기준법"],
+      "expected_article": "근로기준법 제17조",
+      "split": "dev",
+      "source": "근로기준법 제17조(근로조건의 명시) — 서면 명시·교부 의무"
+    },
+    {
+      "query": "경영상 이유에 의한 해고 요건",
+      "domain": "노동",
+      "expected_laws": ["근로기준법"],
+      "expected_article": "근로기준법 제24조",
+      "split": "dev",
+      "source": "근로기준법 제24조(경영상 이유에 의한 해고의 제한) — 긴박한 경영상 필요"
+    },
+    {
+      "query": "실업급여 구직급여 수급 요건",
+      "domain": "노동",
+      "expected_laws": ["고용보험법"],
+      "expected_article": "고용보험법 제40조",
+      "split": "dev",
+      "source": "고용보험법 제40조(구직급여의 수급 요건)"
+    },
+    {
+      "query": "노동조합 설립신고",
+      "domain": "노동",
+      "expected_laws": ["노동조합 및 노동관계조정법"],
+      "expected_article": "노동조합 및 노동관계조정법 제10조",
+      "split": "holdout",
+      "source": "노동조합법 제10조(설립의 신고)"
+    },
+    {
+      "query": "산업재해 장해급여",
+      "domain": "노동",
+      "expected_laws": ["산업재해보상보험법"],
+      "expected_article": "산업재해보상보험법 제57조",
+      "split": "holdout",
+      "source": "산재보험법 제57조(장해급여)"
+    },
+    {
+      "query": "파견근로자 사용기간 제한",
+      "domain": "노동",
+      "expected_laws": ["파견근로자 보호 등에 관한 법률"],
+      "expected_article": "파견근로자 보호 등에 관한 법률 제6조",
+      "split": "holdout",
+      "source": "파견법 제6조(파견기간) — 원칙 1년, 연장 포함 2년 초과 금지"
+    },
+
+    {
+      "query": "긴급체포 요건",
+      "domain": "형사",
+      "expected_laws": ["형사소송법"],
+      "expected_article": "형사소송법 제200조의3",
+      "split": "dev",
+      "source": "형사소송법 제200조의3(긴급체포)"
+    },
+    {
+      "query": "횡령죄 처벌",
+      "domain": "형사",
+      "expected_laws": ["형법"],
+      "expected_article": "형법 제355조",
+      "split": "dev",
+      "source": "형법 제355조(횡령, 배임)"
+    },
+    {
+      "query": "스토킹 잠정조치",
+      "domain": "형사",
+      "expected_laws": ["스토킹범죄의 처벌 등에 관한 법률"],
+      "expected_article": "스토킹범죄의 처벌 등에 관한 법률 제9조",
+      "split": "dev",
+      "source": "스토킹처벌법 제9조(스토킹행위자에 대한 잠정조치)"
+    },
+    {
+      "query": "성폭력 피해자 신뢰관계인 동석",
+      "domain": "형사",
+      "expected_laws": ["성폭력범죄의 처벌 등에 관한 특례법"],
+      "expected_article": "성폭력범죄의 처벌 등에 관한 특례법 제34조",
+      "split": "dev",
+      "source": "성폭력처벌법 제34조(신뢰관계에 있는 사람의 동석)"
+    },
+    {
+      "query": "범죄수익 몰수 추징",
+      "domain": "형사",
+      "expected_laws": ["형법"],
+      "expected_article": "형법 제48조",
+      "split": "dev",
+      "source": "형법 제48조(몰수의 대상과 추징)"
+    },
+    {
+      "query": "압수수색영장 집행 참여",
+      "domain": "형사",
+      "expected_laws": ["형사소송법"],
+      "expected_article": "형사소송법 제121조",
+      "split": "holdout",
+      "source": "형사소송법 제121조(영장집행과 당사자의 참여)"
+    },
+    {
+      "query": "특수상해 처벌",
+      "domain": "형사",
+      "expected_laws": ["형법"],
+      "expected_article": "형법 제258조의2",
+      "split": "holdout",
+      "source": "형법 제258조의2(특수상해)"
+    },
+    {
+      "query": "전화금융사기 보이스피싱 처벌",
+      "domain": "형사",
+      "expected_laws": ["전기통신금융사기 피해 방지 및 피해금 환급에 관한 특별법"],
+      "split": "holdout",
+      "source": "전기통신금융사기 특별법 — 전기통신금융사기 처벌 규정"
+    },
+
+    {
+      "query": "점유취득시효 완성",
+      "domain": "민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제245조",
+      "split": "dev",
+      "source": "민법 제245조(점유로 인한 부동산소유권의 취득기간) — 20년 점유"
+    },
+    {
+      "query": "유치권 성립 요건",
+      "domain": "민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제320조",
+      "split": "dev",
+      "source": "민법 제320조(유치권의 내용)"
+    },
+    {
+      "query": "지상권 존속기간",
+      "domain": "민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제280조",
+      "split": "dev",
+      "source": "민법 제280조(존속기간을 약정한 지상권)"
+    },
+    {
+      "query": "공동불법행위자 연대책임",
+      "domain": "민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제760조",
+      "split": "dev",
+      "source": "민법 제760조(공동불법행위자의 책임)"
+    },
+    {
+      "query": "사용자책임 면책 사유",
+      "domain": "민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제756조",
+      "split": "dev",
+      "source": "민법 제756조(사용자의 배상책임) — 선임·감독 상당한 주의 시 면책"
+    },
+    {
+      "query": "채권양도 대항요건",
+      "domain": "민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제450조",
+      "split": "holdout",
+      "source": "민법 제450조(지명채권양도의 대항요건)"
+    },
+    {
+      "query": "상계 요건",
+      "domain": "민사",
+      "expected_laws": ["민법"],
+      "expected_article": "민법 제492조",
+      "split": "holdout",
+      "source": "민법 제492조(상계의 요건)"
+    },
+    {
+      "query": "제조물 결함 손해배상",
+      "domain": "민사",
+      "expected_laws": ["제조물 책임법"],
+      "expected_article": "제조물 책임법 제3조",
+      "split": "holdout",
+      "source": "제조물 책임법 제3조(제조물 책임)"
+    },
+
+    {
+      "query": "행정심판 청구 기간",
+      "domain": "행정",
+      "expected_laws": ["행정심판법"],
+      "expected_article": "행정심판법 제27조",
+      "split": "dev",
+      "source": "행정심판법 제27조(심판청구의 기간) — 안 날부터 90일, 있었던 날부터 180일"
+    },
+    {
+      "query": "취소소송 제소기간",
+      "domain": "행정",
+      "expected_laws": ["행정소송법"],
+      "expected_article": "행정소송법 제20조",
+      "split": "dev",
+      "source": "행정소송법 제20조(제소기간)"
+    },
+    {
+      "query": "정보공개 비공개 대상 정보",
+      "domain": "행정",
+      "expected_laws": ["공공기관의 정보공개에 관한 법률"],
+      "expected_article": "공공기관의 정보공개에 관한 법률 제9조",
+      "split": "dev",
+      "source": "정보공개법 제9조(비공개 대상 정보)"
+    },
+    {
+      "query": "처분 사전통지 의무",
+      "domain": "행정",
+      "expected_laws": ["행정절차법"],
+      "expected_article": "행정절차법 제21조",
+      "split": "dev",
+      "source": "행정절차법 제21조(처분의 사전 통지)"
+    },
+    {
+      "query": "과징금 부과 기준",
+      "domain": "행정",
+      "expected_laws": ["행정기본법"],
+      "expected_article": "행정기본법 제28조",
+      "split": "dev",
+      "source": "행정기본법 제28조(과징금의 기준)"
+    },
+    {
+      "query": "이행강제금 부과",
+      "domain": "행정",
+      "expected_laws": ["행정기본법"],
+      "expected_article": "행정기본법 제31조",
+      "split": "holdout",
+      "source": "행정기본법 제31조(이행강제금의 부과)"
+    },
+    {
+      "query": "개인정보 유출 통지 의무",
+      "domain": "행정",
+      "expected_laws": ["개인정보 보호법"],
+      "expected_article": "개인정보 보호법 제34조",
+      "split": "holdout",
+      "source": "개인정보 보호법 제34조(개인정보 유출 등의 통지·신고)"
+    },
+    {
+      "query": "건축허가 취소",
+      "domain": "행정",
+      "expected_laws": ["건축법"],
+      "expected_article": "건축법 제11조",
+      "split": "holdout",
+      "source": "건축법 제11조(건축허가) — 착수기간 미준수 시 허가 취소"
+    },
+
+    {
+      "query": "종합소득세 확정신고 기한",
+      "domain": "세무",
+      "expected_laws": ["소득세법"],
+      "expected_article": "소득세법 제70조",
+      "split": "dev",
+      "source": "소득세법 제70조(종합소득과세표준 확정신고) — 다음 연도 5월 1일~31일"
+    },
+    {
+      "query": "매입세액 불공제 대상",
+      "domain": "세무",
+      "expected_laws": ["부가가치세법"],
+      "expected_article": "부가가치세법 제39조",
+      "split": "dev",
+      "source": "부가가치세법 제39조(공제하지 아니하는 매입세액)"
+    },
+    {
+      "query": "상속세 신고 기한",
+      "domain": "세무",
+      "expected_laws": ["상속세 및 증여세법"],
+      "expected_article": "상속세 및 증여세법 제67조",
+      "split": "dev",
+      "source": "상증세법 제67조(상속세 과세표준신고) — 상속개시일이 속하는 달의 말일부터 6개월"
+    },
+    {
+      "query": "가산세 감면 사유",
+      "domain": "세무",
+      "expected_laws": ["국세기본법"],
+      "expected_article": "국세기본법 제48조",
+      "split": "dev",
+      "source": "국세기본법 제48조(가산세 감면 등)"
+    },
+    {
+      "query": "국세 부과 제척기간",
+      "domain": "세무",
+      "expected_laws": ["국세기본법"],
+      "expected_article": "국세기본법 제26조의2",
+      "split": "dev",
+      "source": "국세기본법 제26조의2(국세의 부과제척기간)"
+    },
+    {
+      "query": "1세대 1주택 양도소득세 비과세",
+      "domain": "세무",
+      "expected_laws": ["소득세법"],
+      "expected_article": "소득세법 제89조",
+      "split": "holdout",
+      "source": "소득세법 제89조(비과세 양도소득)"
+    },
+    {
+      "query": "기업업무추진비 손금 한도",
+      "domain": "세무",
+      "expected_laws": ["법인세법"],
+      "expected_article": "법인세법 제25조",
+      "split": "holdout",
+      "source": "법인세법 제25조(기업업무추진비의 손금불산입) — 구 접대비"
+    },
+    {
+      "query": "조세심판 청구 기간",
+      "domain": "세무",
+      "expected_laws": ["국세기본법"],
+      "expected_article": "국세기본법 제68조",
+      "split": "holdout",
+      "source": "국세기본법 제68조(청구기간) — 처분을 안 날부터 90일"
+    }
+  ]
+}

@@ -11,6 +11,7 @@
 | 1 | [20260712-ib1-h8ta2-repair](20260712-ib1-h8ta2-repair/README.md) | 2026-07-12 | lawgo-provider.ts, law-provider.ts, types.ts, index.ts, test/lawgo-provider.test.ts | ✅ | done |
 | 2 | [20260712-ib1b-nts-fulltext-html](20260712-ib1b-nts-fulltext-html/README.md) | 2026-07-12 | lawgo-provider.ts, test/lawgo-provider.test.ts | ✅ | done |
 | 3 | [20260712-ib2-term-bridge](20260712-ib2-term-bridge/README.md) | 2026-07-12 | term-bridge.ts (신규), lawgo-provider.ts, test/term-bridge.test.ts (신규) | ✅ | done |
+| 4 | [20260721-ud0-law-name-resolution](20260721-ud0-law-name-resolution/README.md) | 2026-07-21 | lawgo-provider.ts(resolveLawId·pickLawIdByName), test/law-name-resolution.test.ts (신규) | ✅ | done |
 
 ## 운영 원칙
 

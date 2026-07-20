@@ -322,6 +322,18 @@ export function mapNtsPrecedentDetail(
  * 다단어 자연어 쿼리가 0건일 때 쓰는 완화 재시도 1단: 공백 기준 마지막 토큰을 제거한다.
  * 토큰이 1개 이하면(더 완화할 수 없으면) null을 반환한다.
  */
+/**
+ * 이름으로 부른 법령을 검색 결과에서 고른다 — 정확일치 > prefix > 첫 항목.
+ * `items[0]` 을 그냥 쓰면 순위 신호(부스트·본문검색)가 이름 조회를 오염시킨다(UD0).
+ */
+export function pickLawIdByName(items: Array<{ law_id: string; match_type?: string }>): string {
+  const picked =
+    items.find((item) => item.match_type === "exact") ??
+    items.find((item) => item.match_type === "prefix") ??
+    items[0];
+  return picked.law_id;
+}
+
 export function relaxQuery(query: string): string | null {
   const tokens = query.trim().split(/\s+/).filter(Boolean);
   if (tokens.length <= 1) return null;
@@ -764,10 +776,21 @@ export class LawGoProvider implements LawProvider {
    * If the input is already numeric, return as-is.
    * Otherwise, search by name and return the best match's law_id.
    */
+  /**
+   * 법령명 → 법령ID 해석.
+   *
+   * 이 경로는 **이름 조회**이지 주제 검색이 아니다. 그래서 두 가지를 지킨다:
+   *   ① 용어 연계 부스트를 끈다 — 부스트는 쟁점형 질의("부당해고 구제신청 기간")용이고,
+   *      법령명을 그대로 물을 때는 정확일치를 1위에서 밀어낸다.
+   *   ② 정확일치 → prefix 순으로 고른다. items[0] 을 그냥 쓰지 않는다.
+   *
+   * 이 두 줄이 없으면 `get_law_article("민법","제245조")` 가 새마을금고법 조문을 HTTP 200 으로
+   * 조용히 반환한다(UD0 에서 실측 재현). LB3 `ordin` 사고와 같은 부류 — **틀린 답이 성공처럼 온다.**
+   */
   private async resolveLawId(lawId: string): Promise<string> {
     if (/^\d+$/.test(lawId)) return lawId;
 
-    const result = await this.searchLaw(lawId, { limit: 1 });
+    const result = await this.searchLaw(lawId, { limit: 10, termBoost: { enabled: false } });
     if (result.items.length === 0) {
       throw createMcpError({
         code: "LAW_NOT_FOUND",
@@ -775,7 +798,7 @@ export class LawGoProvider implements LawProvider {
         retryable: false,
       });
     }
-    return result.items[0].law_id;
+    return pickLawIdByName(result.items);
   }
 
   async getLawArticle(lawId: string, articleNo: string): Promise<GetLawArticleResult | null> {
