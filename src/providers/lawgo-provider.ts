@@ -36,6 +36,7 @@ import type { LawProvider } from "./law-provider.js";
 import { tokenizeQuery } from "../article-match.js";
 import { ArticleIndexCache, extractArticles } from "../article-index.js";
 import { rerankByArticleTitle } from "../article-title-signal.js";
+import { rerankByAiSignal } from "../ranking-signal.js";
 import {
   TermLinkageCache,
   lookupTermLinkage,
@@ -927,6 +928,15 @@ export class LawGoProvider implements LawProvider {
        * TV4 이전 동작. A/B 와 되돌림이 같은 지점을 쓴다.
        */
       bodyPool?: { maxPages?: number };
+      /**
+       * `aiSearch` 신호로 후보 순서를 다시 매긴다 (TV7).
+       *
+       * **기본 켜짐** — 채택 판정을 통과한 뒤에 켰다(2026-07-22 교차 A/B 세법 dev:
+       * 이득 2 · 손실 0 · 순 +2, **2회 동일**. recall@3 80.0% → 86.7%). 판정 전까지는
+       * 꺼 둬서 미검증 코드가 제품 경로로 새지 않게 했다 — UD2 와 같은 규율.
+       * 끄는 지점은 여기 하나다.
+       */
+      rankingSignal?: { enabled?: boolean };
     } = {},
   ): Promise<SearchLawResult> {
     assertLawApiKey();
@@ -981,7 +991,16 @@ export class LawGoProvider implements LawProvider {
       options.titleSignal?.enabled ?? false,
       options.titleSignal?.window,
     );
-    return options.includeHistory ? this.attachHistory(ranked) : ranked;
+    // 순위 신호 (TV7). 병합·승격이 **자리를 다 정한 뒤** 마지막에 재정렬한다 — 앞 단계들이
+    // 목록의 *구성*을 정하고, 이 단계는 그 구성의 *순서*만 손본다. 연혁은 1위에 붙으므로
+    // 반드시 이 뒤여야 한다.
+    const resignaled = await this.applyRankingSignal(
+      query,
+      ranked,
+      aiPending,
+      options.rankingSignal?.enabled ?? true,
+    );
+    return options.includeHistory ? this.attachHistory(resignaled) : resignaled;
   }
 
   /**
@@ -1012,6 +1031,31 @@ export class LawGoProvider implements LawProvider {
       if (outcome.unchanged) return base;
       return { ...base, items: outcome.items };
     } catch {
+      return base;
+    }
+  }
+
+  /**
+   * `aiSearch` 신호로 후보 순서를 다시 매긴다 (TV7 step-2).
+   *
+   * **추가 호출이 없다** — 검색과 병렬로 이미 떠 있는 `aiPending` 을 그대로 쓴다.
+   * `lookupAiSearch` 가 모든 실패를 빈 결과로 흡수하므로 이 promise 는 reject 하지 않고,
+   * 신호가 비면 모듈이 원래 순서를 보존한다.
+   */
+  private async applyRankingSignal(
+    query: string,
+    base: SearchLawResult,
+    aiPending: Promise<AiSearchResult> | null,
+    enabled: boolean,
+  ): Promise<SearchLawResult> {
+    if (!enabled || !aiPending || base.items.length < 2) return base;
+
+    try {
+      const outcome = rerankByAiSignal(base.items, query, await aiPending);
+      if (outcome.unchanged) return base;
+      return { ...base, items: outcome.items };
+    } catch {
+      // 재정렬은 보정이다 — 이것 때문에 검색이 죽으면 안 된다.
       return base;
     }
   }

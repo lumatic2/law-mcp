@@ -31,6 +31,7 @@ type Variant = {
     parentLaw?: { enabled: boolean };
     titleSignal?: { enabled: boolean; window?: number };
     bodyPool?: { maxPages: number };
+    rankingSignal?: { enabled: boolean };
   };
 };
 
@@ -56,7 +57,20 @@ const TV4_VARIANTS: Variant[] = [
   { key: "both", label: "풀 도달 + 조문제목 신호", options: { limit: 10, bodyPool: { maxPages: 3 }, titleSignal: { enabled: true, window: 6 } } },
 ];
 
-const VARIANT_SETS: Record<string, Variant[]> = { ud4: UD4_VARIANTS, tv4: TV4_VARIANTS };
+/**
+ * TV7: control = TV4 종료 상태(신호 전부 off). 후보 = `aiSearch` 순위 신호 on.
+ * 추가 HTTP 호출이 없으므로 창·예산 변수는 없다 — 켜고 끄는 것뿐이다.
+ */
+const TV7_VARIANTS: Variant[] = [
+  { key: "control", label: "TV4 종료 상태 (신호 off)", options: { limit: 10 } },
+  { key: "ranking", label: "aiSearch 순위 신호 on", options: { limit: 10, rankingSignal: { enabled: true } } },
+];
+
+const VARIANT_SETS: Record<string, Variant[]> = {
+  ud4: UD4_VARIANTS,
+  tv4: TV4_VARIANTS,
+  tv7: TV7_VARIANTS,
+};
 
 function parseArgs(argv: string[]) {
   const get = (flag: string) => {
@@ -92,7 +106,7 @@ async function main() {
   const rows: Array<Record<string, unknown>> = [];
 
   for (const [index, item] of items.entries()) {
-    const outcome: Record<string, { hit3: boolean; returned: string[]; ms: number }> = {};
+    const outcome: Record<string, { hit3: boolean; hit1: boolean; returned: string[]; ms: number }> = {};
 
     // ★ 교차 측정 — 한 쿼리 안에서 모든 배치를 연달아 잰다.
     for (const variant of VARIANTS) {
@@ -102,12 +116,14 @@ async function main() {
         const returned = result.items.map((i) => i.law_name);
         outcome[variant.key] = {
           hit3: isHitAtK(returned, item.expected_laws, 3),
+          hit1: isHitAtK(returned, item.expected_laws, 1),
           returned,
           ms: Date.now() - started,
         };
       } catch (error) {
         outcome[variant.key] = {
           hit3: false,
+          hit1: false,
           returned: [`ERR ${(error as Error).message.slice(0, 40)}`],
           ms: Date.now() - started,
         };
@@ -121,18 +137,19 @@ async function main() {
 
   console.log("\n=== 배치별 recall@3 · 지연 (참고 수치 — 판정 근거 아님) ===");
   for (const variant of VARIANTS) {
-    const cells = rows.map((row) => (row.outcome as Record<string, { hit3: boolean; ms: number }>)[variant.key]);
+    const cells = rows.map((row) => (row.outcome as Record<string, { hit3: boolean; hit1: boolean; ms: number }>)[variant.key]);
     const hits = cells.filter((cell) => cell.hit3).length;
+    const hits1 = cells.filter((cell) => cell.hit1).length;
     const times = cells.map((cell) => cell.ms).sort((a, b) => a - b);
     const median = times[Math.floor(times.length / 2)];
     console.log(
-      `  ${variant.label.padEnd(28)} ${((hits / rows.length) * 100).toFixed(1)}%  (${hits}/${rows.length})` +
-      `  · 중앙 ${median}ms · p90 ${times[Math.floor(times.length * 0.9)]}ms`,
+      `  ${variant.label.padEnd(28)} @3 ${((hits / rows.length) * 100).toFixed(1)}%  @1 ${((hits1 / rows.length) * 100).toFixed(1)}%` +
+      `  · 중앙 ${median}ms`,
     );
   }
 
   console.log("\n=== 쿼리 단위 승패 (control 대비 — 이게 판정 근거다) ===");
-  const verdicts: Record<string, { won: string[]; broke: string[] }> = {};
+  const verdicts: Record<string, { won: string[]; broke: string[]; won1: string[]; broke1: string[] }> = {};
   for (const variant of VARIANTS.filter((v) => v.key !== "control")) {
     const won: string[] = [];
     const broke: string[] = [];
@@ -141,12 +158,22 @@ async function main() {
       if (!o.control.hit3 && o[variant.key].hit3) won.push(row.query as string);
       if (o.control.hit3 && !o[variant.key].hit3) broke.push(row.query as string);
     }
-    verdicts[variant.key] = { won, broke };
+    const won1: string[] = [];
+    const broke1: string[] = [];
+    for (const row of rows) {
+      const o = row.outcome as Record<string, { hit1: boolean }>;
+      if (!o.control.hit1 && o[variant.key].hit1) won1.push(row.query as string);
+      if (o.control.hit1 && !o[variant.key].hit1) broke1.push(row.query as string);
+    }
+    verdicts[variant.key] = { won, broke, won1, broke1 };
     const net = won.length - broke.length;
     const pass = broke.length === 0 && net >= args.minNet;
     console.log(`\n  ${variant.label} — 이득 ${won.length} / 손실 ${broke.length} / 순 ${net >= 0 ? "+" : ""}${net}  → ${pass ? "**채택 가능**" : "채택 불가"}`);
     if (won.length) console.log(`    이득: ${won.join(" · ")}`);
     if (broke.length) console.log(`    손실: ${broke.join(" · ")}`);
+    const net1 = verdicts[variant.key].won1.length - verdicts[variant.key].broke1.length;
+    console.log(`  [@1] 이득 ${verdicts[variant.key].won1.length} / 손실 ${verdicts[variant.key].broke1.length} / 순 ${net1 >= 0 ? "+" : ""}${net1}`);
+    if (verdicts[variant.key].broke1.length) console.log(`    @1 손실: ${verdicts[variant.key].broke1.join(" · ")}`);
   }
 
   const out = resolve(process.cwd(), args.out ?? `evidence/bench/${args.date}-ud2-ab.json`);
