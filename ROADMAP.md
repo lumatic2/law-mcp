@@ -64,17 +64,21 @@
 
 - Completed at: 2026-07-22
 - Summary: as_of 시점 조회 + effective_date 상시 출하 + 연혁, 시점 정확도 100%/조용한 현행 0건
-<!-- harness:milestone id="TV4" status="active" priority="P1" -->
+<!-- harness:milestone id="TV4" status="completed" priority="P1" evidence="changesets/20260721-tv4-article-title-signal · changesets/20260721-tv4-body-pool · changesets/20260721-tv4-verdict · evidence/bench/2026-07-22-tv4-verdict.md" -->
 ### TV4 — 세법 도달 결함 수리
 - DoD: 조문제목 신호에 법명·도메인·쿼리 토큰 하드코딩 없음. 추가 전문 조회 ≤3/검색. 상류 실패 시
   원상태 반환. 절단 경고 발화. `세금계산서 지연발급 가산세` → 부가가치세법 도달.
   교차 A/B **손실 0 AND 순 이득 ≥2**. 범용 dev 셋 ≥88%. 스키마·도구 불변(재시작 불요).
-- Evidence: `evidence/bench/2026-07-21-tv4-verdict.md` · plan `plans/2026-07-21-tv4-reachability.md`
+- Evidence: `evidence/bench/2026-07-22-tv4-verdict.md` · plan `plans/2026-07-21-tv4-reachability.md`
 - Gap: 본문검색은 가나다순인데 앞 30건만 받아 뒷글자 법령(부가가치세법)이 구조적으로 탈락한다.
   행정 진단이 규명했으나 **평가 세트가 없어** 채택을 못 하고 멈춘 건 — TV1 이 전제조건을 채운다.
 - Scale: changesets>=3; surfaces: 조문제목 신호·본문검색 풀·교차 A/B; capability: 후보 풀에
   못 들어와 못 찾던 법을 찾는다
-- Status: [ ]
+- 판정: **재정렬·풀 확대 미채택**(순 이득 0, 재정렬은 손실 1). 절단은 실재했으나
+  (도달 19/30 → 29/30) recall@3 은 80.0% 그대로 — **정답이 후보에 들어와도 위로 못 올라온다.**
+  남은 결함은 도달이 아니라 **순위 신호**이며 다음 milestone 의 입력이다.
+  출하된 것은 순위가 아닌 정직성 둘: `totalCnt` 오독 수정 · 절단 경고.
+- Status: [x] **완료(2026-07-22)** — 미채택 판정으로 종료(정상 종료)
 
 <!-- harness:milestone id="TV5" status="pending" priority="P2" -->
 ### TV5 — 세율표(별표)
