@@ -10,3 +10,5 @@
 {"actual_changesets": 3, "declared_min": 3, "milestone_id": "TV1", "note": "complete 를 Evidence 에 changeset 을 나열하기 전에 돌려 no-refs 오탐이 적재됐다(순서 역전). 실제 changeset 3개 = 선언 3 충족.", "supersedes": "TV1@2026-07-21 no-refs", "ts": "2026-07-21", "unresolved_refs": [], "verdict": "ok"}
 {"actual_changesets": 4, "declared_min": 4, "milestone_id": "TV2", "ts": "2026-07-21", "unresolved_refs": [], "verdict": "ok"}
 {"actual_changesets": 4, "declared_min": 4, "milestone_id": "TV3", "ts": "2026-07-22", "unresolved_refs": [], "verdict": "ok"}
+{"actual_changesets": 3, "declared_min": 3, "milestone_id": "TV4", "ts": "2026-07-22", "unresolved_refs": [], "verdict": "ok"}
+{"actual_changesets": 3, "declared_min": 3, "milestone_id": "TV7", "ts": "2026-07-22", "unresolved_refs": [], "verdict": "ok"}
