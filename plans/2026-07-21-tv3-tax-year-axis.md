@@ -84,7 +84,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
   - Failure probe: `target=law&efYd=20230101` 를 직접 호출해 **현행이 조용히 오는 것**을 관측하고,
     우리 경로가 이 함정을 **가드로 막는지** 확인
   - Commit: `changesets/20260721-tv3-effective-law/`
-- [ ] **step-2** 표면 전파 — 시점 인자 + 시행일자 상시 출하
+- [x] **step-2** 표면 전파 — 시점 인자 + 시행일자 상시 출하
   - Artifact: `get_law_article`·`search_law` 에 선택 인자 `as_of`(연도 또는 날짜) 추가.
     **모든 조문 응답에 `effective_date` 상시 포함.** 못 맞추면 거절(현행 대체 금지)
   - Files: write `src/index.ts`·`src/providers/lawgo-provider.ts`·`src/types.ts`·

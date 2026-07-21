@@ -43,6 +43,13 @@ export interface GetLawArticleResult {
   title?: string | null;
   content: string;
   /**
+   * 이 조문이 속한 법령판의 시행일자 (TV3). 시점을 지정하지 않아도 **항상** 싣는다 —
+   * 조문을 인용하는 쪽에 시행일이 없는 게 검색 결과에 없는 것보다 위험하다.
+   */
+  effective_date?: string;
+  /** 시점을 지정했을 때, 우리가 그 시점을 어떻게 해석했는지 (사용자가 검증할 수 있어야 한다) */
+  as_of_rule?: string;
+  /**
    * 이 조문의 "대통령령으로 정하는" 이 실제로 가리키는 하위 법령 조문 (UD3 step-2).
    * upstream(`lsDelegated`)이 이미 계산해 둔 값이다. 위임이 없으면 **필드 자체가 없다**.
    */

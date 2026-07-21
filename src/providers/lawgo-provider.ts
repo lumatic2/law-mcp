@@ -15,6 +15,13 @@ import {
 import { DelegationCache, lookupDelegations, type DelegationFetcher } from "../delegated.js";
 import { missingParentNames, parentLawName } from "../parent-law.js";
 import { createMcpError } from "../mcp-error.js";
+import {
+  EFFECTIVE_LAW_TARGET,
+  assertEffectiveDateTarget,
+  pickVersionAsOf,
+  resolveAsOf,
+  type LawVersion,
+} from "../effective-law.js";
 import { bridgeTerm, formatBridgeWarning, type TermBridgeMatch } from "../term-bridge.js";
 import type {
   GetAdminRuleResult,
@@ -554,16 +561,50 @@ async function fetchLawArticleRoot(
   lawKey: string,
   keyField: "ID" | "MST",
   joParam?: string,
+  /**
+   * 시점 조회용 시행일자(YYYYMMDD). 주면 `target=eflaw` 로 간다 —
+   * `target=law` 는 `efYd` 를 **조용히 무시하고 현행을 준다**(TV3 실측).
+   */
+  efYd?: string,
 ): Promise<Record<string, unknown>> {
+  const target = efYd ? EFFECTIVE_LAW_TARGET : "law";
+  // 시점 조회일 때 **실제로 쓰는 타깃**이 efYd 를 무시하는 종류가 아닌지 확인한다.
+  // (여기서 "law" 를 하드코딩하면 시점 조회가 항상 던진다 — 실제로 그 실수를 한 번 했다.)
+  if (efYd) assertEffectiveDateTarget(target);
   const params: Record<string, string> = {
     OC: LAW_API_OC,
-    target: "law",
+    target,
     type: "JSON",
     [keyField]: lawKey,
   };
 
   if (joParam) params.JO = joParam;
+  if (efYd) params.efYd = efYd;
   return fetchLawApi(LAW_SERVICE_BASE_URL, params);
+}
+
+/**
+ * 그 법령의 시행판 목록을 받는다 (TV3). 연혁 접근 경로는 `eflaw` 검색 하나뿐이다 —
+ * `lsHistory` 는 HTML, `lsHstInf` 는 0건, `eflawJo` 는 빈 응답이다(실측).
+ */
+async function fetchLawVersions(lawName: string): Promise<LawVersion[]> {
+  const root = await fetchLawApi(LAW_SEARCH_BASE_URL, {
+    OC: LAW_API_OC,
+    target: EFFECTIVE_LAW_TARGET,
+    type: "JSON",
+    query: lawName,
+    display: "100",
+  });
+  const rows = toArray(asObject(asObject(root).LawSearch).law);
+  return rows
+    .map((raw) => asObject(raw))
+    .filter((row) => String(row.법령명한글 ?? "") === lawName)
+    .map((row) => ({
+      시행일자: String(row.시행일자 ?? ""),
+      현행연혁코드: (row.현행연혁코드 as string) ?? null,
+      공포일자: (row.공포일자 as string) ?? null,
+      법령일련번호: (row.법령일련번호 as string) ?? null,
+    }));
 }
 
 function shouldStopLawFetchFallback(error: unknown): boolean {
@@ -1119,7 +1160,11 @@ export class LawGoProvider implements LawProvider {
   /** 직전 이름 해석이 정확일치·prefix 가 아니었을 때의 기록 (경고 부착용). */
   private looseResolution: { requested: string; resolved: string | null } | null = null;
 
-  async getLawArticle(lawId: string, articleNo: string): Promise<GetLawArticleResult | null> {
+  async getLawArticle(
+    lawId: string,
+    articleNo: string,
+    options: { asOf?: string } = {},
+  ): Promise<GetLawArticleResult | null> {
     assertLawApiKey();
 
     // Auto-resolve law name to numeric ID if needed
@@ -1130,17 +1175,100 @@ export class LawGoProvider implements LawProvider {
     const normalizedArticleNo = normalizeArticleInput(articleNo);
     const joParam = requestedArticle?.joParam ?? normalizedArticleNo;
 
+    // 시점 지정 경로 (TV3). 못 맞추면 **현행으로 대체하지 않고 거절한다** —
+    // 조용한 현행 반환이 이 milestone 이 없애려는 결함 그 자체다.
+    const asOfPlan = options.asOf ? this.resolveAsOfVersion(lawId, options.asOf) : null;
+    const resolved = asOfPlan ? await asOfPlan : null;
+
+    if (resolved) {
+      const root = await fetchLawArticleRoot(
+        String(resolved.version.법령일련번호),
+        "MST",
+        joParam,
+        resolved.version.시행일자,
+      );
+      const found = findArticleInRoot(root, requestedArticle, normalizedArticleNo, lawId, articleNo);
+      if (!found) return null;
+      const withDelegations = await this.attachDelegations(found, resolvedLawId, requestedArticle);
+      return {
+        ...withDelegations,
+        effective_date: resolved.version.시행일자,
+        as_of_rule: resolved.rule,
+      };
+    }
+
     try {
       const root = await fetchLawArticleRoot(resolvedLawId, "ID", joParam);
       const exactById = findArticleInRoot(root, requestedArticle, normalizedArticleNo, lawId, articleNo);
-      if (exactById) return this.attachDelegations(exactById, resolvedLawId, requestedArticle);
+      if (exactById) {
+        return this.withEffectiveDate(
+          await this.attachDelegations(exactById, resolvedLawId, requestedArticle),
+          root,
+        );
+      }
     } catch (error) {
       if (shouldStopLawFetchFallback(error)) throw error;
     }
 
     const fallbackRoot = await fetchLawArticleRoot(resolvedLawId, "MST", joParam);
     const found = findArticleInRoot(fallbackRoot, requestedArticle, normalizedArticleNo, lawId, articleNo);
-    return found ? this.attachDelegations(found, resolvedLawId, requestedArticle) : null;
+    if (!found) return null;
+    return this.withEffectiveDate(
+      await this.attachDelegations(found, resolvedLawId, requestedArticle),
+      fallbackRoot,
+    );
+  }
+
+  /**
+   * 시점 인자를 실제 시행판으로 푼다. **추정하지 않는다** — 해석 못 하거나 그 시점 판이
+   * 없으면 거절한다(현행으로 대체하면 닫는 기준 3 이 무너진다).
+   */
+  private async resolveAsOfVersion(
+    lawName: string,
+    asOf: string,
+  ): Promise<{ version: LawVersion; rule: string }> {
+    const parsed = resolveAsOf(asOf);
+    if (!parsed) {
+      throw createMcpError({
+        code: "INVALID_ARGUMENT",
+        message:
+          `시점 "${asOf}" 을(를) 해석할 수 없다. 연도("2023") 또는 날짜("2023-01-01") 형식으로 준다. `
+          + `해석할 수 없는 시점에 현행 법령을 대신 주지 않는다.`,
+        retryable: false,
+      });
+    }
+
+    const versions = await fetchLawVersions(lawName);
+    const picked = pickVersionAsOf(versions, parsed.asOfDate);
+    if (!picked?.법령일련번호) {
+      throw createMcpError({
+        code: "LAW_VERSION_NOT_FOUND",
+        message:
+          `"${lawName}" 의 ${parsed.asOfDate.slice(0, 4)}년 시점 법령을 찾을 수 없다. `
+          + (versions.length
+            ? `확인된 가장 이른 시행일은 ${[...versions].map((v) => v.시행일자).sort()[0]} 이다. `
+            : "이 이름으로 시행판 목록을 받지 못했다. ")
+          + `현행 법령을 대신 주지 않는다 — 잘못된 연도의 조문은 오답이다.`,
+        retryable: false,
+      });
+    }
+    return { version: picked, rule: parsed.rule };
+  }
+
+  /**
+   * 시점을 지정하지 않아도 응답에 시행일자를 싣는다 (TV3).
+   * 조문을 인용하는 쪽에 시행일이 없는 게 검색 결과에 없는 것보다 위험하다.
+   */
+  private withEffectiveDate(
+    result: GetLawArticleResult,
+    root: Record<string, unknown>,
+  ): GetLawArticleResult {
+    const lawObj = asObject(root.법령 ?? asObject(root.LawService).법령);
+    const basic = asObject(lawObj.기본정보);
+    const eff = basic.시행일자;
+    return typeof eff === "string" && eff.trim()
+      ? { ...result, effective_date: eff.trim() }
+      : result;
   }
 
   /**

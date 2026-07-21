@@ -60,15 +60,29 @@ server.registerTool(
   "get_law_article",
   {
     title: "Get Law Article",
-    description: "Get a specific law article by law id and article number.",
+    description:
+      "Get a specific law article by law id and article number. "
+      + "Every response carries `effective_date` — the enforcement date of the law version the "
+      + "article came from. Pass `as_of` (a year like \"2023\", or a date like \"2023-01-01\") to "
+      + "get the article AS IT STOOD THEN, which is what tax questions usually need: the same "
+      + "article number can have different requirements depending on the tax year. When `as_of` is "
+      + "given the response also carries `as_of_rule`, stating how that year was interpreted "
+      + "(a bare year is read as the end of that calendar year — check it for non-calendar fiscal "
+      + "years). If the requested point in time cannot be resolved, this tool FAILS rather than "
+      + "silently returning the current version.",
     inputSchema: {
       law_id: z.string().min(1),
       article_no: z.string().min(1),
+      as_of: z
+        .string()
+        .min(1)
+        .optional()
+        .describe("시점 — 연도(\"2023\") 또는 날짜(\"2023-01-01\"). 생략하면 현행."),
     },
   },
-  async ({ law_id, article_no }) => {
+  async ({ law_id, article_no, as_of }) => {
     try {
-      const result = await provider.getLawArticle(law_id, article_no);
+      const result = await provider.getLawArticle(law_id, article_no, { asOf: as_of });
       if (!result) {
         return toMcpErrorResponse(
           createMcpError({
