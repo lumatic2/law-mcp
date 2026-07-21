@@ -22,6 +22,7 @@
 | 12 | [20260721-ud2-candidate-merge](20260721-ud2-candidate-merge/README.md) | 2026-07-21 | src/ai-search.ts(AiMergeConfig), src/providers/lawgo-provider.ts(mergeAiSearch·기본 채택), bench/ud2-ab.ts (신규), test/ai-search-merge.test.ts (신규), test/term-boost.test.ts(실 API 격리) | ✅ | done |
 | 13 | [20260721-ud2-article-shipping](20260721-ud2-article-shipping/README.md) | 2026-07-21 | src/types.ts(ai_articles), src/providers/lawgo-provider.ts(조문 출하), bench/run.ts·bench/scoring.ts(출하값 기준 측정), test/ai-search-merge.test.ts | ✅ | done |
 | 14 | [20260721-ud2-verdict](20260721-ud2-verdict/README.md) | 2026-07-21 | src/providers/lawgo-provider.ts(사다리·aiSearch 동시 실행), src/index.ts(description), evidence/bench/2026-07-21-ud2-verdict.md | ✅ | done |
+| 15 | [20260721-ud4-parent-law](20260721-ud4-parent-law/README.md) | 2026-07-21 | src/parent-law.ts (신규), src/providers/lawgo-provider.ts(promoteParentLaws·resolveLawId 차단), bench/ud2-ab.ts(--min-net), test/parent-law.test.ts (신규) | ✅ | done |
 
 ## 운영 원칙
 

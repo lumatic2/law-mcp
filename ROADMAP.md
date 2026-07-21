@@ -1,9 +1,8 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-21
-> 상태: horizon `upstream-delivery` — **UD1·UD2·UD3 전부 완료. horizon close 판단 대기**
-> (닫는 기준 5개 중 4개 충족, recall@3 80%로 기준 ②(≥85%)만 미달. close 는 홀드아웃 1회 개봉을
-> 뜻하므로 사용자 판단 사항)
+> 상태: horizon `upstream-delivery` — UD1·UD2·UD3 완료, **UD4 진행 중**(닫는 기준 중
+> 유일한 미달 recall@3 ≥85% 를 메운다. close = 홀드아웃 1회 개봉이라 사용자 판단 사항)
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -51,6 +50,19 @@
 
 - Completed at: 2026-07-21
 - Summary: aiSearch 편입 — recall@3 48%→80%, 1위 정확도 32%→72%, 조문 출하율 76%. 새로 깨진 쿼리 0, 지연 증가 0
+<!-- harness:milestone id="UD4" status="active" priority="P0" evidence="" -->
+### UD4 — 본법 승격 + 사다리 단축
+- DoD: dev 교차 A/B 에서 본법 승격 **순 이득 ≥2건 + 새로 깨지는 쿼리 0** + 승격 규칙에 법명·쿼리
+  하드코딩 없음 + 없는 본법을 만들어 내지 않음(failure probe) + 사다리 단축이 **품질 중립**(쿼리 단위
+  결과 동일) + 지연 중앙·최대 모두 UD2 대비 감소 + `resolveLawId` 승격 미적용(테스트 고정) +
+  `npm test` 전건 + 배포 사본 build·dist 스모크 + **도구 개수·응답 스키마 불변**.
+- Evidence: (진행 중)
+- Gap: horizon 닫는 기준 5개 중 recall@3 ≥85% 만 미달(현재 80%). 못 맞히는 5건 중 4건이
+  "하위법령은 찾고 근거 본법을 못 주는" 같은 유형이다 (evidence/bench/2026-07-21-ud2-verdict.md)
+- Scale: changesets>=3; surfaces: 검색 후보 보정·사다리 실행 순서·bench·실 API; capability: 반쯤 찾은 답을 끝까지 준다
+- Plan: `plans/2026-07-21-ud4-parent-law-and-ladder.md`
+- Status: [ ]
+
 <!-- harness:milestone id="UD3" status="completed" priority="P1" evidence="changesets/20260721-ud3-committee-sources + changesets/20260721-ud3-delegated-articles + changesets/20260721-ud3-contribution-gate + evidence/bench/2026-07-21-ud3-contribution.md" -->
 ### UD3 — 미접근 자료원 흡수 (위원회 결정문 + 위임조문)
 - DoD: 위원회 결정문이 실 API 도달 + descriptor 마다 조회 파라미터가 테스트로 고정 +

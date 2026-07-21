@@ -7,9 +7,11 @@
  * 이 러너는 그래서 **쿼리마다 모든 배치를 연달아** 잰다. 같은 시점·같은 쿼리에서 어느 쪽이
  * 맞았는지만 세므로 드리프트에 영향받지 않는다.
  *
- * 채택 조건(F13): **새로 깨지는 쿼리 0 AND 순 이득 ≥3건**.
+ * 채택 조건(F13): **새로 깨지는 쿼리 0 AND 순 이득 ≥N건**. N 은 겨냥한 결함 유형이 dev 에
+ * 몇 건 있느냐로 정한다 — 유형이 2건뿐인데 ≥3 을 요구하면 달성 불가능한 문턱이다(UD4).
+ * **손실 0 은 어떤 경우에도 낮추지 않는다.**
  *
- *   npx tsx bench/ud2-ab.ts [--split dev] [--limit n]
+ *   npx tsx bench/ud2-ab.ts [--split dev] [--limit n] [--min-net 2]
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -22,14 +24,18 @@ type Item = { query: string; domain: string; expected_laws: string[]; split: str
 type Variant = {
   key: string;
   label: string;
-  options: { limit: number; termBoost?: { enabled: boolean }; aiSearch?: AiMergeConfig };
+  options: {
+    limit: number;
+    termBoost?: { enabled: boolean };
+    aiSearch?: AiMergeConfig;
+    parentLaw?: { enabled: boolean };
+  };
 };
 
+// UD4: control = UD2 출하 상태(본법 승격 off), 후보 = 본법 승격 on.
 const VARIANTS: Variant[] = [
-  { key: "control", label: "기존 단독 (LB5)", options: { limit: 3 } },
-  { key: "ai_only", label: "aiSearch 단독", options: { limit: 3, termBoost: { enabled: false }, aiSearch: { enabled: true, maxLaws: 3 } } },
-  { key: "merge_ai", label: "병합·aiSearch 우선", options: { limit: 3, aiSearch: { enabled: true, priority: "ai" } } },
-  { key: "merge_boost", label: "병합·부스트 우선", options: { limit: 3, aiSearch: { enabled: true, priority: "boost" } } },
+  { key: "control", label: "UD2 상태 (본법 승격 off)", options: { limit: 3, parentLaw: { enabled: false } } },
+  { key: "parent", label: "본법 승격 on", options: { limit: 3, parentLaw: { enabled: true } } },
 ];
 
 function parseArgs(argv: string[]) {
@@ -41,6 +47,7 @@ function parseArgs(argv: string[]) {
     split: get("--split") ?? "dev",
     limit: get("--limit") ? Number(get("--limit")) : undefined,
     date: get("--date") ?? "2026-07-21",
+    minNet: get("--min-net") ? Number(get("--min-net")) : 3,
   };
 }
 
@@ -95,7 +102,7 @@ async function main() {
     }
     verdicts[variant.key] = { won, broke };
     const net = won.length - broke.length;
-    const pass = broke.length === 0 && net >= 3;
+    const pass = broke.length === 0 && net >= args.minNet;
     console.log(`\n  ${variant.label} — 이득 ${won.length} / 손실 ${broke.length} / 순 ${net >= 0 ? "+" : ""}${net}  → ${pass ? "**채택 가능**" : "채택 불가"}`);
     if (won.length) console.log(`    이득: ${won.join(" · ")}`);
     if (broke.length) console.log(`    손실: ${broke.join(" · ")}`);

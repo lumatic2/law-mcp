@@ -13,6 +13,7 @@ import {
   type AiSearchResult,
 } from "../ai-search.js";
 import { DelegationCache, lookupDelegations, type DelegationFetcher } from "../delegated.js";
+import { missingParentNames, parentLawName } from "../parent-law.js";
 import { createMcpError } from "../mcp-error.js";
 import { bridgeTerm, formatBridgeWarning, type TermBridgeMatch } from "../term-bridge.js";
 import type {
@@ -609,6 +610,9 @@ export class LawGoProvider implements LawProvider {
   private readonly delegationCache = new DelegationCache();
   private readonly delegationFetcher: DelegationFetcher;
 
+  /** 본법명 → 정확일치 법령(없으면 null). miss 도 캐시해 upstream 을 반복해서 때리지 않는다. */
+  private readonly parentLawCache = new Map<string, SearchLawResult["items"][number] | null>();
+
   private readonly aiSearchCache = new AiSearchCache(100);
   private readonly aiSearchFetcher: AiSearchFetcher | undefined;
 
@@ -704,7 +708,12 @@ export class LawGoProvider implements LawProvider {
 
   async searchLaw(
     query: string,
-    options: { limit?: number; termBoost?: TermBoostConfig; aiSearch?: AiMergeConfig } = {},
+    options: {
+      limit?: number;
+      termBoost?: TermBoostConfig;
+      aiSearch?: AiMergeConfig;
+      parentLaw?: { enabled?: boolean };
+    } = {},
   ): Promise<SearchLawResult> {
     assertLawApiKey();
     const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
@@ -734,7 +743,78 @@ export class LawGoProvider implements LawProvider {
     // 부스트가 앞으로 끌어올린 건수 — `boost` 우선 배치에서 그 자리를 지켜 주기 위해 센다.
     // (부스트가 아무것도 안 했으면 `base` 와 **같은 객체**를 돌려주는 규약을 이용한다.)
     const boostPromoted = boosted === base ? 0 : boosted.items.filter((item) => item.linked_articles).length;
-    return this.mergeAiSearch(aiPending, boosted, limit, boostPromoted, options.aiSearch);
+    const merged = await this.mergeAiSearch(aiPending, boosted, limit, boostPromoted, options.aiSearch);
+    return this.promoteParentLaws(merged, limit, options.parentLaw?.enabled ?? true);
+  }
+
+  /**
+   * 본법 승격 (UD4 step-1).
+   *
+   * 하위법령만 찾고 근거 본법을 안 주는 결함을 메운다. 복원한 본법명이 **실재하는지 조회로
+   * 확인한 뒤에만** 편입한다 — 이름 규칙만 믿으면 없는 법을 그럴듯하게 반환하게 된다.
+   *
+   * 비용: 검색 1회당 추가 호출 **≤1**(본법 후보 1개만, 캐시). 실패는 전부 무시하고 `base` 를
+   * 그대로 돌려준다 — 보조 보정이라 이것 때문에 검색이 죽으면 안 된다.
+   */
+  private async promoteParentLaws(
+    base: SearchLawResult,
+    limit: number,
+    enabled: boolean,
+  ): Promise<SearchLawResult> {
+    if (!enabled) return base;
+
+    const missing = missingParentNames(base.items.map((item) => item.law_name));
+    if (missing.length === 0) return base;
+
+    // 이 단계 전체를 흡수한다 — 조회 실패만이 아니라 어떤 예외든 검색을 죽이면 안 된다.
+    // (실패 흡수를 조회 함수 안에만 뒀더니 승격 단계가 던지면 검색이 죽었다 — 테스트가 적발.)
+    let parent: SearchLawResult["items"][number] | null = null;
+    try {
+      parent = await this.lookupExactLaw(missing[0]);
+    } catch {
+      return base;
+    }
+    if (!parent) return base;
+
+    // ★ 끼워 넣지 않고 **그 하위법령 자리를 본법이 차지**한다.
+    //
+    // 처음엔 맨 앞에 끼워 넣었는데, 목록이 limit 에서 잘리는 바람에 하위 순위의 **정답을
+    // 밀어냈다**(실측: `사용자책임 면책 사유` 의 민법이 3위 → 탈락). 자리를 바꾸면 목록 길이가
+    // 그대로라 아무도 안 밀린다. 하위법령은 본법에서 다시 찾아갈 수 있지만, 밀려난 정답은
+    // 소비 LLM 에게 아예 없는 것이 된다.
+    const target = base.items.findIndex((item) => parentLawName(item.law_name) === parent!.law_name);
+    if (target < 0) return base;
+
+    const items = [...base.items];
+    const replaced = items[target];
+    items[target] = parent;
+
+    return {
+      query: base.query,
+      total: base.total,
+      items,
+      warnings: [
+        ...(base.warnings ?? []),
+        `'${replaced.law_name}' 자리에 근거 본법 '${parent.law_name}' 을(를) 놓음`
+          + " — 실제 조회로 존재를 확인한 법령이며, 하위법령은 본법에서 이어서 찾을 수 있음.",
+      ],
+    };
+  }
+
+  /** 법령명 정확일치 1건 조회. 없으면 null. miss 도 캐시한다. */
+  private async lookupExactLaw(lawName: string): Promise<SearchLawResult["items"][number] | null> {
+    const cached = this.parentLawCache.get(lawName);
+    if (cached !== undefined) return cached;
+
+    let found: SearchLawResult["items"][number] | null = null;
+    try {
+      const result = await this.fetchLawSearchOnce(lawName, 5, 15);
+      found = result.items.find((item) => item.match_type === "exact") ?? null;
+    } catch {
+      found = null;
+    }
+    this.parentLawCache.set(lawName, found);
+    return found;
   }
 
   /**
@@ -898,6 +978,9 @@ export class LawGoProvider implements LawProvider {
       limit: 10,
       termBoost: { enabled: false },
       aiSearch: { enabled: false },
+      // ④ 본법 승격도 끈다 — `민법 시행령` 을 물었을 때 `민법` 이 1위로 올라오면
+      //    그 법의 조문을 반환하게 된다. UD0 와 같은 부류의 조용한 오답이다.
+      parentLaw: { enabled: false },
     });
     if (result.items.length === 0) {
       throw createMcpError({
