@@ -44,6 +44,8 @@ export type ItemOutcome = {
   returned: string[];
   /** assisted 모드에서 도구가 고른 조문(표시형) */
   predictedArticles?: string[];
+  /** blind 모드: 조문 라벨은 있는데 제품 응답에 조문이 실리지 않았다 (UD2 step-3) */
+  articleShippingMiss?: boolean;
   /** 측정 대상이 아닌 사유 (조문 라벨 없음 등) — 에러와 구분한다 */
   skipped?: string;
   error?: string;

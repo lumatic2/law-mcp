@@ -10,6 +10,7 @@ import {
   lookupAiSearch,
   type AiMergeConfig,
   type AiSearchFetcher,
+  type AiSearchResult,
 } from "../ai-search.js";
 import { DelegationCache, lookupDelegations, type DelegationFetcher } from "../delegated.js";
 import { createMcpError } from "../mcp-error.js";
@@ -709,6 +710,14 @@ export class LawGoProvider implements LawProvider {
     const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
     const display = Math.max(limit * 3, 30);
 
+    // ★ `aiSearch` 를 **사다리와 동시에** 띄운다. 두 채널은 서로의 결과를 안 쓰므로 순차로
+    //   돌릴 이유가 없다 — 순차였을 때 검색 1회가 중앙 4.1초였고 동시로 바꿔 사다리와
+    //   같은 수준으로 내려왔다(UD2 step-4 실측). `lookupAiSearch` 는 모든 실패를 빈 결과로
+    //   흡수하므로 이 promise 는 reject 하지 않는다(미처리 거부 없음).
+    const aiPending = (options.aiSearch?.enabled ?? true)
+      ? lookupAiSearch(query, this.aiSearchFetcher, this.aiSearchCache)
+      : null;
+
     // 사다리(이름 → 본문 → 완화 → 브리지 → 브리지+완화)는 `searchWithLadder` 공통 구현이다.
     // 행정규칙과 같은 사다리를 쓰게 해 ib3 #6 식 비대칭이 재발하지 않게 한다(LB3 step-1).
     const base = await searchWithLadder(query, (q, mode) => this.fetchLawSearchOnce(q, limit, display, mode), {
@@ -725,7 +734,7 @@ export class LawGoProvider implements LawProvider {
     // 부스트가 앞으로 끌어올린 건수 — `boost` 우선 배치에서 그 자리를 지켜 주기 위해 센다.
     // (부스트가 아무것도 안 했으면 `base` 와 **같은 객체**를 돌려주는 규약을 이용한다.)
     const boostPromoted = boosted === base ? 0 : boosted.items.filter((item) => item.linked_articles).length;
-    return this.mergeAiSearch(query, boosted, limit, boostPromoted, options.aiSearch);
+    return this.mergeAiSearch(aiPending, boosted, limit, boostPromoted, options.aiSearch);
   }
 
   /**
@@ -740,16 +749,16 @@ export class LawGoProvider implements LawProvider {
    * upstream 장애 시 자동으로 LB5 동작으로 degrade 한다.
    */
   private async mergeAiSearch(
-    query: string,
+    pending: Promise<AiSearchResult> | null,
     base: SearchLawResult,
     limit: number,
     boostPromoted: number,
     config: AiMergeConfig = {},
   ): Promise<SearchLawResult> {
-    const { enabled = true, maxLaws = 2, priority = "ai" } = config;
-    if (!enabled) return base;
+    const { maxLaws = 2, priority = "ai" } = config;
+    if (!pending) return base;
 
-    const found = await lookupAiSearch(query, this.aiSearchFetcher, this.aiSearchCache);
+    const found = await pending;
     if (found.laws.length === 0) return base;
 
     const normalized = (value: string) => normalizeLawName(value);
@@ -758,10 +767,18 @@ export class LawGoProvider implements LawProvider {
       const existing = base.items.find((item) => normalized(item.law_name) === normalized(law.lawName));
       // 법령ID 가 없고 기존 결과에도 없으면 싣지 않는다 — ID 없는 항목은 하류 도구가 못 쓴다.
       if (!existing && !law.lawId) continue;
-      promoted.push(existing ?? {
-        law_id: law.lawId as string,
-        law_name: law.lawName,
-        match_type: "contains" as const,
+      promoted.push({
+        ...(existing ?? {
+          law_id: law.lawId as string,
+          law_name: law.lawName,
+          match_type: "contains" as const,
+        }),
+        // upstream 이 이미 조문 단위로 답했다 — 그 조문을 그대로 실어 보낸다(추가 호출 0).
+        // 이게 없으면 소비 LLM 이 "어느 법인지"까지만 받고 조문은 다시 추론해야 한다(F4).
+        ai_articles: law.articles.slice(0, 5).map((article) => ({
+          article: article.display,
+          title: article.title,
+        })),
       });
     }
     if (promoted.length === 0) return base;

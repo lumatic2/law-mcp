@@ -31,10 +31,13 @@ server.registerTool(
   {
     title: "Search Law",
     description:
-      "Search laws by keyword. Tries law-name match first; if 0 results, automatically retries "
-      + "as a full-text (body) search, then once more with the query relaxed (last token dropped) "
-      + "if still 0, then with revised legal terms substituted. A warning field notes when a "
-      + "fallback mode was used; body-search results are NOT relevance-ranked.",
+      "Search laws by keyword or a natural-language legal question. Results are led by the "
+      + "government's own relevance ranking (aiSearch); when it answers, matching items carry "
+      + "`ai_articles` — the specific articles that answer the question, so no extra lookup is "
+      + "needed. Falls back to law-name match, then full-text (body) search, then a relaxed query, "
+      + "then revised legal terms. A warning field notes which channel was used; body-search "
+      + "results are NOT relevance-ranked. `ai_articles` (relevance) and `linked_articles` "
+      + "(term-usage index) come from different sources and are kept separate.",
     inputSchema: {
       query: z.string().min(1),
       limit: z.number().int().min(1).max(100).default(10),

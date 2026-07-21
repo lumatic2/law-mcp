@@ -105,6 +105,37 @@ test("명시적으로 끄면 upstream 을 때리지 않는다", async () => {
   assert.equal(calls, 0, "끈 채널이 upstream 을 때리면 안 된다");
 });
 
+// ── 조문 출하 (step-3, F4 해소) ──
+
+test("aiSearch 가 답한 조문을 제품 응답에 실어 보낸다", async () => {
+  const provider = makeProvider(["상법"], async () => AI_RESPONSE);
+
+  const result = await provider.searchLaw("부당해고 구제신청", { limit: 3, aiSearch: { enabled: true } });
+
+  assert.deepEqual(result.items[0].ai_articles, [
+    { article: "제28조", title: "부당해고등의 구제신청" },
+  ]);
+});
+
+test("조문 출처를 섞지 않는다 — 용어 연계와 aiSearch 는 다른 필드다", async () => {
+  const provider = makeProvider(["상법"], async () => AI_RESPONSE);
+
+  const result = await provider.searchLaw("부당해고 구제신청", { limit: 3, aiSearch: { enabled: true } });
+
+  // 이 테스트의 용어 연계는 빈 신호라 linked_articles 는 아예 없어야 한다.
+  assert.equal(result.items[0].linked_articles, undefined, "출처가 다른 신호가 섞이면 안 된다");
+  assert.ok(result.items[0].ai_articles);
+});
+
+test("aiSearch 가 안 잡은 법령에는 조문 필드를 달지 않는다", async () => {
+  const provider = makeProvider(["상법", "국회법"], async () => AI_RESPONSE);
+
+  const result = await provider.searchLaw("부당해고 구제신청", { limit: 4, aiSearch: { enabled: true } });
+  const sang = result.items.find((item) => item.law_name === "상법");
+
+  assert.equal(sang?.ai_articles, undefined, "빈 배열 오염 금지 — 필드 자체가 없어야 한다");
+});
+
 // ── Failure probe: 폴백이 진짜 폴백인가 ──
 
 test("aiSearch 가 죽어도 검색 결과는 기존과 동일하다", async () => {

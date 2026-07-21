@@ -141,13 +141,33 @@ async function scoreItem(provider: LawGoProvider, item: Item): Promise<ItemOutco
       precHit = false; // 판례 실패는 보조 지표라 항목 전체를 실패로 만들지 않는다
     }
 
+    // 조문 축 (UD2 step-3) — **출하되는 값**을 잰다.
+    // LB2~LB5 는 `scoreArticles` 라는 미출하 함수를 쟀다. 그 수치는 제품이 주는 값이 아니라
+    // 벤치 전용 경로의 값이었다(F4). 여기서는 `search_law` 응답에 실제로 실린 `ai_articles`
+    // 만 본다 — 응답에 없는 것은 소비 LLM 에게 없는 것이다.
+    const label = item.expected_article ? parseArticleLabel(item.expected_article) : null;
+    const shipped = label
+      ? law.items.find((i) => i.law_name === label.law)?.ai_articles ?? null
+      : null;
+
     return {
       ...base,
       returned,
       hit1: isHitAtK(returned, item.expected_laws, 1),
       hit3: isHitAtK(returned, item.expected_laws, 3),
       precHit,
-      // 조문 축은 LB2 에서 채운다 — 지금은 조문 검색 수단이 없다(articleChecked=false).
+      ...(shipped && shipped.length > 0
+        ? {
+            articleChecked: true,
+            predictedArticles: shipped.map((a) => a.article),
+            articleCorrect: isSameArticle(shipped[0].article, label!.article),
+            articleCorrectAt3: shipped.slice(0, 3).some((a) => isSameArticle(a.article, label!.article)),
+          }
+        : {
+            // 정답 법령이 안 나왔거나 조문이 안 실린 경우 — 조문 축의 분모에서 뺀다.
+            // 법령 도달 실패를 조문 오답으로 세면 두 축이 뒤섞인다(recall@3 이 이미 재는 것이다).
+            articleShippingMiss: Boolean(label),
+          }),
     };
   } catch (error) {
     return { ...base, error: (error as Error).message };
@@ -270,7 +290,13 @@ async function main() {
   console.log(`  recall@3        ${(summary.recall_at_3 * 100).toFixed(1)}%  (1차 지표)`);
   console.log(`  recall@1        ${(summary.recall_at_1 * 100).toFixed(1)}%`);
   console.log(`  판례 hit율      ${(summary.precedent_hit_rate * 100).toFixed(1)}%  (품질 지표 아님)`);
-  console.log(`  조문 정확도     ${summary.article_accuracy === null ? "미측정" : `${(summary.article_accuracy * 100).toFixed(1)}%`}`);
+  console.log(`  조문 정확도     ${summary.article_accuracy === null ? "미측정" : `${(summary.article_accuracy * 100).toFixed(1)}%`}  (제품 응답에 실린 조문 기준, n=${summary.article_checked})`);
+  // 출하율을 따로 보여 준다 — 정확도만 보면 "안 실린 것"이 분모에서 빠져 좋아 보인다.
+  const shippingMiss = outcomes.filter((o) => o.articleShippingMiss).length;
+  if (summary.article_checked + shippingMiss > 0) {
+    const rate = (summary.article_checked / (summary.article_checked + shippingMiss)) * 100;
+    console.log(`  조문 출하율     ${rate.toFixed(1)}%  (조문 라벨 ${summary.article_checked + shippingMiss}건 중 ${summary.article_checked}건에 조문이 실림)`);
+  }
   console.log(`  채점 ${summary.scored}건 / 에러 ${summary.errors}건`);
   console.log(`  도메인별 recall@3: ${Object.entries(summary.by_domain).map(([k, v]) => `${k}=${(v.recall_at_3 * 100).toFixed(0)}%`).join(" ")}`);
   console.log(`  → ${outPath}`);

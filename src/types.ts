@@ -11,6 +11,14 @@ export interface SearchLawItem {
    * 조문이라 "어느 법 몇 조" 로 바로 이어진다. 연계 신호가 있을 때만 채워진다.
    */
   linked_articles?: string[];
+  /**
+   * 법제처 지능형 검색(`aiSearch`)이 이 질의에 대해 지목한 이 법령의 조문 (UD2 step-3).
+   *
+   * `linked_articles` 와 **출처가 다르다** — 저쪽은 "그 용어가 쓰인 조문"(용어 연계)이고
+   * 이쪽은 "이 질문에 답하는 조문"(관련도 순위)이다. 소비 LLM 이 어느 신호를 받았는지
+   * 알아야 하므로 섞지 않는다. 해당 없으면 **필드 자체가 없다**.
+   */
+  ai_articles?: Array<{ article: string; title: string | null }>;
 }
 
 export interface LawSummary extends SearchLawItem {}
