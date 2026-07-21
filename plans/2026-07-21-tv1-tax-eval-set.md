@@ -72,7 +72,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
 
 ## Step 트리
 
-- [ ] **step-1** golden-tax 라벨 세트 — 실무 유형 분포에서 뽑고 조문 직접 확인으로 고정
+- [x] **step-1** golden-tax 라벨 세트 — 실무 유형 분포에서 뽑고 조문 직접 확인으로 고정
   - Artifact: `bench/golden-tax.json` — dev 30 / holdout 20. 항목마다 `query`·`expected_laws`·
     `expected_articles`·`type`(6유형)·`tax_year`(TV3 이 쓸 자리, 미지정 가능)·`label_source`
     (확인한 조문 경로)
@@ -84,7 +84,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
   - Failure probe: 존재하지 않는 조문번호를 정답으로 넣은 항목을 일부러 주입해
     `verify-labels` 가 **실패로 잡는지** 확인(라벨 검증이 실제로 도는지)
   - Commit: `changesets/20260721-tv1-golden-tax/`
-- [ ] **step-2** 세법 채점축 — 조문 정확도·시점 정확도 축 추가 + 홀드아웃 봉인 연결
+- [x] **step-2** 세법 채점축 — 조문 정확도·시점 정확도 축 추가 + 홀드아웃 봉인 연결
   - Artifact: `bench/scoring.ts` 에 조문 정확도(정답 조문번호 일치율)·시점 정확도(자리만, `n/a`)
     추가. `bench/run.ts` 가 `--set golden-tax` 를 받고 홀드아웃에 `assertHoldoutSeal` 적용
   - Files: write `bench/scoring.ts`·`bench/run.ts`·`test/bench-runner.test.ts` / read
