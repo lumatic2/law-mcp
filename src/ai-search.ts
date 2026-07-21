@@ -152,6 +152,18 @@ export type AiMergeConfig = {
   priority?: "ai" | "boost";
 };
 
+/**
+ * 한 번에 받아 올 조문 수 (TV7 step-1).
+ *
+ * 10 → 30 으로 올린다. **추가 HTTP 호출이 아니라 같은 호출의 파라미터**다 — TV4 가 신호를
+ * 사려다 비용(전문 771KB·1.1초)에 막혀 죽은 지점을 정면으로 피한다.
+ *
+ * 근거(2026-07-22 실측, 세법 dev 30): 정답 법이 결과 안에 존재하는 비율이
+ * `display=10` 에서 28/30, **`display=30` 에서 30/30**. 재정렬은 후보가 목록 안에 있어야
+ * 시작되므로 이 2건이 곧 도달 상한이었다.
+ */
+export const AI_SEARCH_DISPLAY = 30;
+
 export type AiSearchFetcher = (query: string, display: number) => Promise<unknown>;
 
 export const defaultAiSearchFetcher: AiSearchFetcher = async (query, display) => {
@@ -200,7 +212,7 @@ export async function lookupAiSearch(
   query: string,
   fetcher: AiSearchFetcher = defaultAiSearchFetcher,
   cache?: AiSearchCache,
-  display = 10,
+  display = AI_SEARCH_DISPLAY,
 ): Promise<AiSearchResult> {
   const trimmed = query.trim();
   if (!trimmed) return { ...EMPTY, query };

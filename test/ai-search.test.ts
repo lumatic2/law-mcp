@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { AiSearchCache, extractAiSearch, lookupAiSearch } from "../src/ai-search.js";
+import { AI_SEARCH_DISPLAY, AiSearchCache, extractAiSearch, lookupAiSearch } from "../src/ai-search.js";
 
 /**
  * UD2 step-1 — `aiSearch` 클라이언트 계약 테스트.
@@ -238,4 +238,51 @@ test("캐시는 오래된 항목부터 버린다", async () => {
   await lookupAiSearch("셋", fetcher, cache);
 
   assert.equal(cache.size, 2);
+});
+
+// ── TV7 step-1 — 재정렬용 신호 확장 ────────────────────────────────────────────
+
+test("조문 수집 폭이 30이다 — 재정렬은 후보가 목록에 있어야 시작된다", async () => {
+  // 2026-07-22 실측: 정답 법이 결과 안에 존재하는 비율 display=10 → 28/30,
+  // display=30 → 30/30. 이 값이 곧 재정렬의 도달 상한이라 조용히 낮추면 안 된다.
+  assert.equal(AI_SEARCH_DISPLAY, 30);
+
+  let seen: number | null = null;
+  await lookupAiSearch("가산세", async (_query, display) => {
+    seen = display;
+    return {};
+  });
+  assert.equal(seen, AI_SEARCH_DISPLAY, "기본 호출이 확장된 폭을 쓴다");
+});
+
+test("폭을 넓혀도 추가 HTTP 호출이 생기지 않는다", async () => {
+  // TV4 는 신호를 **사려다** 비용에 막혀 죽었다. 이 milestone 의 전제는
+  // "같은 호출의 파라미터만 바꾼다" 이므로 호출 수가 늘면 전제가 깨진 것이다.
+  let calls = 0;
+  await lookupAiSearch("가산세", async () => {
+    calls += 1;
+    return {};
+  });
+  assert.equal(calls, 1);
+});
+
+test("법령 단위 신호가 순위·조문제목을 함께 준다 — 재정렬의 재료", async () => {
+  const result = extractAiSearch(
+    {
+      aiSearch: {
+        법령조문: [
+          { id: "1", 법령명: "가법", 법령ID: "1", 조문번호: "0005", 조문제목: "목적" },
+          { id: "2", 법령명: "나법", 법령ID: "2", 조문번호: "0060", 조문제목: "가산세" },
+          { id: "3", 법령명: "나법", 법령ID: "2", 조문번호: "0061", 조문제목: "가산세 감면" },
+        ],
+      },
+    },
+    "지연발급 가산세",
+  );
+
+  const 나법 = result.laws.find((law) => law.lawName === "나법");
+  assert.ok(나법, "법령 단위로 접힌다");
+  assert.equal(나법.bestRank, 2, "그 법의 최상위 순위");
+  assert.deepEqual(나법.articles.map((a) => a.title), ["가산세", "가산세 감면"],
+    "조문제목이 보존된다 — TV4 가 771KB 를 내고 얻으려던 값");
 });
