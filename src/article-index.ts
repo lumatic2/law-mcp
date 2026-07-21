@@ -41,6 +41,55 @@ function pickString(obj: Record<string, unknown>, keys: string[]): string | null
   return null;
 }
 
+/**
+ * ASCII 박스 표의 한 줄인가. 표 줄은 **공백을 접으면 안 된다** — 칸 정렬이 곧 의미다.
+ */
+export function isTableSegment(value: string): boolean {
+  return /[┌┬┐├┼┤└┴┘│─]/.test(value);
+}
+
+/**
+ * 내용 필드를 **문자열 조각들로** 펼친다 (TV5).
+ *
+ * ⚠ 법제처는 `항내용`·`호내용`·`목내용` 을 **문자열로 줄 때도 있고 중첩 배열로 줄 때도 있다**:
+ *
+ * ```json
+ * "항내용": [[ "①거주자의 종합소득에 대한 …", "<img src=…>", "┌────┬────┐", "│종합소득│세율│" ]]
+ * ```
+ *
+ * 배열형은 표를 담은 조문에서 나온다. 그런데 `pickString` 은 문자열일 때만 값을 받으므로
+ * 배열이면 `null` 을 돌려주고 **그 항의 본문이 통째로 사라졌다** — 표만이 아니라 텍스트 전부가.
+ * 그래서 소득세법 제55조가 "다음의 세율을 적용하여"라고 해 놓고 정작 세율표가 없었다
+ * (2026-07-22 실측, `research/2026-07-22-tv5-table-source-probe.md`).
+ *
+ * 조각을 **합치지 않고 배열로** 돌려주는 이유: 표 줄은 공백을 보존해야 하고 산문은 접어야 해서
+ * 정리 규칙이 조각마다 다르다. 합쳐 버리면 그 구분이 사라진다.
+ */
+export function flattenContentSegments(value: unknown): string[] {
+  if (typeof value === "string") return value.trim() ? [value] : [];
+  if (typeof value === "number" && Number.isFinite(value)) return [String(value)];
+  if (Array.isArray(value)) return value.flatMap((entry) => flattenContentSegments(entry));
+  return [];
+}
+
+/** 조각 하나를 정리한다. 표 줄은 원문 그대로(재조판 금지), 산문만 공백을 접는다. */
+export function cleanSegment(segment: string): string {
+  const withoutTags = segment.replace(/<[^>]+>/g, " ");
+  if (isTableSegment(withoutTags)) return withoutTags.replace(/\s+$/, "");
+  return withoutTags.replace(/\s+/g, " ").trim();
+}
+
+/** 내용 필드를 정리된 여러 줄 텍스트로 만든다. 빈 조각·태그뿐인 조각은 사라진다. */
+export function readContent(obj: Record<string, unknown>, keys: string[]): string | null {
+  for (const key of keys) {
+    const segments = flattenContentSegments(obj[key]);
+    if (segments.length === 0) continue;
+    const text = segments.map(cleanSegment).filter(Boolean).join("\n");
+    if (text.trim()) return text;
+  }
+  return null;
+}
+
 function stripTags(value: string): string {
   return value.replace(/<[^>]+>/g, " ");
 }
@@ -48,27 +97,30 @@ function stripTags(value: string): string {
 /** 조문 본문 = 조문내용 + 항/호/목 을 재귀로 이어붙인 텍스트. */
 function collectArticleText(joObj: Record<string, unknown>): string {
   const parts: string[] = [];
-  const heading = pickString(joObj, ["조문내용", "JO_CONTENT", "content"]);
+  // `readContent` 는 배열형 내용을 잃지 않고, 표 줄은 원문 그대로 둔다 (TV5).
+  const heading = readContent(joObj, ["조문내용", "JO_CONTENT", "content"]);
   if (heading) parts.push(heading);
 
   for (const 항 of toArray(joObj["항"] ?? joObj["para"] ?? joObj["paragraph"])) {
     const 항Obj = asObject(항);
-    const 항내용 = pickString(항Obj, ["항내용", "PARA_CONTENT", "para_content"]);
+    const 항내용 = readContent(항Obj, ["항내용", "PARA_CONTENT", "para_content"]);
     if (항내용) parts.push(항내용);
 
     for (const 호 of toArray(항Obj["호"] ?? 항Obj["ho"] ?? 항Obj["subitem"])) {
       const 호Obj = asObject(호);
-      const 호내용 = pickString(호Obj, ["호내용", "HO_CONTENT", "ho_content"]);
+      const 호내용 = readContent(호Obj, ["호내용", "HO_CONTENT", "ho_content"]);
       if (호내용) parts.push(호내용);
 
       for (const 목 of toArray(호Obj["목"] ?? 호Obj["mok"] ?? 호Obj["detail"])) {
-        const 목내용 = pickString(asObject(목), ["목내용", "MOK_CONTENT", "mok_content"]);
+        const 목내용 = readContent(asObject(목), ["목내용", "MOK_CONTENT", "mok_content"]);
         if (목내용) parts.push(목내용);
       }
     }
   }
 
-  return stripTags(parts.join("\n")).replace(/[ \t]+/g, " ").trim();
+  // ★ 여기서 `[ \t]+ → " "` 로 접지 않는다 — 접으면 표 칸 정렬이 무너진다.
+  //   조각별 정리는 `cleanSegment` 가 이미 했다.
+  return parts.join("\n").trim();
 }
 
 /**

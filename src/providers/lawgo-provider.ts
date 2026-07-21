@@ -34,7 +34,7 @@ import type {
 } from "../types.js";
 import type { LawProvider } from "./law-provider.js";
 import { tokenizeQuery } from "../article-match.js";
-import { ArticleIndexCache, extractArticles } from "../article-index.js";
+import { ArticleIndexCache, extractArticles, readContent } from "../article-index.js";
 import { rerankByArticleTitle } from "../article-title-signal.js";
 import { rerankByAiSignal } from "../ranking-signal.js";
 import {
@@ -642,26 +642,28 @@ function shouldStopLawFetchFallback(error: unknown): boolean {
 function extractFullArticleContent(joObj: Record<string, unknown>): string {
   const parts: string[] = [];
 
-  const heading = pickString(joObj, ["조문내용", "JO_CONTENT", "content"]);
-  if (heading) parts.push(heading);
+  // ⚠ `readContent` 를 쓴다 — 배열형 내용(표를 담은 조문)을 잃지 않고, 표 줄은 원문 그대로 둔다.
+  //   조문 인덱스(`article-index.ts`)와 **같은 함수**를 써야 두 표면이 같은 본문을 낸다(TV5 DoD ⑤).
+  const heading = readContent(joObj, ["조문내용", "JO_CONTENT", "content"]);
+  if (heading) parts.push(decodeHtmlEntities(heading));
 
   const 항List = toArray((joObj["항"] ?? joObj["para"] ?? joObj["paragraph"]) as unknown);
   for (const 항 of 항List) {
     const 항Obj = asObject(항);
-    const 항내용 = stripHtml(pickString(항Obj, ["항내용", "PARA_CONTENT", "para_content"]));
-    if (항내용) parts.push(항내용);
+    const 항내용 = readContent(항Obj, ["항내용", "PARA_CONTENT", "para_content"]);
+    if (항내용) parts.push(decodeHtmlEntities(항내용));
 
     const 호List = toArray((항Obj["호"] ?? 항Obj["ho"] ?? 항Obj["subitem"]) as unknown);
     for (const 호 of 호List) {
       const 호Obj = asObject(호);
-      const 호내용 = stripHtml(pickString(호Obj, ["호내용", "HO_CONTENT", "ho_content"]));
-      if (호내용) parts.push(호내용);
+      const 호내용 = readContent(호Obj, ["호내용", "HO_CONTENT", "ho_content"]);
+      if (호내용) parts.push(decodeHtmlEntities(호내용));
 
       const 목List = toArray((호Obj["목"] ?? 호Obj["mok"] ?? 호Obj["detail"]) as unknown);
       for (const 목 of 목List) {
         const 목Obj = asObject(목);
-        const 목내용 = stripHtml(pickString(목Obj, ["목내용", "MOK_CONTENT", "mok_content"]));
-        if (목내용) parts.push(목내용);
+        const 목내용 = readContent(목Obj, ["목내용", "MOK_CONTENT", "mok_content"]);
+        if (목내용) parts.push(decodeHtmlEntities(목내용));
       }
     }
   }
@@ -766,6 +768,12 @@ export class LawGoProvider implements LawProvider {
    * 받지 않는 것이 비용의 핵심이다. 영속 색인은 두지 않는다(설치 부담 → 목표와 충돌).
    */
   private readonly titleSignalCache = new ArticleIndexCache(40);
+
+  /**
+   * 법령 전문 응답 캐시 (TV5). 전문은 771KB 라 같은 법을 두 번 받지 않는 것이 비용의 핵심이다.
+   * 항목 수를 작게 잡는다 — 큰 객체라 메모리가 곧 비용이다.
+   */
+  private readonly articleRootCache = new Map<string, Record<string, unknown>>();
 
   constructor(
     linkageFetcher?: LinkageFetcher,
@@ -1058,6 +1066,35 @@ export class LawGoProvider implements LawProvider {
       // 재정렬은 보정이다 — 이것 때문에 검색이 죽으면 안 된다.
       return base;
     }
+  }
+
+  /**
+   * 조문 조회용 **전문** 응답 (TV5).
+   *
+   * ⚠ `JO=` 로 조문 하나만 받으면 upstream 이 **표를 빼고 준다**(2026-07-22 실측:
+   * 소득세법 제55조가 JO 조회에서 251자·표 없음, 전문에서 1596자·표 있음). 세율표가
+   * 조문에 실리려면 전문을 받아 클라이언트에서 찾아야 한다. 캐시가 반복 비용을 없앤다.
+   */
+  private async fetchArticleRootCached(
+    key: string,
+    keyField: "ID" | "MST",
+    efYd?: string,
+  ): Promise<Record<string, unknown>> {
+    const cacheKey = `${keyField}:${key}:${efYd ?? ""}`;
+    const hit = this.articleRootCache.get(cacheKey);
+    if (hit) {
+      this.articleRootCache.delete(cacheKey);
+      this.articleRootCache.set(cacheKey, hit);
+      return hit;
+    }
+    const root = await fetchLawArticleRoot(key, keyField, undefined, efYd);
+    this.articleRootCache.set(cacheKey, root);
+    while (this.articleRootCache.size > 5) {
+      const oldest = this.articleRootCache.keys().next().value;
+      if (oldest === undefined) break;
+      this.articleRootCache.delete(oldest);
+    }
+    return root;
   }
 
   /** 조문 인덱스 조회 + 캐시. 실패는 `null` 로 알린다 — 모듈이 그걸 보고 순서를 보존한다. */
@@ -1404,7 +1441,6 @@ export class LawGoProvider implements LawProvider {
 
     const requestedArticle = parseArticleReference(articleNo);
     const normalizedArticleNo = normalizeArticleInput(articleNo);
-    const joParam = requestedArticle?.joParam ?? normalizedArticleNo;
 
     // 시점 지정 경로 (TV3). 못 맞추면 **현행으로 대체하지 않고 거절한다** —
     // 조용한 현행 반환이 이 milestone 이 없애려는 결함 그 자체다.
@@ -1412,10 +1448,9 @@ export class LawGoProvider implements LawProvider {
     const resolved = asOfPlan ? await asOfPlan : null;
 
     if (resolved) {
-      const root = await fetchLawArticleRoot(
+      const root = await this.fetchArticleRootCached(
         String(resolved.version.법령일련번호),
         "MST",
-        joParam,
         resolved.version.시행일자,
       );
       const found = findArticleInRoot(root, requestedArticle, normalizedArticleNo, lawId, articleNo);
@@ -1429,7 +1464,7 @@ export class LawGoProvider implements LawProvider {
     }
 
     try {
-      const root = await fetchLawArticleRoot(resolvedLawId, "ID", joParam);
+      const root = await this.fetchArticleRootCached(resolvedLawId, "ID");
       const exactById = findArticleInRoot(root, requestedArticle, normalizedArticleNo, lawId, articleNo);
       if (exactById) {
         return this.withEffectiveDate(
@@ -1441,7 +1476,7 @@ export class LawGoProvider implements LawProvider {
       if (shouldStopLawFetchFallback(error)) throw error;
     }
 
-    const fallbackRoot = await fetchLawArticleRoot(resolvedLawId, "MST", joParam);
+    const fallbackRoot = await this.fetchArticleRootCached(resolvedLawId, "MST");
     const found = findArticleInRoot(fallbackRoot, requestedArticle, normalizedArticleNo, lawId, articleNo);
     if (!found) return null;
     return this.withEffectiveDate(
