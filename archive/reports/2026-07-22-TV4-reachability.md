@@ -57,8 +57,11 @@ root 에서 찾고 있어 항상 null → `total` 이 조용히 "받아 온 행 
 - 교차 A/B 4배치: 전부 순 +0 → **미채택**
 - `npm test` **272/272**(신규 30) · `golden-v2 dev` **88.0%** 변동 없음
 - 되돌림 확인: 기본값이 곧 되돌린 상태 — `golden-tax dev` 가 TV1 기준선 **83.3%** 재현
-- 배포 사본 build + dist 스모크: `total=469`(수정 전 100) · 절단 경고 발화 · TV3 시점축 정상
+- 실표면: 배포 사본 dist 스모크 — `total=469`(수정 전 100) · 절단 경고 발화 · TV3 시점축
+  (`as_of=2019` → `effective_date=20190101`) 정상 · 기본 경로 재정렬 꺼짐 확인
 - 응답 스키마·도구 개수 불변 → **MCP 재시작 불요**
+- 재현: `npx tsx bench/ud2-ab.ts --set golden-tax --split dev --variants tv4 --min-net 2`
+  (판정 재실행) · `npm test` · `npm run bench:golden -- --set golden-v2 --split dev` (회귀)
 
 ## 7. 후속 제안 (다음에 무엇을)
 

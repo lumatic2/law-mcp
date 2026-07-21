@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "tv3-tax-year-axis",
+  "active_work_id": "tv4-reachability",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -654,6 +654,57 @@
       "updated_at": "2026-07-21",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
       "completion_summary": "과세연도 축 완성 — 시점 정확도 100%, 조용한 현행 반환 0건, 범용 회귀 없음"
+    },
+    "tv4-reachability": {
+      "work_id": "tv4-reachability",
+      "horizon_id": "tax-vertical",
+      "milestone_id": "TV4",
+      "status": "completed",
+      "plan_path": "plans/2026-07-21-tv4-reachability.md",
+      "changeset_path": "changesets/20260721-tv4-article-title-signal",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1** 조문제목 신호 — upstream 상위 후보의 조문제목을 쿼리와 대조한다",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2** 본문검색 풀 도달 — 가나다순 절단을 없앤다",
+          "status": "pending"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3** 채택 판정 — 손실 0 AND 순 이득 ≥2 아니면 되돌린다",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-22",
+        "plan_sha256": "2a5ff017ad8fa34e093798e9a1f49d6eebeb23f68277e17c1e98e50ba58c14a1"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "claude:7539c846-464e-4a55-bd5a-192cb2e3a519"
+      ],
+      "owner_session_uuid": "claude:7539c846-464e-4a55-bd5a-192cb2e3a519",
+      "updated_at": "2026-07-22",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "| changeset | 내용 | 출하 | |---|---|---| | `20260721-tv4-article-title-signal` | 조문제목·쿼리 대조 재정렬 (`src/article-title-signal.ts`) | **꺼짐** | | `20260721-tv4-body-pool` | 본문검색 페이지 병렬 확장 + 절단 경고 + `totalCnt`"
     }
   }
 }
