@@ -36,6 +36,7 @@
 | 26 | [20260721-tv3-effective-law](20260721-tv3-effective-law/README.md) | 2026-07-21 | src/effective-law.ts (신규), test/effective-law.test.ts (신규) | ✅ | done |
 | 27 | [20260721-tv3-as-of-surface](20260721-tv3-as-of-surface/README.md) | 2026-07-21 | src/providers/lawgo-provider.ts(as_of·effective_date·거절), src/index.ts(도구 인자), src/types.ts, test/as-of-surface.test.ts (신규) | ✅ | done |
 | 28 | [20260721-tv3-law-history](20260721-tv3-law-history/README.md) | 2026-07-21 | src/providers/lawgo-provider.ts(attachHistory·fetchLawVersions), src/index.ts(include_history), src/types.ts, test/law-history.test.ts (신규) | ✅ | done |
+| 29 | [20260721-tv3-asof-verdict](20260721-tv3-asof-verdict/README.md) | 2026-07-21 | bench/tv3-asof.ts (신규), evidence/bench/2026-07-21-tv3-asof.{md,json} | ✅ | done |
 
 ## 운영 원칙
 

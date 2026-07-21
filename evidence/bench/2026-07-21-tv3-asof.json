@@ -1,0 +1,151 @@
+{
+  "date": "2026-07-21",
+  "accuracy": 1,
+  "correct": 10,
+  "measured": 10,
+  "silent_current_returns": 0,
+  "rejected_properly": 5,
+  "reject_cases": 5,
+  "rows": [
+    {
+      "law": "소득세법",
+      "article": "제89조",
+      "asOf": "2019",
+      "mustBeOnOrBefore": "20191231",
+      "effective_date": "20190101",
+      "ok": true,
+      "silentCurrent": false,
+      "hasRule": true
+    },
+    {
+      "law": "소득세법",
+      "article": "제89조",
+      "asOf": "2023",
+      "mustBeOnOrBefore": "20231231",
+      "effective_date": "20230701",
+      "ok": true,
+      "silentCurrent": false,
+      "hasRule": true
+    },
+    {
+      "law": "소득세법",
+      "article": "제12조",
+      "asOf": "2022",
+      "mustBeOnOrBefore": "20221231",
+      "effective_date": "20220701",
+      "ok": true,
+      "silentCurrent": false,
+      "hasRule": true
+    },
+    {
+      "law": "법인세법",
+      "article": "제25조",
+      "asOf": "2021",
+      "mustBeOnOrBefore": "20211231",
+      "effective_date": "20211230",
+      "ok": true,
+      "silentCurrent": false,
+      "hasRule": true
+    },
+    {
+      "law": "법인세법",
+      "article": "제23조",
+      "asOf": "2023",
+      "mustBeOnOrBefore": "20231231",
+      "effective_date": "20230701",
+      "ok": true,
+      "silentCurrent": false,
+      "hasRule": true
+    },
+    {
+      "law": "부가가치세법",
+      "article": "제60조",
+      "asOf": "2022",
+      "mustBeOnOrBefore": "20221231",
+      "effective_date": "20220701",
+      "ok": true,
+      "silentCurrent": false,
+      "hasRule": true
+    },
+    {
+      "law": "국세기본법",
+      "article": "제45조의2",
+      "asOf": "2020",
+      "mustBeOnOrBefore": "20201231",
+      "effective_date": "20201210",
+      "ok": true,
+      "silentCurrent": false,
+      "hasRule": true
+    },
+    {
+      "law": "국세기본법",
+      "article": "제47조의2",
+      "asOf": "2023",
+      "mustBeOnOrBefore": "20231231",
+      "effective_date": "20230401",
+      "ok": true,
+      "silentCurrent": false,
+      "hasRule": true
+    },
+    {
+      "law": "상속세 및 증여세법",
+      "article": "제53조",
+      "asOf": "2022",
+      "mustBeOnOrBefore": "20221231",
+      "effective_date": "20220101",
+      "ok": true,
+      "silentCurrent": false,
+      "hasRule": true
+    },
+    {
+      "law": "조세특례제한법",
+      "article": "제6조",
+      "asOf": "2021",
+      "mustBeOnOrBefore": "20211231",
+      "effective_date": "20211230",
+      "ok": true,
+      "silentCurrent": false,
+      "hasRule": true
+    },
+    {
+      "law": "소득세법",
+      "article": "제89조",
+      "asOf": "작년",
+      "rejectExpected": true,
+      "rejected": true,
+      "code": "INVALID_ARGUMENT"
+    },
+    {
+      "law": "소득세법",
+      "article": "제89조",
+      "asOf": "최근",
+      "rejectExpected": true,
+      "rejected": true,
+      "code": "INVALID_ARGUMENT"
+    },
+    {
+      "law": "소득세법",
+      "article": "제89조",
+      "asOf": "2023년 1기",
+      "rejectExpected": true,
+      "rejected": true,
+      "code": "INVALID_ARGUMENT"
+    },
+    {
+      "law": "소득세법",
+      "article": "제89조",
+      "asOf": "1900",
+      "rejectExpected": true,
+      "rejected": true,
+      "code": "INVALID_ARGUMENT"
+    },
+    {
+      "law": "소득세법",
+      "article": "제89조",
+      "asOf": "1955",
+      "rejectExpected": true,
+      "rejected": true,
+      "code": "LAW_VERSION_NOT_FOUND"
+    }
+  ]
+}

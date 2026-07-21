@@ -1,1 +1,2 @@
 {"event": "undocumented_stop", "next_task": "step-1** golden-tax 라벨 세트 — 실무 유형 분포에서 뽑고 조문 직접 확인으로 고정", "remaining": 3, "runtime": "claude", "total": 3, "ts": "2026-07-21T14:13:46.995663+00:00", "unhonored_reason": null, "work_id": "tv1-tax-eval-set"}
+{"event": "undocumented_stop", "next_task": "step-1** 시점 조회 경로 — `eflaw` 로 그때의 조문을 가져온다 + 무경고 함정 차단", "remaining": 4, "runtime": "claude", "total": 4, "ts": "2026-07-21T14:47:26.823723+00:00", "unhonored_reason": null, "work_id": "tv3-tax-year-axis"}

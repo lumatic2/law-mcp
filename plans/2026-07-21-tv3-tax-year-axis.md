@@ -104,7 +104,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
   - Verify: `npm test` + 실 API 로 소득세법 연혁이 시행예정/현행/연혁으로 **구분되어** 오는지 관측
   - Failure probe: 연혁이 없는 법령(신규 제정)에서 **빈 배열이 오고 오류가 나지 않는지** 확인
   - Commit: `changesets/20260721-tv3-law-history/`
-- [ ] **step-4** 시점 정확도 판정 — 채택 여부를 수치로 닫는다
+- [x] **step-4** 시점 정확도 판정 — 채택 여부를 수치로 닫는다
   - Artifact: `bench/tv3-asof.ts` + `evidence/bench/2026-07-21-tv3-asof.md` — TV1 세트의
     `tax_year` 지정 항목에서 **시점 정확도**(반환 조문의 시행일자가 그 연도에 유효한 비율)와
     **조용한 현행 반환 건수**(0 이어야 함). 범용 회귀 동시 측정
