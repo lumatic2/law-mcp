@@ -33,6 +33,7 @@
 | 23 | [20260721-tv2-rulings-adapter](20260721-tv2-rulings-adapter/README.md) | 2026-07-21 | src/providers/source-adapter.ts(CGM_EXPC 2종·detailUnavailable), src/providers/lawgo-provider.ts(전문 거절), src/index.ts(enum 17→19), test/cgm-expc.test.ts (신규) | ✅ | done |
 | 24 | [20260721-tv2-authority-grade](20260721-tv2-authority-grade/README.md) | 2026-07-21 | src/providers/source-adapter.ts(SourceAuthority·전 descriptor 등급), src/providers/lawgo-provider.ts(응답 출하·경고), src/types.ts, test/authority-grade.test.ts (신규) | ✅ | done |
 | 25 | [20260721-tv2-contribution](20260721-tv2-contribution/README.md) | 2026-07-21 | bench/tv2-contribution.ts (신규), evidence/bench/2026-07-21-tv2-contribution.{md,json} | ✅ | done |
+| 26 | [20260721-tv3-effective-law](20260721-tv3-effective-law/README.md) | 2026-07-21 | src/effective-law.ts (신규), test/effective-law.test.ts (신규) | ✅ | done |
 
 ## 운영 원칙
 

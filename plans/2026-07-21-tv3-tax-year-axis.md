@@ -73,7 +73,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
 
 ## Step 트리
 
-- [ ] **step-1** 시점 조회 경로 — `eflaw` 로 그때의 조문을 가져온다 + 무경고 함정 차단
+- [x] **step-1** 시점 조회 경로 — `eflaw` 로 그때의 조문을 가져온다 + 무경고 함정 차단
   - Artifact: `src/effective-law.ts` — `getLawAsOf(lawName, date)`. `eflaw` 사용 강제,
     `target=law&efYd` 경로 **금지**(사용 시 즉시 실패하는 가드). 못 찾으면 명시 실패
   - Files: write `src/effective-law.ts`·`test/effective-law.test.ts` / read
