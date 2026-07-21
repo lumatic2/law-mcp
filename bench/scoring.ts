@@ -33,6 +33,8 @@ export function isSameArticle(left: string, right: string): boolean {
 export type ItemOutcome = {
   query: string;
   domain: string;
+  /** 세법 세트(golden-tax)의 질의 유형. 구 세트에는 없다 — 없으면 유형 분해를 하지 않는다. */
+  type?: string;
   split: string;
   hit1: boolean;
   hit3: boolean;
@@ -49,6 +51,16 @@ export type ItemOutcome = {
   /** 측정 대상이 아닌 사유 (조문 라벨 없음 등) — 에러와 구분한다 */
   skipped?: string;
   error?: string;
+
+  /**
+   * 시점 정확도 (TV3 이 채운다). TV1 에서는 **자리만** 둔다.
+   *
+   * 왜 자리를 미리 두나: 세법에서 "몇 년 귀속이냐"는 조문 번호만큼 중요한 축이고, 이 축이
+   * 없으면 TV3 완료 후 기준선을 다시 재야 한다. 다만 **켜지지 않은 축을 0% 로 보고하면
+   * "시점을 다 틀렸다"는 거짓 주장**이 되므로, 측정하지 않은 상태는 반드시 null(n/a)이다.
+   */
+  asOfChecked?: boolean;
+  asOfCorrect?: boolean;
 };
 
 export type Summary = {
@@ -61,6 +73,15 @@ export type Summary = {
   article_accuracy: number | null;
   article_checked: number;
   by_domain: Record<string, { total: number; recall_at_3: number }>;
+  /**
+   * 유형별 분해 (TV1). 세법 세트는 domain 이 전부 "세법"이라 by_domain 이 한 칸으로 뭉개진다 —
+   * **어느 유형이 약한지**가 TV2~TV5 의 우선순위 근거이므로 유형 축이 따로 필요하다.
+   * 유형 라벨이 없는 구 세트에서는 빈 객체다.
+   */
+  by_type: Record<string, { total: number; recall_at_3: number; article_accuracy: number | null }>;
+  /** 시점 정확도 — TV3 전에는 측정하지 않으므로 null(n/a). 0 으로 내면 거짓 주장이 된다. */
+  as_of_accuracy: number | null;
+  as_of_checked: number;
 };
 
 function ratio(part: number, whole: number): number {
@@ -109,6 +130,24 @@ export function summarize(outcomes: ItemOutcome[]): Summary {
 
   const articleChecked = scored.filter((o) => o.articleChecked);
 
+  const byType: Summary["by_type"] = {};
+  for (const outcome of scored) {
+    if (!outcome.type) continue;
+    const bucket = (byType[outcome.type] ??= { total: 0, recall_at_3: 0, article_accuracy: null });
+    bucket.total += 1;
+    if (outcome.hit3) bucket.recall_at_3 += 1;
+  }
+  for (const key of Object.keys(byType)) {
+    const inType = scored.filter((o) => o.type === key);
+    const checked = inType.filter((o) => o.articleChecked);
+    byType[key].recall_at_3 = ratio(byType[key].recall_at_3, byType[key].total);
+    byType[key].article_accuracy = checked.length
+      ? ratio(checked.filter((o) => o.articleCorrect).length, checked.length)
+      : null;
+  }
+
+  const asOfChecked = scored.filter((o) => o.asOfChecked);
+
   return {
     total: outcomes.length,
     scored: scored.length,
@@ -121,6 +160,12 @@ export function summarize(outcomes: ItemOutcome[]): Summary {
       : null,
     article_checked: articleChecked.length,
     by_domain: byDomain,
+    by_type: byType,
+    // 측정한 항목이 0 이면 null(n/a). TV3 이 asOfChecked 를 켜기 전까지는 항상 null 이다.
+    as_of_accuracy: asOfChecked.length
+      ? ratio(asOfChecked.filter((o) => o.asOfCorrect).length, asOfChecked.length)
+      : null,
+    as_of_checked: asOfChecked.length,
   };
 }
 

@@ -25,6 +25,10 @@ import {
 type Item = {
   query: string;
   domain: string;
+  /** 세법 세트(golden-tax)의 질의 유형. 구 세트에는 없다. */
+  type?: string;
+  /** 귀속연도 — TV3 이 쓸 자리. TV1 시점에는 전부 null 이다. */
+  tax_year?: string | null;
   expected_laws: string[];
   expected_article?: string;
   split: string;
@@ -84,6 +88,7 @@ async function scoreAssisted(provider: LawGoProvider, item: Item): Promise<ItemO
   const base: ItemOutcome = {
     query: item.query,
     domain: item.domain,
+    type: item.type,
     split: item.split,
     hit1: false,
     hit3: false,
@@ -121,6 +126,7 @@ async function scoreItem(provider: LawGoProvider, item: Item): Promise<ItemOutco
   const base: ItemOutcome = {
     query: item.query,
     domain: item.domain,
+    type: item.type,
     split: item.split,
     hit1: false,
     hit3: false,
@@ -299,6 +305,14 @@ async function main() {
   }
   console.log(`  채점 ${summary.scored}건 / 에러 ${summary.errors}건`);
   console.log(`  도메인별 recall@3: ${Object.entries(summary.by_domain).map(([k, v]) => `${k}=${(v.recall_at_3 * 100).toFixed(0)}%`).join(" ")}`);
+  // 유형 분해는 세법 세트에서만 나온다(구 세트는 type 라벨이 없어 빈 객체).
+  // 어느 유형이 약한지가 TV2~TV5 의 우선순위 근거다.
+  for (const [name, v] of Object.entries(summary.by_type)) {
+    const art = v.article_accuracy === null ? "n/a" : `${(v.article_accuracy * 100).toFixed(0)}%`;
+    console.log(`    ${name.padEnd(16)} n=${String(v.total).padStart(2)}  recall@3 ${(v.recall_at_3 * 100).toFixed(0).padStart(3)}%  조문정확도 ${art}`);
+  }
+  // 켜지지 않은 축을 0% 로 내면 "시점을 다 틀렸다"는 거짓 주장이 된다 — n/a 로 낸다.
+  console.log(`  시점 정확도     ${summary.as_of_accuracy === null ? "n/a (TV3 미도입)" : `${(summary.as_of_accuracy * 100).toFixed(1)}%  (${summary.as_of_checked}건)`}`);
   console.log(`  → ${outPath}`);
 }
 
