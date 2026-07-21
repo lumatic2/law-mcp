@@ -19,6 +19,7 @@
 | 9 | [20260721-ud3-committee-sources](20260721-ud3-committee-sources/README.md) | 2026-07-21 | src/providers/source-adapter.ts(위원회 9종 + 단건객체 수리), src/index.ts(source enum 5→14), test/source-adapter.test.ts | ✅ | done |
 | 10 | [20260721-ud3-delegated-articles](20260721-ud3-delegated-articles/README.md) | 2026-07-21 | src/delegated.ts (신규), src/providers/lawgo-provider.ts(부착), src/types.ts, test/delegated.test.ts (신규) | ✅ | done |
 | 11 | [20260721-ud3-contribution-gate](20260721-ud3-contribution-gate/README.md) | 2026-07-21 | bench/ud3-contribution.ts (신규), evidence/bench/2026-07-21-ud3-contribution.md | ✅ | done |
+| 12 | [20260721-ud2-candidate-merge](20260721-ud2-candidate-merge/README.md) | 2026-07-21 | src/ai-search.ts(AiMergeConfig), src/providers/lawgo-provider.ts(mergeAiSearch·기본 채택), bench/ud2-ab.ts (신규), test/ai-search-merge.test.ts (신규), test/term-boost.test.ts(실 API 격리) | ✅ | done |
 
 ## 운영 원칙
 

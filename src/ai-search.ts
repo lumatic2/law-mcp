@@ -137,6 +137,21 @@ export function extractAiSearch(root: unknown, query: string): AiSearchResult {
   };
 }
 
+/**
+ * 후보 병합 설정 (UD2 step-2).
+ *
+ * `enabled` 기본값은 **채택 판정을 통과한 뒤에** 켰다(2026-07-21 교차 A/B: 이득 8 · 손실 0,
+ * 2회 동일). 그 전까지는 false 로 두어 판정 전 코드가 제품 경로로 새지 않게 했다.
+ * `priority` 기본값 `"ai"` 도 선험적 선택이 아니라 실측 결과다 — `"boost"` 는 +7 로 한 건 낮았다.
+ */
+export type AiMergeConfig = {
+  enabled?: boolean;
+  /** 상위로 올릴 법령 수 */
+  maxLaws?: number;
+  /** 용어 연계 부스트와 충돌할 때 누가 위인가 — 선험적으로 정하지 않고 실측으로 고른다. */
+  priority?: "ai" | "boost";
+};
+
 export type AiSearchFetcher = (query: string, display: number) => Promise<unknown>;
 
 export const defaultAiSearchFetcher: AiSearchFetcher = async (query, display) => {

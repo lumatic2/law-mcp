@@ -5,6 +5,12 @@ import {
   LAW_SEARCH_BASE_URL,
   LAW_SERVICE_BASE_URL,
 } from "../config.js";
+import {
+  AiSearchCache,
+  lookupAiSearch,
+  type AiMergeConfig,
+  type AiSearchFetcher,
+} from "../ai-search.js";
 import { DelegationCache, lookupDelegations, type DelegationFetcher } from "../delegated.js";
 import { createMcpError } from "../mcp-error.js";
 import { bridgeTerm, formatBridgeWarning, type TermBridgeMatch } from "../term-bridge.js";
@@ -602,7 +608,15 @@ export class LawGoProvider implements LawProvider {
   private readonly delegationCache = new DelegationCache();
   private readonly delegationFetcher: DelegationFetcher;
 
-  constructor(linkageFetcher?: LinkageFetcher, delegationFetcher?: DelegationFetcher) {
+  private readonly aiSearchCache = new AiSearchCache(100);
+  private readonly aiSearchFetcher: AiSearchFetcher | undefined;
+
+  constructor(
+    linkageFetcher?: LinkageFetcher,
+    delegationFetcher?: DelegationFetcher,
+    aiSearchFetcher?: AiSearchFetcher,
+  ) {
+    this.aiSearchFetcher = aiSearchFetcher;
     this.delegationFetcher = delegationFetcher ?? ((lawId: string) =>
       fetchLawApi(LAW_SERVICE_BASE_URL, {
         OC: LAW_API_OC, target: "lsDelegated", type: "JSON", ID: lawId,
@@ -689,7 +703,7 @@ export class LawGoProvider implements LawProvider {
 
   async searchLaw(
     query: string,
-    options: { limit?: number; termBoost?: TermBoostConfig } = {},
+    options: { limit?: number; termBoost?: TermBoostConfig; aiSearch?: AiMergeConfig } = {},
   ): Promise<SearchLawResult> {
     assertLawApiKey();
     const limit = Math.min(Math.max(options.limit ?? 10, 1), 100);
@@ -707,7 +721,70 @@ export class LawGoProvider implements LawProvider {
       bridgeThenRelaxSearch,
     });
 
-    return this.boostWithTermLinkage(query, base, limit, options.termBoost);
+    const boosted = await this.boostWithTermLinkage(query, base, limit, options.termBoost);
+    // 부스트가 앞으로 끌어올린 건수 — `boost` 우선 배치에서 그 자리를 지켜 주기 위해 센다.
+    // (부스트가 아무것도 안 했으면 `base` 와 **같은 객체**를 돌려주는 규약을 이용한다.)
+    const boostPromoted = boosted === base ? 0 : boosted.items.filter((item) => item.linked_articles).length;
+    return this.mergeAiSearch(query, boosted, limit, boostPromoted, options.aiSearch);
+  }
+
+  /**
+   * `aiSearch` 후보 병합 (UD2 step-2).
+   *
+   * 법제처는 자연어 질의를 **조문 단위로** 답하는 검색을 이미 갖고 있다. 우리가 다섯 milestone
+   * 동안 만든 사다리보다 이 신호가 강할 수 있어, **대체가 아니라 앞단 채널로** 얹는다.
+   * `aiSearch` 도 틀리는 유형이 있어서(정당방위 → 정당법) 기존 사다리 결과는 뒤에 보존한다.
+   *
+   * 부스트와 같은 원칙 — **신호가 있을 때만 움직인다**: 결과가 비거나 조회가 실패하면 `base` 를
+   * 그대로(같은 객체) 돌려준다. `lookupAiSearch` 가 모든 실패를 빈 결과로 흡수하므로 이 경로는
+   * upstream 장애 시 자동으로 LB5 동작으로 degrade 한다.
+   */
+  private async mergeAiSearch(
+    query: string,
+    base: SearchLawResult,
+    limit: number,
+    boostPromoted: number,
+    config: AiMergeConfig = {},
+  ): Promise<SearchLawResult> {
+    const { enabled = true, maxLaws = 2, priority = "ai" } = config;
+    if (!enabled) return base;
+
+    const found = await lookupAiSearch(query, this.aiSearchFetcher, this.aiSearchCache);
+    if (found.laws.length === 0) return base;
+
+    const normalized = (value: string) => normalizeLawName(value);
+    const promoted: SearchLawResult["items"] = [];
+    for (const law of found.laws.slice(0, maxLaws)) {
+      const existing = base.items.find((item) => normalized(item.law_name) === normalized(law.lawName));
+      // 법령ID 가 없고 기존 결과에도 없으면 싣지 않는다 — ID 없는 항목은 하류 도구가 못 쓴다.
+      if (!existing && !law.lawId) continue;
+      promoted.push(existing ?? {
+        law_id: law.lawId as string,
+        law_name: law.lawName,
+        match_type: "contains" as const,
+      });
+    }
+    if (promoted.length === 0) return base;
+
+    const promotedNames = new Set(promoted.map((item) => normalized(item.law_name)));
+    const head = priority === "boost"
+      ? base.items.slice(0, boostPromoted).filter((item) => !promotedNames.has(normalized(item.law_name)))
+      : [];
+    const headNames = new Set(head.map((item) => normalized(item.law_name)));
+    const tail = base.items.filter(
+      (item) => !promotedNames.has(normalized(item.law_name)) && !headNames.has(normalized(item.law_name)),
+    );
+
+    return {
+      query: base.query,
+      total: base.total,
+      items: [...head, ...promoted, ...tail].slice(0, limit),
+      warnings: [
+        ...(base.warnings ?? []),
+        `법제처 지능형 검색(aiSearch)이 ${promoted.map((item) => item.law_name).join(", ")}`
+          + " 을(를) 상위로 올림 — upstream 이 매긴 관련도 순위이며, 우리 순위가 아님.",
+      ],
+    };
   }
 
   /**
@@ -798,7 +875,13 @@ export class LawGoProvider implements LawProvider {
   private async resolveLawId(lawId: string): Promise<string> {
     if (/^\d+$/.test(lawId)) return lawId;
 
-    const result = await this.searchLaw(lawId, { limit: 10, termBoost: { enabled: false } });
+    // ③ `aiSearch` 병합도 끈다 — 주제 검색용 채널이라 법령명 정확일치를 밀어낼 수 있다.
+    //    지금은 기본값이 off 라 없어도 같지만, step-4 에서 기본을 켜는 순간 UD0 회귀가 재발한다.
+    const result = await this.searchLaw(lawId, {
+      limit: 10,
+      termBoost: { enabled: false },
+      aiSearch: { enabled: false },
+    });
     if (result.items.length === 0) {
       throw createMcpError({
         code: "LAW_NOT_FOUND",

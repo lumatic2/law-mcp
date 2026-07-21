@@ -40,7 +40,9 @@ function providerWithLinkage(linkedLaws: Array<{ name: string; id: string; artic
     },
   });
 
-  const provider = new LawGoProvider({ searchTerm, fetchLinkedArticles });
+  // aiSearch 는 빈 신호로 고정한다 — 이 파일이 재는 것은 **부스트 단독** 동작이고,
+  // 주입하지 않으면 기본으로 켜진 aiSearch 가 실 API 를 탄다(UD2 step-2 에서 실제로 샜다).
+  const provider = new LawGoProvider({ searchTerm, fetchLinkedArticles }, undefined, async () => ({}));
   // 법령 검색은 실 API 를 타지 않도록 대체한다.
   (provider as unknown as Record<string, unknown>).fetchLawSearchOnce = async () => ({
     items: LAW_SEARCH_RESPONSE.LawSearch.law.map((row) => ({
@@ -115,10 +117,14 @@ test("term boost respects the minLinks threshold", async () => {
 
 // Failure probe: 용어 연계가 통째로 죽어도 검색은 살아 있어야 한다(보조 채널 원칙).
 test("term boost failure never breaks the search itself", async () => {
-  const provider = new LawGoProvider({
-    searchTerm: async () => { throw new Error("HTTP 503"); },
-    fetchLinkedArticles: async () => { throw new Error("HTTP 503"); },
-  });
+  const provider = new LawGoProvider(
+    {
+      searchTerm: async () => { throw new Error("HTTP 503"); },
+      fetchLinkedArticles: async () => { throw new Error("HTTP 503"); },
+    },
+    undefined,
+    async () => ({}),
+  );
   (provider as unknown as Record<string, unknown>).fetchLawSearchOnce = async () => ({
     items: [{ law_id: "111", law_name: "예금자보호법", match_type: "contains" as const }],
     total: 1,
