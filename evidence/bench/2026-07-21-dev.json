@@ -6,7 +6,7 @@
     "total": 25,
     "scored": 25,
     "errors": 0,
-    "recall_at_1": 0.8,
+    "recall_at_1": 0.68,
     "recall_at_3": 0.88,
     "precedent_hit_rate": 0.64,
     "article_accuracy": 0.7368,
@@ -54,7 +54,8 @@
       ],
       "predictedArticles": [
         "제37조",
-        "제43조의8"
+        "제43조의8",
+        "제36조"
       ],
       "articleCorrectAt3": true
     },
@@ -62,15 +63,15 @@
       "query": "육아휴직 신청 요건과 기간",
       "domain": "노동",
       "split": "dev",
-      "hit1": true,
+      "hit1": false,
       "hit3": true,
       "precHit": false,
       "articleChecked": false,
       "articleCorrect": false,
       "returned": [
-        "남녀고용평등과 일ㆍ가정 양립 지원에 관한 법률",
+        "고용보험법 시행령",
         "고용보험법 시행규칙",
-        "고용보험법 시행령"
+        "남녀고용평등과 일ㆍ가정 양립 지원에 관한 법률"
       ],
       "articleShippingMiss": true
     },
@@ -115,7 +116,8 @@
         "제24조",
         "제27조",
         "제23조",
-        "제26조"
+        "제26조",
+        "제2조"
       ],
       "articleCorrectAt3": true
     },
@@ -130,8 +132,8 @@
       "articleCorrect": true,
       "returned": [
         "고용보험법",
-        "고용보험법 시행규칙",
-        "고용보험법 시행령"
+        "고용보험법 시행령",
+        "고용보험법 시행규칙"
       ],
       "predictedArticles": [
         "제40조",
@@ -152,12 +154,13 @@
       "articleChecked": true,
       "articleCorrect": true,
       "returned": [
-        "검사와 사법경찰관의 상호협력과 일반적 수사준칙에 관한 규정",
+        "검찰사건사무규칙",
         "형사소송법",
-        "검찰사건사무규칙"
+        "검사와 사법경찰관의 상호협력과 일반적 수사준칙에 관한 규정"
       ],
       "predictedArticles": [
-        "제200조의3"
+        "제200조의3",
+        "제200조의4"
       ],
       "articleCorrectAt3": true
     },
@@ -210,15 +213,15 @@
       "query": "성폭력 피해자 신뢰관계인 동석",
       "domain": "형사",
       "split": "dev",
-      "hit1": true,
+      "hit1": false,
       "hit3": true,
       "precHit": false,
       "articleChecked": true,
       "articleCorrect": true,
       "returned": [
+        "군검찰 사건사무규칙",
         "성폭력범죄의 처벌 등에 관한 특례법",
-        "성폭력범죄 등 사건의 심리ㆍ재판 및 피해자 보호에 관한 규칙",
-        "군검찰 사건사무규칙"
+        "성폭력범죄 등 사건의 심리ㆍ재판 및 피해자 보호에 관한 규칙"
       ],
       "predictedArticles": [
         "제34조",
@@ -239,8 +242,8 @@
       "articleChecked": false,
       "articleCorrect": false,
       "returned": [
-        "게임산업진흥에 관한 법률",
         "범죄수익은닉의 규제 및 처벌 등에 관한 법률",
+        "게임산업진흥에 관한 법률",
         "검사와 사법경찰관의 상호협력과 일반적 수사준칙에 관한 규정"
       ],
       "articleShippingMiss": true
@@ -391,7 +394,8 @@
         "제41조",
         "제37조",
         "제20조",
-        "제44조"
+        "제44조",
+        "제5조"
       ],
       "articleCorrectAt3": true
     },
@@ -428,9 +432,9 @@
       "articleChecked": false,
       "articleCorrect": false,
       "returned": [
-        "징발법",
         "질서위반행위규제법",
-        "행정조사기본법"
+        "행정조사기본법",
+        "징발법"
       ],
       "articleShippingMiss": true
     },
@@ -468,7 +472,8 @@
         "제70조",
         "제78조",
         "제76조",
-        "제74조"
+        "제74조",
+        "제70조의2"
       ],
       "articleCorrectAt3": true
     },
@@ -492,14 +497,14 @@
       "query": "상속세 신고 기한",
       "domain": "세무",
       "split": "dev",
-      "hit1": true,
+      "hit1": false,
       "hit3": true,
       "precHit": true,
       "articleChecked": true,
       "articleCorrect": true,
       "returned": [
-        "상속세 및 증여세법",
         "상속세 및 증여세법 시행령",
+        "상속세 및 증여세법",
         "국세기본법"
       ],
       "predictedArticles": [
@@ -522,11 +527,15 @@
       "articleCorrect": true,
       "returned": [
         "국세기본법",
-        "국세기본법 시행규칙",
-        "관세법"
+        "관세법",
+        "국세기본법 시행규칙"
       ],
       "predictedArticles": [
-        "제48조"
+        "제48조",
+        "제47조의2",
+        "제47조",
+        "제47조의3",
+        "제49조"
       ],
       "articleCorrectAt3": true
     },
@@ -547,7 +556,9 @@
       "predictedArticles": [
         "제26조의2",
         "제47조의4",
-        "제21조"
+        "제21조",
+        "제45조의2",
+        "제27조"
       ],
       "articleCorrectAt3": true
     }

@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-22
-> 상태: **horizon `tax-vertical` 실행 중** — 승인 2026-07-21, TV1·TV2·TV3·TV4 완료 (4/6).
+> 상태: **horizon `tax-vertical` 실행 중** — 승인 2026-07-21, TV1~TV4·TV7 완료 (5/7).
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -81,7 +81,7 @@
 - Status: [x]
 
 - Completed at: 2026-07-22
-<!-- harness:milestone id="TV7" status="active" priority="P0" -->
+<!-- harness:milestone id="TV7" status="completed" priority="P0" evidence="changesets/20260722-tv7-aisearch-signal · changesets/20260722-tv7-ranking-rerank · changesets/20260722-tv7-verdict · evidence/bench/2026-07-22-tv7-verdict.md" -->
 ### TV7 — 순위 신호
 - DoD: 재정렬 규칙에 법명·도메인·쿼리 토큰 하드코딩 없음. **추가 HTTP 호출 0**. aiSearch 실패·
   빈 결과 시 원래 순서 보존. 세법 dev 교차 A/B **손실 0 AND 순 이득 ≥2**. 범용 dev 셋 ≥88%.
@@ -92,7 +92,9 @@
   0** 으로 이미 주는데 안 쓰고 있었다(프로브: 정답 법이 display=30 안에 30/30 존재).
 - Scale: changesets>=3; surfaces: aiSearch 신호 추출·후보 재정렬·교차 A/B; capability: 이름이
   안 걸리는 정답을 위로 올린다
-- Status: [ ]
+- 판정: **채택** — 세법 dev recall@3 80.0% → **86.7%**(이득 2·손실 0, 2회 동일), 범용 교차 A/B
+  손실 0. 추가 HTTP 호출 0·지연 증가 없음. TV4 가 못 산 신호를 **이미 사 놓고 안 쓰던 곳**에서 꺼냈다.
+- Status: [x] **완료(2026-07-22)**
 
 <!-- harness:milestone id="TV5" status="pending" priority="P2" -->
 ### TV5 — 세율표(별표)
