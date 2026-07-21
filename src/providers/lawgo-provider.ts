@@ -655,6 +655,37 @@ function findArticleInRoot(
  * - 검색: DRF/lawSearch.do
  * - 법령 상세: DRF/lawService.do
  */
+/**
+ * upstream 이 준 데이터 기준일을 그대로 집는다(추정 금지). 없으면 null.
+ * 심판례 2024.12.18 · 예규 2025.06.28 처럼 자료원마다 다르고, 이걸 안 밝히면
+ * 소비 LLM 은 "최근 결정례"를 물었을 때 오래된 목록을 최신으로 읽는다.
+ */
+function pickDataAsOf(items: SourceItem[]): string | null {
+  for (const item of items) {
+    const value = item["데이터기준일시"];
+    if (typeof value === "string" && value.trim()) return value.trim();
+  }
+  return null;
+}
+
+/**
+ * 구속력 등급 경고. 등급이 `reference_only` 인 자료원은 **경고로도 한 번 더** 말한다 —
+ * 필드는 무시돼도 경고는 읽히는 경우가 많고, 이 등급의 오용(예규를 조문처럼 인용)이
+ * 이 horizon 의 프리모템 ③ 이다.
+ */
+function buildAuthorityWarning(descriptor: SourceDescriptor, items: SourceItem[]): string[] {
+  const out: string[] = [];
+  if (items.length === 0) return out;
+  if (descriptor.authority.grade === "reference_only") {
+    out.push(`⚠ ${descriptor.label}: ${descriptor.authority.note}`);
+  }
+  const asOf = pickDataAsOf(items);
+  if (asOf) {
+    out.push(`이 자료원의 데이터 기준일은 ${asOf} 이다 — 그 이후 문서는 포함되지 않는다.`);
+  }
+  return out;
+}
+
 export class LawGoProvider implements LawProvider {
   private readonly linkageCache = new TermLinkageCache(200);
 
@@ -1489,13 +1520,20 @@ export class LawGoProvider implements LawProvider {
       },
     );
 
+    // 구속력 등급과 데이터 기준일을 **응답에** 싣는다(TV2 step-3).
+    // 선언만 하고 안 내보내면 소비 LLM 은 여전히 예규를 조문처럼 인용한다.
+    const authorityWarning = buildAuthorityWarning(descriptor, result.items);
+
     return {
       source: descriptor.label,
       target: descriptor.target,
+      authority: descriptor.authority.grade,
+      authority_note: descriptor.authority.note,
+      data_as_of: pickDataAsOf(result.items),
       query: result.query,
       total: result.total,
       items: result.items,
-      warnings: [...result.warnings, ...structureWarnings],
+      warnings: [...result.warnings, ...structureWarnings, ...authorityWarning],
     };
   }
 

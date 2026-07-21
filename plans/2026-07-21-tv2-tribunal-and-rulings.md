@@ -108,7 +108,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
   - Failure probe: `display=1` 로 호출해 **단건객체가 배열로 정규화되는지** 확인 —
     프로브에서 이 결함으로 ID 추출이 조용히 실패했다
   - Commit: `changesets/20260721-tv2-rulings-adapter/`
-- [ ] **step-3** 구속력 등급 — 예규를 법조문처럼 인용하지 못하게 한다
+- [x] **step-3** 구속력 등급 — 예규를 법조문처럼 인용하지 못하게 한다
   - Artifact: 해석자료 응답에 `authority` 필드(`binding_on_authority`/`reference_only`/
     `adjudication`) + `data_as_of`(upstream 기준일 그대로) + 등급 설명 경고
   - Files: write `src/types.ts`·`src/providers/source-adapter.ts`·`src/index.ts`(description)·

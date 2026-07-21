@@ -110,6 +110,16 @@ export interface SearchLegalSourceResult {
   source: string;
   /** DRF target */
   target: string;
+  /**
+   * 구속력 등급 (TV2). 모든 법원(法源)이 같은 무게가 아니다 — 예규는 법원(法院)을 구속하지
+   * 않는 참고자료이고, 심판례는 그 사건을 종결시킨 판단이다. **필수 필드다**: 등급 없이
+   * 나가면 소비 LLM 이 예규를 조문처럼 인용한다.
+   */
+  authority: "adjudication" | "reference_only" | "constitutional" | "statute" | "dictionary";
+  /** 이 자료를 어떻게 써야 하는지 한 줄 */
+  authority_note: string;
+  /** upstream 이 밝힌 데이터 기준일(추정 아님). 그 이후 문서는 없다. */
+  data_as_of: string | null;
   query: string;
   total: number;
   items: Array<{ source_id: string; title: string | null; [key: string]: string | null }>;

@@ -54,6 +54,32 @@ export type SourceDescriptor = {
   detailUnavailable?: string;
   /** 전문 대신 안내할 원문 링크 필드(있으면) */
   detailLinkKeys?: string[];
+  /**
+   * 이 자료원의 **구속력 등급** (TV2 step-3). 모든 법원(法源)이 같은 무게가 아니다 —
+   * 이걸 안 밝히면 소비 LLM 이 예규를 법조문처럼 인용한다(F20 과 같은 부류의 함정).
+   */
+  authority: SourceAuthority;
+};
+
+/**
+ * 구속력 등급. 도메인 리서치(`research/2026-07-21-tax-domain-tax-practice-sources.md` §1)가
+ * 확인한 위계를 그대로 옮긴다.
+ *
+ * - `adjudication` — 재결·판정. 그 사건을 실제로 종결시킨 판단이다(심판례·위원회 판정).
+ * - `reference_only` — 예규·해석례·통칙. **법원(法院)을 구속하지 않는 "자료"** 이고
+ *   (대법원 1998.9.8 취지), 예규문 자체에 "사실관계가 다르면 답변이 달라질 수 있다"는
+ *   면책 단서가 붙는다. 근거로 쓰려면 반드시 법령·판례로 되짚어야 한다.
+ * - `constitutional` — 헌재결정. 위헌결정은 법률의 효력을 없앤다.
+ * - `statute` — 자치법규처럼 그 자체가 법규인 것.
+ * - `dictionary` — 용어 정의. 법적 판단의 근거가 아니다.
+ *
+ * ⚠ 판정이 애매하면 **보수적으로 `reference_only`** 로 둔다. "모르면 구속력 있다"로 새면
+ * 그게 오답의 원천이다.
+ */
+export type SourceAuthority = {
+  grade: "adjudication" | "reference_only" | "constitutional" | "statute" | "dictionary";
+  /** 소비 LLM 이 읽을 한 줄 — 이 자료를 어떻게 써야 하는지 */
+  note: string;
 };
 
 export type SourceDetailSpec = {
@@ -78,6 +104,10 @@ export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
     rowKey: "expc",
     idKeys: ["법령해석례일련번호"],
     titleKeys: ["안건명"],
+    authority: {
+      grade: "reference_only",
+      note: "법제처 법령해석례는 행정해석이다. 법원을 구속하지 않으므로 근거로 쓰려면 법령·판례로 되짚어야 한다.",
+    },
     fields: [
       { as: "안건번호", from: ["안건번호"] },
       { as: "회신기관명", from: ["회신기관명"] },
@@ -107,6 +137,10 @@ export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
     rowKey: "Detc",
     idKeys: ["헌재결정례일련번호"],
     titleKeys: ["사건명"],
+    authority: {
+      grade: "constitutional",
+      note: "헌법재판소 결정이다. 위헌결정은 법률의 효력을 상실시킨다.",
+    },
     fields: [
       { as: "사건번호", from: ["사건번호"] },
       { as: "종국일자", from: ["종국일자"] },
@@ -136,6 +170,10 @@ export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
     rowKey: "decc",
     idKeys: ["행정심판재결례일련번호"],
     titleKeys: ["사건명"],
+    authority: {
+      grade: "adjudication",
+      note: "행정심판 재결이다. 그 사건을 종결시킨 판단이며 같은 쟁점의 선례로 참고한다.",
+    },
     fields: [
       { as: "사건번호", from: ["사건번호"] },
       { as: "재결청", from: ["재결청"] },
@@ -172,6 +210,10 @@ export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
     rowKey: "law",
     idKeys: ["자치법규일련번호", "자치법규ID"],
     titleKeys: ["자치법규명"],
+    authority: {
+      grade: "statute",
+      note: "자치법규(조례·규칙)는 그 지자체 관할에서 효력을 갖는 법규다.",
+    },
     fields: [
       { as: "지자체기관명", from: ["지자체기관명"] },
       { as: "자치법규종류", from: ["자치법규종류"] },
@@ -204,6 +246,10 @@ export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
     rowKey: "lstrm",
     idKeys: ["법령용어ID"],
     titleKeys: ["법령용어명"],
+    authority: {
+      grade: "dictionary",
+      note: "법령에 정의된 용어의 뜻이다. 법적 판단의 근거가 아니라 말의 뜻이다.",
+    },
     fields: [{ as: "법령종류코드", from: ["법령종류코드"] }],
     supportsBodySearch: false,
     detail: {
@@ -251,6 +297,10 @@ function committee(
     rowKey: target,
     idKeys,
     titleKeys,
+    authority: {
+      grade: "adjudication",
+      note: `${label}은(는) 그 사건을 실제로 종결시킨 판단이다. 법원 판례와는 별개 계통이며 같은 쟁점의 선례로 쓴다.`,
+    },
     fields: searchFields.map((name) => ({ as: name, from: [name] })),
     supportsBodySearch: true,
     detail: {
@@ -364,6 +414,10 @@ function specialDecc(
     // 행 번호 `id` 를 절대 넣지 않는다.
     idKeys: ["특별행정심판재결례일련번호"],
     titleKeys: ["사건명"],
+    authority: {
+      grade: "adjudication",
+      note: `${label}은(는) 그 사건을 종결시킨 재결이다. 조세 분쟁은 법원에 가기 전에 여기서 결정되는 경우가 많다.`,
+    },
     fields: [
       { as: "청구번호", from: ["청구번호"] },
       { as: "재결청", from: ["재결청"] },
@@ -420,6 +474,15 @@ function cgmExpc(target: string, label: string): SourceDescriptor {
     rowKey: "cgmExpc",
     idKeys: ["법령해석일련번호"],
     titleKeys: ["안건명"],
+    // 예규는 법이 아니다. 이 등급을 빼면 소비 LLM 이 예규를 조문처럼 인용한다(프리모템 ③).
+    authority: {
+      grade: "reference_only",
+      note:
+        `${label}은(는) 법령이 아니라 과세관청의 해석이다. 법원을 구속하지 않고, 예규문 자체에 `
+        + "\"사실관계가 다르면 답변이 달라질 수 있다\"는 단서가 붙는다. 근거로 인용하지 말고 "
+        + "법령·판례·심판례로 되짚어야 한다. (세법해석 사전답변은 예외적으로 과세관청을 구속하나 "
+        + "이 목록에서는 구분되지 않으므로 보수적으로 참고자료로 취급한다.)",
+    },
     fields: [
       { as: "안건번호", from: ["안건번호"] },
       { as: "해석기관명", from: ["해석기관명"] },
