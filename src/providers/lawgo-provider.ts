@@ -133,6 +133,19 @@ function stripHtml(value: string | null): string | null {
   return decodeHtmlEntities(value.replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
 }
 
+/**
+ * 용어 연계를 시도할 토큰 — 긴 토큰일수록 쟁점어일 확률이 높다
+ * ("부당해고 구제신청 기간" → 부당해고).
+ *
+ * 부스트 본체와 **프리페치가 같은 토큰을 봐야** 프리페치가 캐시로 이어진다. 두 곳에 복제하면
+ * 한쪽만 바뀌었을 때 프리페치가 조용히 헛돈다.
+ */
+function linkageTokens(query: string, maxTerms: number): string[] {
+  return tokenizeQuery(query)
+    .sort((left, right) => right.length - left.length)
+    .slice(0, Math.max(1, maxTerms));
+}
+
 function normalizeLawName(value: string): string {
   return value.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
 }
@@ -727,6 +740,13 @@ export class LawGoProvider implements LawProvider {
       ? lookupAiSearch(query, this.aiSearchFetcher, this.aiSearchCache)
       : null;
 
+    // 용어 연계도 같은 이유로 **사다리와 동시에** 띄운다 — 사다리 결과에 의존하지 않는데
+    // 뒤에 붙어 있어서 지연 꼬리를 만들고 있었다(F19). 결과를 바꾸지 않고 캐시만 미리 채우므로
+    // **품질 중립**이다(부스트 본체는 캐시에서 같은 값을 읽는다).
+    const linkagePending = (options.termBoost?.enabled ?? true)
+      ? this.prefetchLinkage(query, options.termBoost?.maxTerms ?? 1)
+      : null;
+
     // 사다리(이름 → 본문 → 완화 → 브리지 → 브리지+완화)는 `searchWithLadder` 공통 구현이다.
     // 행정규칙과 같은 사다리를 쓰게 해 ib3 #6 식 비대칭이 재발하지 않게 한다(LB3 step-1).
     const base = await searchWithLadder(query, (q, mode) => this.fetchLawSearchOnce(q, limit, display, mode), {
@@ -739,6 +759,9 @@ export class LawGoProvider implements LawProvider {
       bridgeThenRelaxSearch,
     });
 
+    // 이 시점엔 사다리와 겹쳐 이미 끝나 있다 — 여기서 기다리는 시간은 max(사다리, 연계) 이지
+    // 사다리 + 연계 가 아니다.
+    if (linkagePending) await linkagePending;
     const boosted = await this.boostWithTermLinkage(query, base, limit, options.termBoost);
     // 부스트가 앞으로 끌어올린 건수 — `boost` 우선 배치에서 그 자리를 지켜 주기 위해 센다.
     // (부스트가 아무것도 안 했으면 `base` 와 **같은 객체**를 돌려주는 규약을 이용한다.)
@@ -884,6 +907,18 @@ export class LawGoProvider implements LawProvider {
     };
   }
 
+  /** 용어 연계 캐시를 미리 채운다. 실패는 전부 무시한다 — 부스트 본체가 다시 시도한다. */
+  private async prefetchLinkage(query: string, maxTerms: number): Promise<void> {
+    for (const token of linkageTokens(query, maxTerms)) {
+      try {
+        const found = await lookupTermLinkage(token, this.linkageFetcher, this.linkageCache);
+        if (found.laws.length > 0) return;
+      } catch {
+        return;
+      }
+    }
+  }
+
   /**
    * 용어 연계 후보 부스트 (LB5 step-2).
    *
@@ -902,12 +937,11 @@ export class LawGoProvider implements LawProvider {
     const { enabled = true, maxLaws = 2, minLinks = 1, maxTerms = 1 } = config;
     if (!enabled) return base;
 
-    // 긴 토큰일수록 쟁점어일 확률이 높다("부당해고 구제신청 기간" → 부당해고).
-    const tokens = tokenizeQuery(query).sort((left, right) => right.length - left.length);
+    const tokens = linkageTokens(query, maxTerms);
     if (tokens.length === 0) return base;
 
     let linkage: TermLinkage | null = null;
-    for (const token of tokens.slice(0, Math.max(1, maxTerms))) {
+    for (const token of tokens) {
       const found = await lookupTermLinkage(token, this.linkageFetcher, this.linkageCache);
       if (found.laws.length > 0) { linkage = found; break; }
     }
