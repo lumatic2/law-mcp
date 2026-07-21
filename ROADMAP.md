@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-22
-> 상태: **horizon `tax-vertical` 실행 중** — 승인 2026-07-21, TV1~TV4·TV7 완료 (5/7).
+> 상태: **horizon `tax-vertical` 실행 중** — 승인 2026-07-21, TV1~TV5·TV7 완료 (6/7) — 남은 것은 TV6 판정.
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -97,17 +97,20 @@
 - Status: [x]
 
 - Completed at: 2026-07-22
-<!-- harness:milestone id="TV5" status="active" priority="P2" -->
-### TV5 — 세율표(별표)
+<!-- harness:milestone id="TV5" status="completed" priority="P2" evidence="changesets/20260722-tv5-article-body-loss · changesets/20260722-tv5-verdict · evidence/bench/2026-07-22-tv5-verdict.md" -->
+### TV5 — 조문 본문 유실 수리 (구 "세율표(별표)")
 - DoD: 세율 질의에서 별표 메타(별표명·번호·링크) 도달, 별표 없는 법령에서 무오류, 추가 호출 ≤1.
   추출 스파이크 결과가 **채택이든 기각이든** 수치로 기록. 채택 시 성공률 ≥70%·지연 ≤3초·
   부분 표 미출하. 범용 dev 셋 ≥88%.
-- Evidence: `evidence/bench/2026-07-21-tv5-table-extraction.md` · plan `plans/2026-07-21-tv5-tax-tables.md`
-- Gap: 세법의 실제 숫자(세율·공제한도·과세표준 구간)는 조문이 아니라 별표에 있다. 조문만 주면
-  "대통령령으로 정하는 율"에서 끊긴다.
-- Scale: changesets>=2; surfaces: 별표 메타 출하·파일 추출 스파이크; capability: 세율표에 닿는다
-- Status: [ ]
+- Evidence: `evidence/bench/2026-07-22-tv5-verdict.md` · plan `plans/2026-07-22-tv5-article-body-loss.md`
+- Gap: 세법의 실제 숫자를 못 준다. **원 전제(별표·licbyl·PDF)는 실측으로 반증** —
+  세율표는 우리가 이미 받는 JSON 전문 안에 있었고 우리 추출기가 버리고 있었다.
+- Scale: changesets>=2; surfaces: 조문 본문 추출·전문 조회 캐시; capability: 세율표에 닿는다
+- 판정: **채택** — `소득세법 제55조` 본문 251자 → **1596자**(세율표 도달), 회귀 없음
+  (범용 88.0%·세법 83.3%). 순수 추가 지연 +263ms. `as_of` 와 함께 그 시점 판 세율표가 나온다.
+- Status: [x]
 
+- Completed at: 2026-07-22
 <!-- harness:milestone id="TV6" status="pending" priority="P0" -->
 ### TV6 — 세법 판정
 - DoD: 홀드아웃 20건 blind 1회 개봉. 닫는 기준 6종 `선언/실측/판정` 대조표. 프리모템 5종 발화

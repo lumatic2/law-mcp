@@ -808,7 +808,7 @@
       "work_id": "tv5-article-body-loss",
       "horizon_id": "tax-vertical",
       "milestone_id": "TV5",
-      "status": "active",
+      "status": "completed",
       "plan_path": "plans/2026-07-22-tv5-article-body-loss.md",
       "changeset_path": "changesets/20260722-tv5-article-body-loss",
       "next_step": "step-1",
@@ -847,7 +847,8 @@
       ],
       "owner_session_uuid": "claude:7539c846-464e-4a55-bd5a-192cb2e3a519",
       "updated_at": "2026-07-22",
-      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "조문 본문 유실 수리 — 세율표가 조문에 실린다(251자→1596자), 회귀 없음"
     }
   }
 }
