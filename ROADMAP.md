@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-21
-> 상태: **horizon `tax-vertical` 실행 중** — 승인 2026-07-21, TV1 완료 · TV2 진행 중 (1/6).
+> 상태: **horizon `tax-vertical` 실행 중** — 승인 2026-07-21, TV1·TV2 완료 (2/6).
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -34,20 +34,22 @@
 
 - Completed at: 2026-07-21
 - Summary: 세법 평가 세트 dev30/holdout20 + 채점축 + 기준선 recall@3 83.3%(n=3, σ0.0%p)
-<!-- harness:milestone id="TV2" status="active" priority="P0" -->
+<!-- harness:milestone id="TV2" status="completed" priority="P0" evidence="changesets/20260721-tv2-tribunal-adapter · changesets/20260721-tv2-rulings-adapter · changesets/20260721-tv2-authority-grade · changesets/20260721-tv2-contribution · evidence/bench/2026-07-21-tv2-contribution.md" -->
 ### TV2 — 심판례·예규 편입
 - DoD: 조세심판원·국세청 예규가 `source` enum 에서 조회 가능하고 전문(재결요지·이유) 도달.
   해석자료 응답 100% 에 `authority` 구속력 등급 + `data_as_of`. 대표 질의 도달률 ≥70%.
   범용 dev 셋 ≥88%. 도구 개수 11 불변. 배포 사본 dist 스모크.
-- Evidence: `evidence/bench/2026-07-21-tv2-contribution.md` · `bench/tv2-contribution.ts` ·
+- Evidence: changesets/20260721-tv2-tribunal-adapter · changesets/20260721-tv2-rulings-adapter · changesets/20260721-tv2-authority-grade · changesets/20260721-tv2-contribution · evidence/bench/2026-07-21-tv2-contribution.md
   plan `plans/2026-07-21-tv2-tribunal-and-rulings.md`
 - Gap: 세법 실무의 답이 나오는 층이 통째로 비어 있다 — 조세심판원 4,688건·국세청 예규 1,938건이
   실측으로 열려 있는데 enum 14종에 둘 다 없다(선행 조사가 target 어순을 뒤집어 "없음"으로 적었다).
 - Scale: changesets>=4; surfaces: source-adapter·MCP enum·구속력 등급·기여도 게이트;
   capability: 법령 밖 해석자료를 구속력 등급과 함께 준다
-- Status: [ ]
+- Status: [x]
 
-<!-- harness:milestone id="TV3" status="pending" priority="P0" -->
+- Completed at: 2026-07-21
+- Summary: 조세심판원 4688건·국세청 예규 1938건 편입, 구속력 등급 100% 표기, 도달 100%
+<!-- harness:milestone id="TV3" status="active" priority="P0" -->
 ### TV3 — 과세연도 축
 - DoD: 소득세법 2023/2024/현행이 서로 다른 조문 집합으로 반환. `target=law&efYd` 무경고 함정이
   가드로 차단. 시점 인자 미지정 시 기존 동작·호출 수 불변. 모든 조문 응답에 `effective_date`.

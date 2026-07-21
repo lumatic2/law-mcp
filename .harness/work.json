@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "tv1-tax-eval-set",
+  "active_work_id": "tv2-tribunal-and-rulings",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -542,6 +542,62 @@
       "updated_at": "2026-07-21",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
       "completion_summary": "세법 평가 세트 완성 — dev 30/holdout 20, 정답 조문 50/50 실 API 확인, 기준선 recall@3 83.3%(σ 0.0%p)"
+    },
+    "tv2-tribunal-and-rulings": {
+      "work_id": "tv2-tribunal-and-rulings",
+      "horizon_id": "tax-vertical",
+      "milestone_id": "TV2",
+      "status": "completed",
+      "plan_path": "plans/2026-07-21-tv2-tribunal-and-rulings.md",
+      "changeset_path": "changesets/20260721-tv2-tribunal-adapter",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1** 심판례 어댑터 — `…SpecialDecc` 3종 + 전문 조회",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2** 예규 어댑터 — `…CgmExpc` 2종 + 전문 계약 확정",
+          "status": "pending"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3** 구속력 등급 — 예규를 법조문처럼 인용하지 못하게 한다",
+          "status": "pending"
+        },
+        {
+          "id": "step-4",
+          "label": "step-4** 기여도 게이트 — 도달 못 하면 채택하지 않는다",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-21",
+        "plan_sha256": "cb26160d5eec0158f5c96cf37103f2249490ad155a885a5fb44e6f48e1b7e976"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "claude:7539c846-464e-4a55-bd5a-192cb2e3a519"
+      ],
+      "owner_session_uuid": "claude:7539c846-464e-4a55-bd5a-192cb2e3a519",
+      "updated_at": "2026-07-21",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "조세심판원·국세청 예규 편입 — 도달 100%, 구속력 등급 100% 표기, 범용 회귀 없음(88.0%)"
     }
   }
 }
