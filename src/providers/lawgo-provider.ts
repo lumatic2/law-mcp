@@ -348,22 +348,48 @@ export function mapNtsPrecedentDetail(
  * 이름으로 부른 법령을 검색 결과에서 고른다 — 정확일치 > prefix > 첫 항목.
  * `items[0]` 을 그냥 쓰면 순위 신호(부스트·본문검색)가 이름 조회를 오염시킨다(UD0).
  *
- * 마지막 폴백(첫 항목)은 `부가가치세` → `부가가치세법` 같은 느슨한 조회를 살리려고 남겨 둔 것인데,
- * **부분문자열 우연**으로 엉뚱한 법을 집기도 한다(실측: `민법 시행령` → **난민법 시행령** —
- * "난민법 시행령" 이 "민법 시행령" 을 포함한다). 그런 법은 실재하지 않아 사용자는 자기가 다른
- * 법의 조문을 읽고 있다는 걸 알 방법이 없다. 그래서 **어떤 이름으로 해석됐는지 함께 돌려준다.**
+ * 마지막 폴백(첫 항목)은 느슨한 조회(`공정거래법` → `독점규제 및 공정거래에 관한 법률`)를
+ * 살리려고 남겨 둔 것인데, **부분문자열 우연**으로 엉뚱한 법을 집기도 한다
+ * (실측: `민법 시행령` → **난민법 시행령**). 그런 법은 실재하지 않아 사용자는 자기가 다른
+ * 법의 조문을 읽고 있다는 걸 알 방법이 없다.
+ *
+ * ★ 사고와 정당한 느슨함을 가르는 선 (F20, 2026-07-21 실측):
+ *   - 사고: 반환된 이름이 **요청을 부분문자열로 품되 앞에서 시작하지 않는다**
+ *     (`난민법 시행령` ⊃ `민법 시행령`, `기상법 시행령` ⊃ `상법 시행령`).
+ *     요청한 이름의 법이 따로 없다는 뜻이므로 `accidental` 로 표시해 **거절**한다.
+ *   - 정당: 약칭·별칭은 요청을 부분문자열로 품지 않는다
+ *     (`독점규제 및 공정거래에 관한 법률` 은 `공정거래법` 을 포함하지 않는다). 그대로 살린다.
+ *   - `부가가치세` → `부가가치세법` 은 upstream 이 `prefix` 로 표시해 애초에 여기 안 온다.
+ *     다만 그 표시를 못 믿는 경우를 위해 `startsWith` 후보를 먼저 뒤진다.
  */
 export function pickLawByName(
   items: Array<{ law_id: string; law_name?: string; match_type?: string }>,
-): { lawId: string; resolvedName: string | null; loose: boolean } {
+  requestedName?: string,
+): { lawId: string; resolvedName: string | null; loose: boolean; accidental: boolean } {
   const exact = items.find((item) => item.match_type === "exact");
   const prefix = items.find((item) => item.match_type === "prefix");
-  const picked = exact ?? prefix ?? items[0];
-  return {
-    lawId: picked.law_id,
-    resolvedName: picked.law_name ?? null,
-    loose: !exact && !prefix,
-  };
+  if (exact ?? prefix) {
+    const hit = (exact ?? prefix)!;
+    return { lawId: hit.law_id, resolvedName: hit.law_name ?? null, loose: false, accidental: false };
+  }
+
+  const request = requestedName ? normalizeLawName(requestedName) : null;
+
+  // upstream 이 prefix 를 표시하지 않았어도 이름이 요청으로 시작하면 그건 느슨한 사고가 아니다.
+  const startsWith = request
+    ? items.find((item) => item.law_name && normalizeLawName(item.law_name).startsWith(request))
+    : undefined;
+  const picked = startsWith ?? items[0];
+  const pickedName = picked.law_name ?? null;
+
+  const accidental = Boolean(
+    request
+      && !startsWith
+      && pickedName
+      && normalizeLawName(pickedName).includes(request),
+  );
+
+  return { lawId: picked.law_id, resolvedName: pickedName, loose: true, accidental };
 }
 
 /** @deprecated `pickLawByName` 을 쓴다 — 해석된 이름까지 필요하다. */
@@ -1038,7 +1064,22 @@ export class LawGoProvider implements LawProvider {
         retryable: false,
       });
     }
-    const picked = pickLawByName(result.items);
+    const picked = pickLawByName(result.items, lawId);
+
+    // ⑤ 이름이 **우연히 겹쳤을 뿐**이면 조용히 다른 법을 주지 않고 못 찾았다고 말한다 (F20).
+    //    `민법 시행령` 은 실재하지 않는데 `난민법 시행령` 이 그 문자열을 품는다 — 경고를 달아도
+    //    소비 LLM 은 조문 본문을 그대로 인용한다. 틀린 답보다 없는 답이 낫다.
+    if (picked.accidental) {
+      throw createMcpError({
+        code: "LAW_NOT_FOUND",
+        message:
+          `법령 "${lawId}"을(를) 찾을 수 없습니다. `
+          + `("${picked.resolvedName}" 은(는) 이름이 우연히 겹칠 뿐 다른 법입니다.) `
+          + `숫자 법령코드 또는 정확한 법령명을 사용해주세요.`,
+        retryable: false,
+      });
+    }
+
     // 느슨하게 집혔으면 호출자가 경고를 달 수 있게 기록해 둔다.
     this.looseResolution = picked.loose ? { requested: lawId, resolved: picked.resolvedName } : null;
     return picked.lawId;

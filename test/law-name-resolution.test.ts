@@ -66,6 +66,83 @@ test("정확일치·prefix 가 없으면 어느 법으로 해석했는지 알려
   assert.equal(picked.resolvedName, "난민법 시행령");
 });
 
+/**
+ * F20 근본 수리 (2026-07-21) — 경고만으로는 부족했다. 소비 LLM 은 경고를 읽어도 조문 본문을
+ * 그대로 인용한다. 이름이 **우연히 겹쳤을 뿐**인 경우를 거절로 승격한다.
+ *
+ * 사고와 정당한 느슨함을 가르는 선은 실측으로 정했다 (`bench` 이름 해석 프로브):
+ *   사고  — 반환 이름이 요청을 부분문자열로 품되 앞에서 시작하지 않음 (난민법 시행령 ⊃ 민법 시행령)
+ *   정당  — 약칭은 요청을 부분문자열로 품지 않음 (독점규제…법률 ⊅ 공정거래법)
+ */
+test("이름이 우연히 겹쳤을 뿐이면 사고로 표시한다 — 민법 시행령 → 난민법 시행령", () => {
+  const picked = pickLawByName(
+    [{ law_id: "111", law_name: "난민법 시행령", match_type: "contains" }],
+    "민법 시행령",
+  );
+
+  assert.equal(picked.accidental, true);
+});
+
+test("같은 사고 — 상법 시행령 → 기상법 시행령", () => {
+  const picked = pickLawByName(
+    [{ law_id: "111", law_name: "기상법 시행령", match_type: "contains" }],
+    "상법 시행령",
+  );
+
+  assert.equal(picked.accidental, true);
+});
+
+test("공백만 다른 것도 같은 이름으로 본다", () => {
+  const picked = pickLawByName(
+    [{ law_id: "111", law_name: "난민법시행령", match_type: "contains" }],
+    "민법 시행령",
+  );
+
+  assert.equal(picked.accidental, true);
+});
+
+// 정당한 약칭은 그대로 살린다 — 이 셋이 죽으면 수리가 과잉이다.
+test("약칭 해석은 사고가 아니다 — 공정거래법 → 독점규제 및 공정거래에 관한 법률", () => {
+  const picked = pickLawByName(
+    [{ law_id: "111", law_name: "독점규제 및 공정거래에 관한 법률", match_type: "contains" }],
+    "공정거래법",
+  );
+
+  assert.equal(picked.loose, true);
+  assert.equal(picked.accidental, false);
+});
+
+test("약칭 해석은 사고가 아니다 — 형법 시행령 → 형의 집행 및 수용자의 처우에 관한 법률 시행령", () => {
+  const picked = pickLawByName(
+    [{ law_id: "111", law_name: "형의 집행 및 수용자의 처우에 관한 법률 시행령", match_type: "contains" }],
+    "형법 시행령",
+  );
+
+  assert.equal(picked.accidental, false);
+});
+
+// upstream 이 prefix 를 표시하지 않아도 이름이 요청으로 시작하면 사고가 아니다.
+test("요청으로 시작하는 후보가 있으면 그것을 고르고 사고로 보지 않는다", () => {
+  const picked = pickLawByName(
+    [
+      { law_id: "999", law_name: "외국인관광객 등에 대한 부가가치세 특례규정", match_type: "contains" },
+      { law_id: "111", law_name: "부가가치세법", match_type: "contains" },
+    ],
+    "부가가치세",
+  );
+
+  assert.equal(picked.lawId, "111");
+  assert.equal(picked.accidental, false);
+});
+
+// 요청 이름을 안 주면 판정할 수 없다 — 기존 호출자(`pickLawIdByName`) 동작 보존.
+test("요청 이름이 없으면 사고 판정을 하지 않는다", () => {
+  const picked = pickLawByName([{ law_id: "111", law_name: "난민법 시행령", match_type: "contains" }]);
+
+  assert.equal(picked.loose, true);
+  assert.equal(picked.accidental, false);
+});
+
 test("정확일치가 있으면 느슨한 해석이 아니다", () => {
   const picked = pickLawByName([
     { law_id: "222", law_name: "난민법 시행령", match_type: "contains" },
