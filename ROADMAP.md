@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-21
-> 상태: **horizon `tax-vertical` 설계 완료 — 사용자 승인 대기.**
+> 상태: **horizon `tax-vertical` 실행 중** — 승인 2026-07-21, TV1 완료 (1/6).
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -18,19 +18,22 @@
 
 ## Active Milestones
 
-<!-- harness:milestone id="TV1" status="active" priority="P0" -->
+<!-- harness:milestone id="TV1" status="completed" priority="P0" evidence="evidence/bench/2026-07-21-tv1-tax-baseline.md" -->
 ### TV1 — 세법 평가 세트
 - DoD: `bench/golden-tax.json` dev 30 / holdout 20, 유형당 ≥5, 전건 정답 조문이 실 API 조회로
   존재 확인. 홀드아웃이 개봉 플래그 없이 exit 1 거절. 조문 정확도 채점축 반영. dev 기준선이
   n=3 표준편차·유형별 분해와 함께 기록. `src/` diff 0 줄.
-- Evidence: `bench/golden-tax.json` · `evidence/bench/2026-07-21-tv1-tax-baseline.md` ·
+- Evidence: `changesets/20260721-tv1-golden-tax` · `changesets/20260721-tv1-tax-scoring` ·
+  `changesets/20260721-tv1-tax-baseline` · `evidence/bench/2026-07-21-tv1-tax-baseline.md` ·
   `npx tsx bench/verify-labels.ts --set golden-tax` · plan `plans/2026-07-21-tv1-tax-eval-set.md`
 - Gap: 홀드아웃 15건은 직전 horizon close 에서 소진됐고 세법 전용 라벨은 애초에 없다. 세트 없이
   TV2~TV5 를 채택하면 그게 F5 과적합이다(행정 진단이 이미 이 이유로 멈췄다).
 - Scale: changesets>=3; surfaces: 라벨 검증기·벤치 러너·기준선 보고서; capability: 세법 품질을
   과적합 없이 판정할 수 있다
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-21
+- Summary: 세법 평가 세트 dev30/holdout20 + 채점축 + 기준선 recall@3 83.3%(n=3, σ0.0%p)
 <!-- harness:milestone id="TV2" status="pending" priority="P0" -->
 ### TV2 — 심판례·예규 편입
 - DoD: 조세심판원·국세청 예규가 `source` enum 에서 조회 가능하고 전문(재결요지·이유) 도달.
