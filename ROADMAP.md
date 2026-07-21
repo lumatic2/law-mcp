@@ -97,7 +97,7 @@
 - Status: [x]
 
 - Completed at: 2026-07-22
-<!-- harness:milestone id="TV5" status="pending" priority="P2" -->
+<!-- harness:milestone id="TV5" status="active" priority="P2" -->
 ### TV5 — 세율표(별표)
 - DoD: 세율 질의에서 별표 메타(별표명·번호·링크) 도달, 별표 없는 법령에서 무오류, 추가 호출 ≤1.
   추출 스파이크 결과가 **채택이든 기각이든** 수치로 기록. 채택 시 성공률 ≥70%·지연 ≤3초·
