@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { pickLawIdByName } from "../src/providers/lawgo-provider.js";
+import { pickLawByName, pickLawIdByName } from "../src/providers/lawgo-provider.js";
 
 /**
  * UD0 회귀 테스트 — 법령명으로 부른 조회가 **다른 법**을 가리키면 안 된다.
@@ -52,4 +52,26 @@ test("정확일치가 목록 끝에 있어도 찾는다", () => {
   ];
 
   assert.equal(pickLawIdByName(items), "001872");
+});
+
+// UD4 step-3 — dist 스모크에서 적발한 기존 결함(near-miss).
+// `민법 시행령` 은 실재하지 않는데 `난민법 시행령` 이 그 문자열을 포함해 조용히 집힌다.
+// 폴백 자체는 `부가가치세` → `부가가치세법` 같은 조회를 살리므로 없애지 않고, **조용하지 않게** 만든다.
+test("정확일치·prefix 가 없으면 어느 법으로 해석했는지 알려준다", () => {
+  const picked = pickLawByName([
+    { law_id: "111", law_name: "난민법 시행령", match_type: "contains" },
+  ]);
+
+  assert.equal(picked.loose, true);
+  assert.equal(picked.resolvedName, "난민법 시행령");
+});
+
+test("정확일치가 있으면 느슨한 해석이 아니다", () => {
+  const picked = pickLawByName([
+    { law_id: "222", law_name: "난민법 시행령", match_type: "contains" },
+    { law_id: "111", law_name: "민법", match_type: "exact" },
+  ]);
+
+  assert.equal(picked.loose, false);
+  assert.equal(picked.lawId, "111");
 });

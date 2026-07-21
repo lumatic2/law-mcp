@@ -347,13 +347,28 @@ export function mapNtsPrecedentDetail(
 /**
  * 이름으로 부른 법령을 검색 결과에서 고른다 — 정확일치 > prefix > 첫 항목.
  * `items[0]` 을 그냥 쓰면 순위 신호(부스트·본문검색)가 이름 조회를 오염시킨다(UD0).
+ *
+ * 마지막 폴백(첫 항목)은 `부가가치세` → `부가가치세법` 같은 느슨한 조회를 살리려고 남겨 둔 것인데,
+ * **부분문자열 우연**으로 엉뚱한 법을 집기도 한다(실측: `민법 시행령` → **난민법 시행령** —
+ * "난민법 시행령" 이 "민법 시행령" 을 포함한다). 그런 법은 실재하지 않아 사용자는 자기가 다른
+ * 법의 조문을 읽고 있다는 걸 알 방법이 없다. 그래서 **어떤 이름으로 해석됐는지 함께 돌려준다.**
  */
+export function pickLawByName(
+  items: Array<{ law_id: string; law_name?: string; match_type?: string }>,
+): { lawId: string; resolvedName: string | null; loose: boolean } {
+  const exact = items.find((item) => item.match_type === "exact");
+  const prefix = items.find((item) => item.match_type === "prefix");
+  const picked = exact ?? prefix ?? items[0];
+  return {
+    lawId: picked.law_id,
+    resolvedName: picked.law_name ?? null,
+    loose: !exact && !prefix,
+  };
+}
+
+/** @deprecated `pickLawByName` 을 쓴다 — 해석된 이름까지 필요하다. */
 export function pickLawIdByName(items: Array<{ law_id: string; match_type?: string }>): string {
-  const picked =
-    items.find((item) => item.match_type === "exact") ??
-    items.find((item) => item.match_type === "prefix") ??
-    items[0];
-  return picked.law_id;
+  return pickLawByName(items).lawId;
 }
 
 export function relaxQuery(query: string): string | null {
@@ -1023,13 +1038,20 @@ export class LawGoProvider implements LawProvider {
         retryable: false,
       });
     }
-    return pickLawIdByName(result.items);
+    const picked = pickLawByName(result.items);
+    // 느슨하게 집혔으면 호출자가 경고를 달 수 있게 기록해 둔다.
+    this.looseResolution = picked.loose ? { requested: lawId, resolved: picked.resolvedName } : null;
+    return picked.lawId;
   }
+
+  /** 직전 이름 해석이 정확일치·prefix 가 아니었을 때의 기록 (경고 부착용). */
+  private looseResolution: { requested: string; resolved: string | null } | null = null;
 
   async getLawArticle(lawId: string, articleNo: string): Promise<GetLawArticleResult | null> {
     assertLawApiKey();
 
     // Auto-resolve law name to numeric ID if needed
+    this.looseResolution = null;
     const resolvedLawId = await this.resolveLawId(lawId);
 
     const requestedArticle = parseArticleReference(articleNo);
@@ -1068,7 +1090,8 @@ export class LawGoProvider implements LawProvider {
         ? `제${requestedArticle.main}조의${requestedArticle.branch}`
         : `제${requestedArticle.main}조`)
       : null;
-    if (!article) return result;
+    const withWarning = this.attachLooseResolutionWarning(result);
+    if (!article) return withWarning;
 
     const delegated = await lookupDelegations(
       resolvedLawId,
@@ -1076,7 +1099,27 @@ export class LawGoProvider implements LawProvider {
       this.delegationFetcher,
       this.delegationCache,
     );
-    return delegated.length > 0 ? { ...result, delegated_to: delegated } : result;
+    return delegated.length > 0 ? { ...withWarning, delegated_to: delegated } : withWarning;
+  }
+
+  /**
+   * 이름이 느슨하게 해석됐으면 그 사실을 응답에 남긴다.
+   *
+   * 없는 법령명을 물었을 때 부분문자열이 겹치는 다른 법의 조문이 조용히 오는 것을 막지는
+   * 못한다(그 폴백은 `부가가치세` → `부가가치세법` 같은 조회를 살린다). 대신 **조용하지 않게**
+   * 만든다 — 소비 LLM 이 자기가 무엇을 읽고 있는지 알아야 한다.
+   */
+  private attachLooseResolutionWarning(result: GetLawArticleResult): GetLawArticleResult {
+    const loose = this.looseResolution;
+    if (!loose || !loose.resolved) return result;
+    return {
+      ...result,
+      warnings: [
+        ...(result.warnings ?? []),
+        `'${loose.requested}' 는 정확히 일치하는 법령이 없어 '${loose.resolved}' 로 해석함`
+          + " — 의도한 법령이 맞는지 확인할 것.",
+      ],
+    };
   }
 
   private async fetchPrecedentSearchOnce(

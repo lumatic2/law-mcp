@@ -24,6 +24,7 @@
 | 14 | [20260721-ud2-verdict](20260721-ud2-verdict/README.md) | 2026-07-21 | src/providers/lawgo-provider.ts(사다리·aiSearch 동시 실행), src/index.ts(description), evidence/bench/2026-07-21-ud2-verdict.md | ✅ | done |
 | 15 | [20260721-ud4-parent-law](20260721-ud4-parent-law/README.md) | 2026-07-21 | src/parent-law.ts (신규), src/providers/lawgo-provider.ts(promoteParentLaws·resolveLawId 차단), bench/ud2-ab.ts(--min-net), test/parent-law.test.ts (신규) | ✅ | done |
 | 16 | [20260721-ud4-ladder-shortcut](20260721-ud4-ladder-shortcut/README.md) | 2026-07-21 | src/providers/lawgo-provider.ts(prefetchLinkage·linkageTokens), test/ladder-shortcut.test.ts (신규) | ✅ | done |
+| 17 | [20260721-ud4-verdict](20260721-ud4-verdict/README.md) | 2026-07-21 | src/providers/lawgo-provider.ts(pickLawByName·느슨한 해석 경고), test/law-name-resolution.test.ts, evidence/bench/2026-07-21-ud4-verdict.md | ✅ | done |
 
 ## 운영 원칙
 
