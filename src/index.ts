@@ -395,9 +395,14 @@ server.registerTool(
 // UD3 step-1: 위원회 결정문 9종을 같은 도구 2개에 얹는다. `source` enum 만 늘고 **도구 개수는
 // 그대로**다 — 위원회를 도구로 풀면 +18 이 되고, 소비 LLM 의 선택 부담이 곧 품질 저하다.
 // 최종 목록은 step-3 기여도 게이트가 정한다(대표 쿼리에 못 닿는 자료원은 여기서 뺀다).
+// TV2 step-1: 특별행정심판 재결례 3종 추가. 여기서도 도구는 안 늘린다(11개 유지).
+// `ttDecc` 조세심판원이 핵심이다 — 세법 실무는 법원이 아니라 심판원에서 다퉈진다.
+// ⚠ `decc`(행정심판재결례)로는 조세를 못 잡는다. `decc&query=가산세` 는 0건이고 조세심판원은
+//    **별도 컨테이너**다(2026-07-21 실측). 이름이 비슷하다고 같은 자료원으로 묶지 말 것.
 const LEGAL_SOURCES = [
   "expc", "detc", "decc", "ordin", "lstrm",
   "nlrc", "ppc", "nhrck", "sfc", "kcc", "ecc", "oclt", "ftc", "baiPvcs",
+  "ttDecc", "acrDecc", "adapDecc",
 ] as const;
 
 server.registerTool(
@@ -414,6 +419,12 @@ server.registerTool(
       + "dismissal disputes), ppc=개인정보보호위원회, nhrck=국가인권위원회, sfc=증권선물위원회, "
       + "kcc=방송통신위원회, ecc=중앙환경분쟁조정위원회, oclt=중앙토지수용위원회, ftc=공정거래위원회, "
       + "baiPvcs=감사원 사전컨설팅 의견서. "
+      + "Special administrative tribunals: ttDecc=조세심판원 결정례 (tax tribunal; ~4.7k rulings "
+      + "on 가산세 alone — where Korean tax disputes are actually decided, before they ever reach "
+      + "a court), acrDecc=감사원 심사청구, adapDecc=소청심사. "
+      + "Note ttDecc is a SEPARATE source from decc — 행정심판재결례 (decc) does not contain tax "
+      + "rulings. Tribunal data is current only to its stated 데이터기준일시, so recent rulings "
+      + "may be missing. "
       + "Works best when the query is a topic/case name, since the primary match is on the document "
       + "title. If the title match returns 0 results the tool falls back to full-text search, then a "
       + "relaxed query — and a warning says so. Treat fallback results with suspicion: upstream "

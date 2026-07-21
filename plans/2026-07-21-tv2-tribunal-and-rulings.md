@@ -84,7 +84,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
 
 ## Step 트리
 
-- [ ] **step-1** 심판례 어댑터 — `…SpecialDecc` 3종 + 전문 조회
+- [x] **step-1** 심판례 어댑터 — `…SpecialDecc` 3종 + 전문 조회
   - Artifact: `src/providers/source-adapter.ts` 에 `tt`(조세심판원)·`acr`(감사원 심사청구)·
     `adap`(소청) descriptor. 검색은 `Decc.decc[]`, 전문은 `SpecialDeccService`(재결청·청구취지·
     참조결정·재결요지·이유). ID 는 `특별행정심판재결례일련번호`

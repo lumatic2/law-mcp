@@ -323,6 +323,72 @@ export const COMMITTEE_DESCRIPTORS: Record<string, SourceDescriptor> = {
 // LB3 법원 5종 + UD3 위원회 9종. 실제 노출 목록은 `src/index.ts` 의 enum 이 정한다.
 Object.assign(SOURCE_DESCRIPTORS, COMMITTEE_DESCRIPTORS);
 
+/**
+ * 특별행정심판 재결례 3종 (TV2 step-1) — **조세심판원이 이 묶음의 핵심이다.**
+ * "가산세" 4,688건 · "1세대 1주택" 3,885건. 세법 실무에서 다투는 곳은 법원이 아니라 여기다.
+ *
+ * ⚠ **`committee()` 헬퍼를 쓸 수 없다.** 헬퍼는 `container = 첫 글자 대문자(target)` ·
+ * `rowKey = target` 을 가정하는데, 이 3종은 그 규칙이 깨진다:
+ *   target `ttSpecialDecc` → 컨테이너 **`Decc`** · 행 키 **`decc`** (target 과 무관)
+ * 그래서 명시 descriptor 로 둔다. 헬퍼로 바꾸면 조용히 0건이 된다.
+ *
+ * ⚠ **target 이름의 어순이 공식 문서와 반대다.** 문서는 `specialDeccTt` 로 적었는데 그 이름은
+ * 빈 응답이고, 실제로 응답하는 것은 `ttSpecialDecc`(기관약어 + 서비스명)다. 2026-07-21 실측 —
+ * `research/2026-07-21-tax-vertical-upstream-probe.md` §1. **문서를 보고 되돌리지 말 것.**
+ *
+ * ⚠ **`type=HTML` 폴백을 쓰면 안 된다.** IB1b 에서 NTS 판례에 HTML 폴백을 붙인 선례가 있어
+ * 재사용하기 쉬운데, 여기서 HTML 은 본문 없는 JS 로더 셸(1,973B)이다. JSON 만 쓴다.
+ *
+ * ⚠ **ID 는 행의 `id` 가 아니다.** `id` 는 행 번호(1,2,3…)이고 단건 조회 ID 는
+ * `특별행정심판재결례일련번호` 다. `ID=1` 로 부르면 무관한 문서가 200 으로 돌아온다(실측 사고).
+ */
+function specialDecc(
+  target: string,
+  label: string,
+  detailFields: string[],
+): SourceDescriptor {
+  return {
+    target,
+    label,
+    // 3종 모두 같은 컨테이너를 쓴다 — target 에서 유도되지 않는다.
+    container: "Decc",
+    rowKey: "decc",
+    // 행 번호 `id` 를 절대 넣지 않는다.
+    idKeys: ["특별행정심판재결례일련번호"],
+    titleKeys: ["사건명"],
+    fields: [
+      { as: "청구번호", from: ["청구번호"] },
+      { as: "재결청", from: ["재결청"] },
+      { as: "의결일자", from: ["의결일자"] },
+      { as: "재결구분명", from: ["재결구분명"] },
+      { as: "데이터기준일시", from: ["데이터기준일시"] },
+    ],
+    supportsBodySearch: true,
+    detail: {
+      container: "SpecialDeccService",
+      idParam: "ID",
+      fields: detailFields.map((name) => ({ as: name, from: [name] })),
+    },
+  };
+}
+
+export const SPECIAL_DECC_DESCRIPTORS: Record<string, SourceDescriptor> = {
+  // 조세심판원 — 세법 vertical 의 핵심 자료원.
+  ttDecc: specialDecc("ttSpecialDecc", "조세심판원 결정례", [
+    "재결청", "청구취지", "참조결정", "재결요지", "이유",
+  ]),
+  // 같은 어댑터라 추가 비용이 거의 0 이라 함께 담는다(감사원 심사청구 79 · 소청 201).
+  acrDecc: specialDecc("acrSpecialDecc", "감사원 심사청구 결정례", [
+    "재결청", "청구취지", "참조결정", "재결요지", "이유",
+  ]),
+  adapDecc: specialDecc("adapSpecialDecc", "소청심사 결정례", [
+    "재결청", "청구취지", "참조결정", "재결요지", "이유",
+  ]),
+  // `kmstSpecialDecc`(해양안전심판원)은 프로브에서 0건이라 담지 않는다.
+};
+
+Object.assign(SOURCE_DESCRIPTORS, SPECIAL_DECC_DESCRIPTORS);
+
 export type SourceItem = {
   source_id: string;
   title: string | null;
