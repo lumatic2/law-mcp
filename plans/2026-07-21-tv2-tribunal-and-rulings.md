@@ -119,7 +119,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
   - Failure probe: 등급을 못 정하는 항목을 주입해 **`reference_only` 로 보수적 처리**되는지 확인 —
     "모르면 구속력 있다"로 새면 그게 오답의 원천이다
   - Commit: `changesets/20260721-tv2-authority-grade/`
-- [ ] **step-4** 기여도 게이트 — 도달 못 하면 채택하지 않는다
+- [x] **step-4** 기여도 게이트 — 도달 못 하면 채택하지 않는다
   - Artifact: `bench/tv2-contribution.ts` + `evidence/bench/2026-07-21-tv2-contribution.md` —
     세무 대표 질의(TV1 dev 에서 추출)별 심판례·예규 상위 3 도달률, 등급 표기율, 무관 결과 비율
   - Files: write `bench/tv2-contribution.ts`·`evidence/bench/2026-07-21-tv2-contribution.md`·

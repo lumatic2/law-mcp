@@ -1,0 +1,212 @@
+{
+  "date": "2026-07-21",
+  "top_k": 3,
+  "threshold": 0.7,
+  "verdicts": [
+    {
+      "source": "ttDecc",
+      "reach": 1,
+      "labelled": 1,
+      "verdict": "채택"
+    },
+    {
+      "source": "ntsExpc",
+      "reach": 1,
+      "labelled": 1,
+      "verdict": "채택"
+    }
+  ],
+  "rows": [
+    {
+      "query": "세금계산서 지연발급 가산세",
+      "source": "ttDecc",
+      "total": 9,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2024.12.18",
+      "topTitles": [
+        "당월 월합계 세금계산서를 발급하면서 전월 26일부터 전월 말일까지 제공한 용역대가를 포함한",
+        "「부가가치세법 시행령」 제75조 제3호는 세금계산서가 지연발급되어도 동일 과세기간 내에 발",
+        "세금계산서 발급기한을 1일 경과하여 발급된 쟁점전자세금계산서에 대해 부가가치세(전자세금계산"
+      ]
+    },
+    {
+      "query": "세금계산서 지연발급 가산세",
+      "source": "ntsExpc",
+      "total": 1,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2025.02.21",
+      "topTitles": [
+        "당초 공급가액 착오 기재로 수정세금계산서 발급 시 세금계산서 지연발급가산세 적용 여부"
+      ]
+    },
+    {
+      "query": "1세대 1주택 비과세",
+      "source": "ttDecc",
+      "total": 2365,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2024.12.18",
+      "topTitles": [
+        "(1) 1세대1주택 비과세신고한 쟁점부동산의 주택면적이 주택이외(점포)의 면적보다 큰지 여",
+        "1984년부터 구주택에서 거주하다가 구주택을 멸실하고 새로운 상가겸용주택(쟁점건물)을 건축",
+        "1990.8.6. 주택을 증축하고 1990.9.5. 세대전원이 전출한 경우 쟁점주택의양도가"
+      ]
+    },
+    {
+      "query": "1세대 1주택 비과세",
+      "source": "ntsExpc",
+      "total": 3093,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2025.02.21",
+      "topTitles": [
+        "1/2 지분을 양도하는 경우 1세대1주택 비과세 적용가능 여부",
+        "’17.8.2. 이전에 취득한 주택을 양도하는 경우 1세대 1주택 비과세 거주요건 적용 여",
+        "1988.08.25 현재 1세대 1주택 비과세요건"
+      ]
+    },
+    {
+      "query": "기업업무추진비 손금불산입",
+      "source": "ttDecc",
+      "total": 1,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2025.01.17",
+      "topTitles": [
+        "후원방문판매업을 영위하는 청구법인이 위탁관리인에게 지급하는 쟁점용역수수료를 접대비(기업업무"
+      ]
+    },
+    {
+      "query": "기업업무추진비 손금불산입",
+      "source": "ntsExpc",
+      "total": 516,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2025.02.22",
+      "topTitles": [
+        "1990.01.01 지급이자 손금불산입 대상주식의 장부가액",
+        "1주당 최근 3년간의 순손익액의 계산방법",
+        "1회 접대 지출 금액이 5만 원 이상인 경우 손금불산입 여부"
+      ]
+    },
+    {
+      "query": "경정청구",
+      "source": "ttDecc",
+      "total": 4362,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2024.12.18",
+      "topTitles": [
+        "00종합건설(주)의 대표이사 000와 부사장인 청구인이 특수관계인에 해당하는지 여부(경정)",
+        "10년의 부과제척기간이 적용되는 것으로 보아 경정청구를 거부한 처분의 당부",
+        "(1) 2016사업연도 이전에 발생한 외국납부세액에 대한 경정청구 대상 과세기간은 2016"
+      ]
+    },
+    {
+      "query": "경정청구",
+      "source": "ntsExpc",
+      "total": 551,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2025.02.22",
+      "topTitles": [
+        "2회이상 분할납부하여 과오납한 세액을 경정청구에 의해 환급하는 경우 기산일",
+        "가공매입 과세자료 관련 수정신고 후 경정청구 가능 여부",
+        "가공 세금계산서 교부분 경정청구시 환급 여부"
+      ]
+    },
+    {
+      "query": "증여재산공제",
+      "source": "ttDecc",
+      "total": 167,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2024.12.18",
+      "topTitles": [
+        "10년간의 증여재산공제 계산은 상속개시 후 증여분부터 적용되어야 한다는 청주주장의 당부(기",
+        "10년간의 증여재산공제 계산은 상속개시 후 증여분부터 적용되어야 한다는 청주주장의 당부(기",
+        "1차 상속시 상속세 과세가액에 산입된 사전증여재산이 단기간에 2차 상속되었을 경우 본래의 "
+      ]
+    },
+    {
+      "query": "증여재산공제",
+      "source": "ntsExpc",
+      "total": 158,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2025.02.27",
+      "topTitles": [
+        "1인이 여러명에게 공유지분으로 증여하는 경우 증여재산공제금액의 계산",
+        "2이상의 증여가 동시에 있는 경우 증여재산공제 적용방법",
+        "2이상의 증여시 증여재산공제"
+      ]
+    },
+    {
+      "query": "부당과소신고 가산세",
+      "source": "ttDecc",
+      "total": 232,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2024.12.18",
+      "topTitles": [
+        "10년의 국세부과의 제척기간을 적용하여 부가가치세를 부과한 처분의 당부 및 부당과소신고가산",
+        "10년의 국세부과제척기간과 부당과소신고가산세를 적용한 처분의 당부 등",
+        "10년의 국세부과제척기간 및 부당과소신고가산세를 적용하여 과세한 처분의 당부"
+      ]
+    },
+    {
+      "query": "부당과소신고 가산세",
+      "source": "ntsExpc",
+      "total": 11,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2025.02.21",
+      "topTitles": [
+        "부당과소신고가산세 적용대상 여부",
+        "부당과소신고 가산세 적용대상 여부",
+        "부당과소신고가산세 적용대상 여부"
+      ]
+    },
+    {
+      "query": "이행강제금",
+      "source": "ttDecc",
+      "total": 3,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2024.12.18",
+      "topTitles": [
+        "불법으로 증축한 건물에 대하여 이행강제금을 납부하였으므로 취득세 등을 추가로 부과한 처분은",
+        "이행강제금 부과 처분에 대한 심판청구가 본안심리 대상인지 여부",
+        "처분청이 위법건축물 이행강제금의 부과대상자인 청구인을 「지방세법」제107조 제3항에 따라 "
+      ]
+    },
+    {
+      "query": "매입세액 불공제",
+      "source": "ttDecc",
+      "total": 2222,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2024.12.18",
+      "topTitles": [
+        "00금은 주식회사로부터 교부받은 세금계산서가 사실과 다른 세금계산서라 하며 관련 매입세액을",
+        "11인승 차량을 업무와 관련이 없는 비영업용차량으로 인정하여 매입세액을 불공제한 처분의 당",
+        "1989년도 청구인의 매입액 중 21,535,240원의 가공매입이 있다하여 이에 대한 매입"
+      ]
+    },
+    {
+      "query": "매입세액 불공제",
+      "source": "ntsExpc",
+      "total": 59,
+      "reached": true,
+      "authorityLabelled": true,
+      "dataAsOf": "2025.02.22",
+      "topTitles": [
+        "가공거래로 보아 매입세액을 불공제하여야 하는지 여부",
+        "겸영사업자의 예정신고, 확정신고 시 매입세액불공제분의 계산",
+        "공제 가능한 매입세액을 착오로 매입세액 불공제분으로 신고 시 수정신고 가능여부"
+      ]
+    }
+  ]
+}
