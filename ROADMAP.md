@@ -1,7 +1,9 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-21
-> 상태: horizon `upstream-delivery` — UD1·UD3 완료, **UD2 step-2 대기**(F12 휴지 후 기준선 재측정이 선행)
+> 상태: horizon `upstream-delivery` — **UD1·UD2·UD3 전부 완료. horizon close 판단 대기**
+> (닫는 기준 5개 중 4개 충족, recall@3 80%로 기준 ②(≥85%)만 미달. close 는 홀드아웃 1회 개봉을
+> 뜻하므로 사용자 판단 사항)
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -35,18 +37,20 @@
 
 - Completed at: 2026-07-21
 - Summary: 신 평가 세트 40건 실 API 라벨링 + 홀드아웃 봉인 코드화 + 기준선 48.0%. 검증 중 get_law_article 회귀 적발·수리(UD0)
-<!-- harness:milestone id="UD2" status="pending" priority="P0" evidence="" -->
+<!-- harness:milestone id="UD2" status="completed" priority="P0" evidence="changesets/20260721-ud2-aisearch-client + changesets/20260721-ud2-candidate-merge + changesets/20260721-ud2-article-shipping + changesets/20260721-ud2-verdict + evidence/bench/2026-07-21-ud2-verdict.md" -->
 ### UD2 — `aiSearch` 편입 + A/B 판정
 - DoD: 교차 측정 dev A/B 에서 `aiSearch` 병합의 **순 이득 ≥3건** + **새로 깨지는 쿼리 0** + 쿼리 단위 승패 표
   + `aiSearch` 장애 시 graceful degrade(테스트 고정) + 조문이 **제품 응답으로 출하**되고 그 정확도가
   제품 경로 기준으로 측정됨(F4 해소) + 추가 호출 ≤1 · 지연 ≤3초 + 배포 사본 build + 실 MCP 스모크.
-- Evidence: changesets/20260721-ud2-aisearch-client (step-1 완료 / step-2~4 대기)
+- Evidence: changesets/20260721-ud2-aisearch-client + changesets/20260721-ud2-candidate-merge + changesets/20260721-ud2-article-shipping + changesets/20260721-ud2-verdict + evidence/bench/2026-07-21-ud2-verdict.md
 - Gap: 관련도 랭킹이 있는 엔드포인트가 따로 있었는데 5 milestone 동안 몰랐다. 92% vs 76% 격차이고
   응답이 조문 단위다 (research 2026-07-21 §★)
 - Scale: changesets>=4; surfaces: 검색 후보 생성·MCP 응답 스키마·bench·실 MCP; capability: upstream 최선 경로로 답한다
 - Plan: `plans/2026-07-21-ud2-aisearch-adoption.md`
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-21
+- Summary: aiSearch 편입 — recall@3 48%→80%, 1위 정확도 32%→72%, 조문 출하율 76%. 새로 깨진 쿼리 0, 지연 증가 0
 <!-- harness:milestone id="UD3" status="completed" priority="P1" evidence="changesets/20260721-ud3-committee-sources + changesets/20260721-ud3-delegated-articles + changesets/20260721-ud3-contribution-gate + evidence/bench/2026-07-21-ud3-contribution.md" -->
 ### UD3 — 미접근 자료원 흡수 (위원회 결정문 + 위임조문)
 - DoD: 위원회 결정문이 실 API 도달 + descriptor 마다 조회 파라미터가 테스트로 고정 +

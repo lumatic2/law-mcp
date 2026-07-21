@@ -334,7 +334,7 @@
       "work_id": "ud2-aisearch-adoption",
       "horizon_id": "upstream-delivery",
       "milestone_id": "UD2",
-      "status": "active",
+      "status": "completed",
       "plan_path": "plans/2026-07-21-ud2-aisearch-adoption.md",
       "changeset_path": "changesets/20260721-ud2-aisearch-client",
       "next_step": "step-2",
@@ -385,7 +385,8 @@
       ],
       "owner_session_uuid": "claude:63608ba6-d81b-484c-a4f5-f92f932a3b4b",
       "updated_at": "2026-07-21",
-      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "법제처가 이미 가진 관련도 순위를 편입해 1위 정확도를 32%에서 72%로 올렸다 — 조문까지 함께 주고, 기존 사다리는 하나도 지우지 않았으며 지연도 늘지 않았다."
     },
     "ud3-untapped-sources": {
       "work_id": "ud3-untapped-sources",
