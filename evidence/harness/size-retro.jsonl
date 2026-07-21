@@ -5,3 +5,4 @@
 {"actual_changesets": 4, "declared_min": 3, "milestone_id": "UD1", "ts": "2026-07-21", "verdict": "ok"}
 {"actual_changesets": 3, "declared_min": 3, "milestone_id": "UD3", "ts": "2026-07-21", "verdict": "ok"}
 {"actual_changesets": 4, "declared_min": 4, "milestone_id": "UD2", "ts": "2026-07-21", "unresolved_refs": [], "verdict": "ok"}
+{"actual_changesets": 3, "declared_min": 3, "milestone_id": "UD4", "ts": "2026-07-21", "unresolved_refs": [], "verdict": "ok"}
