@@ -69,6 +69,22 @@ const NTS_PLACEHOLDER_CONTENT_PATTERN = /붙임과\s*같습니다/;
 
 // 본문(전문) 검색 결과에는 upstream 이 매칭 스니펫·관련도 점수를 주지 않는다(2026-07-20 실측).
 // 정렬은 법령명 토큰 겹침 → upstream 순서(가나다)일 뿐이므로, 상위 = 가장 관련 있는 법령이 아니다.
+/**
+ * 본문검색 후보 풀 (TV4 step-2).
+ *
+ * 본문검색 응답은 관련도순이 아니라 **가나다순**이라, 앞쪽만 받으면 뒷글자 법령이 구조적으로
+ * 탈락한다(2026-07-22 실측: 세법 dev 30건 중 정답이 후보 풀에 드는 비율이 30건 창에서 19건,
+ * 100건 창에서 29건).
+ *
+ * ⚠ **기본은 넓히지 않는다.** 풀을 넓혀도 recall@3 이 안 움직였기 때문이다 — 정답이 후보에
+ * 들어와도 순위를 정하는 신호가 법령명뿐이라 위로 못 올라온다(TV4 step-3 판정: 이득 0).
+ * 채택 규약(손실 0 AND 순 이득 ≥2)을 못 넘겼으므로 **호출부가 켤 때만** 넓힌다.
+ * 넓히는 쪽이 옳다는 증거가 생기면 `BODY_POOL_DEFAULT_PAGES` 한 줄로 켠다.
+ */
+const BODY_POOL_PAGE_SIZE = 100;
+const BODY_POOL_DEFAULT_PAGES = 1;
+const BODY_POOL_MAX_PAGES = 3;
+
 const BODY_SEARCH_RANK_WARNING =
   "본문검색 결과는 관련도순이 아님(upstream 이 관련도 점수를 제공하지 않음) — 목록에서 쟁점에 맞는 항목을 직접 고를 것.";
 
@@ -780,22 +796,71 @@ export class LawGoProvider implements LawProvider {
     limit: number,
     display: number,
     searchMode?: 1 | 2,
-  ): Promise<{ items: SearchLawResult["items"]; total: number }> {
-    const root = await fetchLawApi(LAW_SEARCH_BASE_URL, {
-      OC: LAW_API_OC,
-      target: "law",
-      type: "JSON",
-      mobileYn: "Y",
-      query,
-      display,
-      ...(searchMode ? { search: searchMode } : {}),
-    });
+    /** 본문검색 후보 풀 페이지 수. 기본 1 = TV3 동작 그대로(되돌림 지점). */
+    maxPages: number = BODY_POOL_DEFAULT_PAGES,
+  ): Promise<{ items: SearchLawResult["items"]; total: number; warnings?: string[] }> {
+    const isBodySearch = searchMode === 2;
+    const fetchPage = (page?: number) =>
+      fetchLawApi(LAW_SEARCH_BASE_URL, {
+        OC: LAW_API_OC,
+        target: "law",
+        type: "JSON",
+        mobileYn: "Y",
+        query,
+        // 풀을 넓히지 않는 기본값에서는 **요청 크기까지 TV3 그대로**여야 한다 —
+        // 페이지 크기만 키워도 그건 이미 검증 안 된 풀 변경이다.
+        display: isBodySearch && maxPages > 1 ? BODY_POOL_PAGE_SIZE : display,
+        ...(searchMode ? { search: searchMode } : {}),
+        ...(page && page > 1 ? { page } : {}),
+      });
 
-    const directLawRows = root.법령 ?? root.law ?? root.Law;
-    const nestedLawRows = toArray(asObject(root.LawSearch ?? root.search).law);
-    const lawRows = (Array.isArray(directLawRows) ? directLawRows : nestedLawRows).filter(
-      (row) => typeof row === "object" && row !== null,
-    );
+    const rowsOf = (payload: Record<string, unknown>) => {
+      const direct = payload.법령 ?? payload.law ?? payload.Law;
+      const nested = toArray(asObject(payload.LawSearch ?? payload.search).law);
+      return (Array.isArray(direct) ? direct : nested).filter(
+        (row) => typeof row === "object" && row !== null,
+      );
+    };
+
+    const root = await fetchPage();
+    let lawRows = rowsOf(root);
+    const poolWarnings: string[] = [];
+
+    // 후보 풀 도달 (TV4 step-2) — 본문검색은 upstream 순서가 **가나다순**이라 앞 한 페이지만
+    // 받으면 뒷글자 법령(부·행·환)이 **구조적으로 탈락**한다. 페이지는 병렬로 받으므로 지연은
+    // 한 페이지와 거의 같다(2026-07-22 실측: 4페이지 병렬 850ms ≈ 1페이지 803ms).
+    // ⚠ `totalCnt` 는 **`LawSearch` 컨테이너 안에** 있다. root 에서 찾으면 항상 null 이라
+    //   `total` 이 조용히 "받아 온 행 수"가 된다 — 그러면 절단을 영원히 감지 못 한다
+    //   (2026-07-22 실측: 실제 469건인 쿼리가 100 으로 보고되고 있었다).
+    const totalRawFirst =
+      pickString(asObject(root.LawSearch ?? root.search), ["totalCnt", "total", "TotalCnt"])
+      ?? pickString(root, ["totalCnt", "total", "TotalCnt"]);
+    const totalCount = totalRawFirst ? Number(totalRawFirst) : lawRows.length;
+
+    if (isBodySearch && Number.isFinite(totalCount) && totalCount > lawRows.length) {
+      const pages = Math.min(
+        Math.ceil(totalCount / BODY_POOL_PAGE_SIZE),
+        Math.max(1, Math.min(maxPages, BODY_POOL_MAX_PAGES)),
+      );
+      const rest = await Promise.all(
+        Array.from({ length: Math.max(0, pages - 1) }, (_, index) =>
+          // 한 페이지가 실패해도 나머지로 계속한다 — 풀이 좁아질 뿐 검색이 죽지는 않는다.
+          fetchPage(index + 2).catch(() => null),
+        ),
+      );
+      for (const page of rest) {
+        if (page) lawRows = [...lawRows, ...rowsOf(page)];
+      }
+
+      // ★ 절단을 **조용히** 하지 않는다. 조용한 절단이 이 결함의 원인이었다 —
+      //   사용자는 목록을 다 봤다고 믿고 "그런 법은 없다"고 결론한다.
+      if (totalCount > lawRows.length) {
+        poolWarnings.push(
+          `본문검색 전체 ${totalCount}건 중 앞 ${lawRows.length}건만 확인함(upstream 순서는 관련도가 아니라 가나다순)`
+          + " — 찾는 법령이 안 보이면 쿼리를 좁혀 다시 물을 것.",
+        );
+      }
+    }
     const normalizedQuery = normalizeLawName(query);
 
     const items = lawRows
@@ -834,10 +899,9 @@ export class LawGoProvider implements LawProvider {
       .slice(0, limit)
       .map(({ _sortRank, _sortIndex, _normalizedLawLength, _nameTokenMatches, ...item }) => item);
 
-    const totalRaw = pickString(root, ["totalCnt", "total", "TotalCnt"]);
-    const total = totalRaw ? Number(totalRaw) : items.length;
+    const total = Number.isFinite(totalCount) ? totalCount : items.length;
 
-    return { items, total: Number.isFinite(total) ? total : items.length };
+    return { items, total, ...(poolWarnings.length ? { warnings: poolWarnings } : {}) };
   }
 
   async searchLaw(
@@ -858,6 +922,11 @@ export class LawGoProvider implements LawProvider {
        * TV4 step-3 의 교차 A/B(손실 0 AND 순 이득 ≥2)가 정한다. 켜고 끄는 지점은 여기 하나다.
        */
       titleSignal?: { enabled?: boolean; window?: number };
+      /**
+       * 본문검색 후보 풀 깊이 (TV4 step-2). `maxPages: 1` 이면 앞 한 페이지만 =
+       * TV4 이전 동작. A/B 와 되돌림이 같은 지점을 쓴다.
+       */
+      bodyPool?: { maxPages?: number };
     } = {},
   ): Promise<SearchLawResult> {
     assertLawApiKey();
@@ -881,15 +950,19 @@ export class LawGoProvider implements LawProvider {
 
     // 사다리(이름 → 본문 → 완화 → 브리지 → 브리지+완화)는 `searchWithLadder` 공통 구현이다.
     // 행정규칙과 같은 사다리를 쓰게 해 ib3 #6 식 비대칭이 재발하지 않게 한다(LB3 step-1).
-    const base = await searchWithLadder(query, (q, mode) => this.fetchLawSearchOnce(q, limit, display, mode), {
-      primaryZeroWarning: "법령명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음.",
-      bodySearchWarning: BODY_SEARCH_RANK_WARNING,
-      supportsBodySearch: true,
-      relaxQuery,
-      bridgeTerm,
-      formatBridgeWarning,
-      bridgeThenRelaxSearch,
-    });
+    const base = await searchWithLadder(
+      query,
+      (q, mode) => this.fetchLawSearchOnce(q, limit, display, mode, options.bodyPool?.maxPages),
+      {
+        primaryZeroWarning: "법령명 검색 0건 → 본문(전문) 검색으로 재시도해 결과를 찾음.",
+        bodySearchWarning: BODY_SEARCH_RANK_WARNING,
+        supportsBodySearch: true,
+        relaxQuery,
+        bridgeTerm,
+        formatBridgeWarning,
+        bridgeThenRelaxSearch,
+      },
+    );
 
     // 이 시점엔 사다리와 겹쳐 이미 끝나 있다 — 여기서 기다리는 시간은 max(사다리, 연계) 이지
     // 사다리 + 연계 가 아니다.

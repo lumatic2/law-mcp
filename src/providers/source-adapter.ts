@@ -705,7 +705,15 @@ export function extractDetail(
   return detail;
 }
 
-export type LadderResult<T> = { items: T[]; total: number };
+export type LadderResult<T> = {
+  items: T[];
+  total: number;
+  /**
+   * 그 조회 자체가 만들어 낸 경고(예: 후보 풀 절단). 사다리는 **결과를 채택한 단계의 것만**
+   * 실어 보낸다 — 버려진 단계의 경고를 실으면 사용자가 안 받은 목록을 설명하게 된다.
+   */
+  warnings?: string[];
+};
 
 /**
  * 검색 폴백 사다리 (이름 매칭 → 본문검색 → 완화 → 용어 브리지 → 브리지+완화).
@@ -741,7 +749,7 @@ export async function searchWithLadder<T, B extends { replaced: string }>(
 
   const primary = await fetchOnce(query);
   if (primary.items.length > 0) {
-    return { query, total: primary.total, items: primary.items, warnings: [] };
+    return { query, total: primary.total, items: primary.items, warnings: [...(primary.warnings ?? [])] };
   }
 
   if (options.supportsBodySearch) {
@@ -751,7 +759,7 @@ export async function searchWithLadder<T, B extends { replaced: string }>(
         query,
         total: bodySearch.total,
         items: bodySearch.items,
-        warnings: [options.primaryZeroWarning, ...bodyWarnings],
+        warnings: [options.primaryZeroWarning, ...bodyWarnings, ...(bodySearch.warnings ?? [])],
       };
     }
   }
@@ -764,7 +772,11 @@ export async function searchWithLadder<T, B extends { replaced: string }>(
         query,
         total: relaxedSearch.total,
         items: relaxedSearch.items,
-        warnings: [`원 쿼리 0건 → '${relaxed}'로 재검색(본문 검색).`, ...bodyWarnings],
+        warnings: [
+          `원 쿼리 0건 → '${relaxed}'로 재검색(본문 검색).`,
+          ...bodyWarnings,
+          ...(relaxedSearch.warnings ?? []),
+        ],
       };
     }
   }
@@ -777,7 +789,11 @@ export async function searchWithLadder<T, B extends { replaced: string }>(
         query,
         total: bridgeSearch.total,
         items: bridgeSearch.items,
-        warnings: [options.formatBridgeWarning(bridged, query), ...bodyWarnings],
+        warnings: [
+          options.formatBridgeWarning(bridged, query),
+          ...bodyWarnings,
+          ...(bridgeSearch.warnings ?? []),
+        ],
       };
     }
 
@@ -789,7 +805,7 @@ export async function searchWithLadder<T, B extends { replaced: string }>(
         query,
         total: bridgeRelax.total,
         items: bridgeRelax.items,
-        warnings: [bridgeRelax.warning, ...bodyWarnings],
+        warnings: [bridgeRelax.warning, ...bodyWarnings, ...(bridgeRelax.warnings ?? [])],
       };
     }
   }

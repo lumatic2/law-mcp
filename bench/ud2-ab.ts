@@ -30,6 +30,7 @@ type Variant = {
     aiSearch?: AiMergeConfig;
     parentLaw?: { enabled: boolean };
     titleSignal?: { enabled: boolean; window?: number };
+    bodyPool?: { maxPages: number };
   };
 };
 
@@ -49,9 +50,10 @@ const UD4_VARIANTS: Variant[] = [
 // limit 은 도구 기본값과 같은 10 이다 — 창이 출력(3)보다 길어야 재정렬이 상위 3의 **구성**을
 // 바꿀 수 있다. 판정은 반환 목록의 앞 3건(recall@3)으로 한다.
 const TV4_VARIANTS: Variant[] = [
-  { key: "control", label: "현 출하 상태 (신호 off)", options: { limit: 10 } },
-  { key: "title3", label: "조문제목 신호 창3 (예산 내)", options: { limit: 10, titleSignal: { enabled: true, window: 3 } } },
-  { key: "title6", label: "조문제목 신호 창6 (예산 초과)", options: { limit: 10, titleSignal: { enabled: true, window: 6 } } },
+  { key: "control", label: "TV3 상태 (풀1p · 신호 off)", options: { limit: 10, bodyPool: { maxPages: 1 } } },
+  { key: "pool", label: "풀 도달만 (풀3p)", options: { limit: 10, bodyPool: { maxPages: 3 } } },
+  { key: "title", label: "조문제목 신호만 (풀1p)", options: { limit: 10, bodyPool: { maxPages: 1 }, titleSignal: { enabled: true, window: 6 } } },
+  { key: "both", label: "풀 도달 + 조문제목 신호", options: { limit: 10, bodyPool: { maxPages: 3 }, titleSignal: { enabled: true, window: 6 } } },
 ];
 
 const VARIANT_SETS: Record<string, Variant[]> = { ud4: UD4_VARIANTS, tv4: TV4_VARIANTS };
