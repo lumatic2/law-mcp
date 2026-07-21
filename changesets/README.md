@@ -30,6 +30,7 @@
 | 20 | [20260721-tv1-tax-scoring](20260721-tv1-tax-scoring/README.md) | 2026-07-21 | bench/scoring.ts(by_type·as_of 축), bench/run.ts(유형 출력), test/tax-scoring.test.ts (신규) | ✅ | done |
 | 21 | [20260721-tv1-tax-baseline](20260721-tv1-tax-baseline/README.md) | 2026-07-21 | evidence/bench/2026-07-21-tv1-tax-baseline.{md,json} (신규) | ✅ | done |
 | 22 | [20260721-tv2-tribunal-adapter](20260721-tv2-tribunal-adapter/README.md) | 2026-07-21 | src/providers/source-adapter.ts(SPECIAL_DECC 3종), src/index.ts(enum 14→17·description), test/special-decc.test.ts (신규) | ✅ | done |
+| 23 | [20260721-tv2-rulings-adapter](20260721-tv2-rulings-adapter/README.md) | 2026-07-21 | src/providers/source-adapter.ts(CGM_EXPC 2종·detailUnavailable), src/providers/lawgo-provider.ts(전문 거절), src/index.ts(enum 17→19), test/cgm-expc.test.ts (신규) | ✅ | done |
 
 ## 운영 원칙
 

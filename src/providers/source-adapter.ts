@@ -46,6 +46,14 @@ export type SourceDescriptor = {
   supportsBodySearch: boolean;
   /** 단건 조회(lawService.do) 사양 */
   detail: SourceDetailSpec;
+  /**
+   * 전문 조회가 **upstream 에 없는** 자료원의 사유. 설정되면 `get_legal_source` 는 시도하지 않고
+   * 즉시 사유와 대체 경로를 알린다 — 빈 응답을 "본문 없음"으로 흘리면 소비 LLM 이
+   * "찾아봤지만 내용이 없다"로 오해한다. 실제로는 **여기서는 못 준다**가 맞다.
+   */
+  detailUnavailable?: string;
+  /** 전문 대신 안내할 원문 링크 필드(있으면) */
+  detailLinkKeys?: string[];
 };
 
 export type SourceDetailSpec = {
@@ -388,6 +396,59 @@ export const SPECIAL_DECC_DESCRIPTORS: Record<string, SourceDescriptor> = {
 };
 
 Object.assign(SOURCE_DESCRIPTORS, SPECIAL_DECC_DESCRIPTORS);
+
+/**
+ * 중앙부처 1차 법령해석(예규) 2종 (TV2 step-2) — **국세청 예규가 핵심이다.**
+ * "가산세" 1,938건. 세무 실무자가 인용하는 안건번호 체계(`기준-2023-법규법인-0191`)가 그대로 온다.
+ *
+ * ⚠ **여기도 어순이다.** 공식 문서의 `cgmExpc` + 부처코드 형태는 전부 빈 응답이고
+ * (`cgmExpc1220000`·`cgmExpc1210000`·`cgmExpc1051000` 실측), 응답하는 것은 `ntsCgmExpc`
+ * (기관약어 + 서비스명)다. 조세심판원과 같은 규칙이다.
+ *
+ * ⚠ **전문 조회가 없다.** 2026-07-21 실측: `lawService.do?target=ntsCgmExpc&ID=…` 는 HTML 을
+ * 반환하고, `expc` 로 같은 ID 를 부르면 "일치하는 법령해석례가 없습니다"가 온다. 검색 메타데이터
+ * (안건명·안건번호·해석일자)와 **원문 링크**(`taxlaw.nts.go.kr`)까지가 upstream 이 주는 전부다.
+ *
+ * ⚠ **`display=1` 이면 행이 배열이 아니라 단건 객체로 온다**(실측). UD3 이 위원회 9종에서
+ * 고친 것과 같은 결함이며 `toRowArray` 가 흡수한다.
+ */
+function cgmExpc(target: string, label: string): SourceDescriptor {
+  return {
+    target,
+    label,
+    container: "CgmExpc",
+    rowKey: "cgmExpc",
+    idKeys: ["법령해석일련번호"],
+    titleKeys: ["안건명"],
+    fields: [
+      { as: "안건번호", from: ["안건번호"] },
+      { as: "해석기관명", from: ["해석기관명"] },
+      { as: "질의기관명", from: ["질의기관명"] },
+      { as: "해석일자", from: ["해석일자"] },
+      { as: "원문링크", from: ["법령해석상세링크"] },
+      { as: "데이터기준일시", from: ["데이터기준일시"] },
+    ],
+    supportsBodySearch: true,
+    // 전문 조회 자체가 없으므로 아래 detail 은 쓰이지 않는다(detailUnavailable 이 먼저 걸린다).
+    detail: {
+      container: "CgmExpcService",
+      idParam: "ID",
+      fields: [{ as: "안건명", from: ["안건명"] }],
+    },
+    detailUnavailable:
+      "이 자료원은 법제처 API 에 전문 조회가 없다(2026-07-21 실측 — HTML 반환). "
+      + "검색 결과의 `원문링크`(국세법령정보시스템)로 원문을 확인해야 한다.",
+    detailLinkKeys: ["법령해석상세링크"],
+  };
+}
+
+export const CGM_EXPC_DESCRIPTORS: Record<string, SourceDescriptor> = {
+  ntsExpc: cgmExpc("ntsCgmExpc", "국세청 법령해석(예규)"),
+  moefExpc: cgmExpc("moefCgmExpc", "기획재정부 법령해석(예규)"),
+  // `molabCgmExpc`(고용노동부)는 프로브에서 빈 응답이라 담지 않는다.
+};
+
+Object.assign(SOURCE_DESCRIPTORS, CGM_EXPC_DESCRIPTORS);
 
 export type SourceItem = {
   source_id: string;

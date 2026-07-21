@@ -403,6 +403,7 @@ const LEGAL_SOURCES = [
   "expc", "detc", "decc", "ordin", "lstrm",
   "nlrc", "ppc", "nhrck", "sfc", "kcc", "ecc", "oclt", "ftc", "baiPvcs",
   "ttDecc", "acrDecc", "adapDecc",
+  "ntsExpc", "moefExpc",
 ] as const;
 
 server.registerTool(
@@ -425,6 +426,11 @@ server.registerTool(
       + "Note ttDecc is a SEPARATE source from decc — 행정심판재결례 (decc) does not contain tax "
       + "rulings. Tribunal data is current only to its stated 데이터기준일시, so recent rulings "
       + "may be missing. "
+      + "Agency interpretations (예규, TV2): ntsExpc=국세청 법령해석 (1.9k on 가산세; the 예규 "
+      + "practitioners actually cite, with 안건번호 like 기준-2023-법규법인-0191), "
+      + "moefExpc=기획재정부 법령해석. These are NOT binding law — an agency 예규 does not bind "
+      + "a court, and each carries a disclaimer that the answer changes if the facts differ. "
+      + "They also have NO full text here: use the 원문링크 field to reach the original. "
       + "Works best when the query is a topic/case name, since the primary match is on the document "
       + "title. If the title match returns 0 results the tool falls back to full-text search, then a "
       + "relaxed query — and a warning says so. Treat fallback results with suspicion: upstream "

@@ -1511,6 +1511,18 @@ export class LawGoProvider implements LawProvider {
       });
     }
 
+    // 전문 조회가 upstream 에 아예 없는 자료원(예: 국세청 예규)은 시도하지 않고 사유를 말한다.
+    // 부르면 HTML 이 오는데, 그걸 파싱해 빈 결과로 흘리면 소비 LLM 은 "찾아봤지만 내용이 없다"로
+    // 읽는다. 사실은 **여기서는 못 준다**이고, 원문 링크라는 대체 경로가 있다.
+    if (descriptor.detailUnavailable) {
+      throw createMcpError({
+        code: "DETAIL_NOT_AVAILABLE",
+        message:
+          `${descriptor.label}은(는) 전문 조회를 지원하지 않는다. ${descriptor.detailUnavailable}`,
+        retryable: false,
+      });
+    }
+
     const root = await fetchLawApi(LAW_SERVICE_BASE_URL, {
       OC: LAW_API_OC,
       target: descriptor.target,
