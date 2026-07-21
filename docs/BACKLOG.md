@@ -74,6 +74,26 @@
 
 ## Completed
 
+### horizon `upstream-delivery` (2026-07-21, closed)
+축 전환: "우리가 랭킹을 만든다" → "법제처가 가진 것을 손실 없이 전달한다". **닫는 기준 5/5 달성.**
+법령 recall@3 76% → **93.3%(홀드아웃 blind 최초 개봉, dev 88.0%)** — 과적합 기각.
+상세 → `archive/horizons/upstream-delivery.md` · `evidence/bench/2026-07-21-horizon-close-holdout.md`.
+예상 ~10 changeset / 실측 14 (계획에 없던 UD4 가 차이).
+
+- **UD1 측정 기반 재건** (2026-07-21) — 신 평가 세트 40건(dev25/holdout15) 실 API 라벨링 +
+  반복측정 러너(n·σ·범위) + **홀드아웃 봉인 코드 강제**(`assertHoldoutSeal`) + 기준선 48.0%.
+  검증 중 `get_law_article` 회귀 적발·수리(UD0). Evidence: `evidence/bench/2026-07-21-ud1-baseline-v2.md`.
+- **UD2 `aiSearch` 편입 + A/B 판정** (2026-07-21) — upstream 관련도 랭킹 엔드포인트를 **대체가 아니라
+  병합**으로 편입. recall@3 48%→80%, 1위 32%→72%, 조문 출하 76%(F4 부채 해소). 새로 깨진 쿼리 0.
+  Evidence: `evidence/bench/2026-07-21-ud2-verdict.md`.
+- **UD3 미접근 자료원 흡수** (2026-07-21) — 위원회 결정문 9종(`nlrc` 노동위 3.9만 건 포함) + 위임조문
+  점프. `source` enum 5→14 로 흡수해 **도구 개수 11 불변**. 기존 `limit:1` 결함도 수리.
+  Evidence: `evidence/bench/2026-07-21-ud3-contribution.md`.
+- **UD4 본법 승격 + 사다리 단축** (2026-07-21, 계획에 없던 추가) — 하위법령만 찾고 근거 본법을 못 주던
+  유형 해소. recall@3 80%→88%, 검색 중앙 2939→1966ms. **끼워 넣기가 꼬리의 정답을 밀어내는 것**을
+  쿼리 단위 승패 표로 잡아 자리 바꾸기로 재설계. Evidence: `evidence/bench/2026-07-21-ud4-verdict.md`.
+  남은 gap: 행정 도메인 60~67%(총칙-개별법 관계) · F20 부분문자열 오집 · 홀드아웃 소진.
+
 ### horizon `general-legal-coverage` (2026-07-20 ~ 2026-07-21, closed)
 세무 특화(실은 희귀어 특화) 도구를 법 일반 도구로. 닫는 기준 4개 중 3개 달성.
 상세 → `archive/horizons/general-legal-coverage.md`, plan doc 은 `archive/plans/`.
