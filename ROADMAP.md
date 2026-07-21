@@ -81,7 +81,20 @@
 - Status: [x]
 
 - Completed at: 2026-07-22
-<!-- harness:milestone id="TV5" status="active" priority="P2" -->
+<!-- harness:milestone id="TV7" status="active" priority="P0" -->
+### TV7 — 순위 신호
+- DoD: 재정렬 규칙에 법명·도메인·쿼리 토큰 하드코딩 없음. **추가 HTTP 호출 0**. aiSearch 실패·
+  빈 결과 시 원래 순서 보존. 세법 dev 교차 A/B **손실 0 AND 순 이득 ≥2**. 범용 dev 셋 ≥88%.
+  지연 TV4 기본 대비 +200ms 이내. 스키마·도구 불변(재시작 불요).
+- Evidence: `evidence/bench/2026-07-22-tv7-verdict.md` · plan `plans/2026-07-22-tv7-ranking-signal.md`
+- Gap: TV4 가 판정한 진짜 결함 — 도달은 고쳤는데 순위가 안 움직였다. 순위 신호가 법령명
+  문자열뿐이라 이름과 글자를 안 나누는 정답이 밀린다. `aiSearch` 가 조문제목·순위를 **추가 비용
+  0** 으로 이미 주는데 안 쓰고 있었다(프로브: 정답 법이 display=30 안에 30/30 존재).
+- Scale: changesets>=3; surfaces: aiSearch 신호 추출·후보 재정렬·교차 A/B; capability: 이름이
+  안 걸리는 정답을 위로 올린다
+- Status: [ ]
+
+<!-- harness:milestone id="TV5" status="pending" priority="P2" -->
 ### TV5 — 세율표(별표)
 - DoD: 세율 질의에서 별표 메타(별표명·번호·링크) 도달, 별표 없는 법령에서 무오류, 추가 호출 ≤1.
   추출 스파이크 결과가 **채택이든 기각이든** 수치로 기록. 채택 시 성공률 ≥70%·지연 ≤3초·
