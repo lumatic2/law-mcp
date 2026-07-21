@@ -839,6 +839,12 @@ export class LawGoProvider implements LawProvider {
       termBoost?: TermBoostConfig;
       aiSearch?: AiMergeConfig;
       parentLaw?: { enabled?: boolean };
+      /**
+       * 1위 법령의 시행 연혁을 함께 낸다 (TV3 step-3). **기본 꺼짐** —
+       * 켜면 검색 1회당 API 호출이 1 늘어나므로, 시점을 안 묻는 대다수 검색에
+       * 비용을 얹지 않는다(plan 비용 예산: 시점 미지정 경로 호출 증가 0).
+       */
+      includeHistory?: boolean;
     } = {},
   ): Promise<SearchLawResult> {
     assertLawApiKey();
@@ -880,7 +886,48 @@ export class LawGoProvider implements LawProvider {
     // (부스트가 아무것도 안 했으면 `base` 와 **같은 객체**를 돌려주는 규약을 이용한다.)
     const boostPromoted = boosted === base ? 0 : boosted.items.filter((item) => item.linked_articles).length;
     const merged = await this.mergeAiSearch(aiPending, boosted, limit, boostPromoted, options.aiSearch);
-    return this.promoteParentLaws(merged, limit, options.parentLaw?.enabled ?? true);
+    const promoted = await this.promoteParentLaws(merged, limit, options.parentLaw?.enabled ?? true);
+    return options.includeHistory ? this.attachHistory(promoted) : promoted;
+  }
+
+  /**
+   * 1위 법령의 시행 연혁을 붙인다 (TV3 step-3).
+   *
+   * ⚠ 연혁 접근 경로는 **`eflaw` 검색 하나뿐이다** — `lsHistory` 는 HTML, `lsHstInf` 는 0건,
+   * `eflawJo` 는 빈 응답이다(2026-07-21 실측). 다른 target 으로 바꾸면 조용히 빈 연혁이 된다.
+   *
+   * 실패해도 검색 자체를 죽이지 않는다 — 연혁은 부가 정보고, 없으면 없는 대로 나간다.
+   */
+  private async attachHistory(base: SearchLawResult): Promise<SearchLawResult> {
+    const top = base.items[0];
+    if (!top?.law_name) return base;
+
+    try {
+      const versions = await fetchLawVersions(top.law_name);
+      if (versions.length === 0) return base;
+
+      const items = [...base.items];
+      items[0] = {
+        ...top,
+        history: versions.map((v) => ({
+          시행일자: v.시행일자,
+          현행연혁코드: v.현행연혁코드 ?? null,
+          공포일자: v.공포일자 ?? null,
+        })),
+      };
+      return {
+        ...base,
+        items,
+        warnings: [
+          ...(base.warnings ?? []),
+          `'${top.law_name}' 의 시행 연혁 ${versions.length}건을 함께 실었다`
+            + " — 시행예정/현행/연혁이 섞여 있으니 `현행연혁코드` 로 구분할 것.",
+        ],
+      };
+    } catch {
+      // 연혁 조회 실패가 검색 실패가 되면 안 된다.
+      return base;
+    }
   }
 
   /**

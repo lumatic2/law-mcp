@@ -95,7 +95,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
   - Failure probe: 존재하지 않는 시점(1900년)·미래 과도 시점을 넣어 **조용히 현행이 오지 않고
     거절되는지** 확인 — 닫는 기준 3 의 "조용한 현행 반환 0건"이 여기서 결정된다
   - Commit: `changesets/20260721-tv3-as-of-surface/`
-- [ ] **step-3** 연혁 목록 — 이 조문이 언제 바뀌었나
+- [x] **step-3** 연혁 목록 — 이 조문이 언제 바뀌었나
   - Artifact: `search_law` 응답에 `history`(시행일자 + 현행연혁코드 + 공포일자) 선택 출하.
     `eflaw` 검색이 유일 경로임을 주석으로 고정
   - Files: write `src/effective-law.ts`·`src/providers/lawgo-provider.ts`·`src/types.ts`·

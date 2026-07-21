@@ -19,6 +19,13 @@ export interface SearchLawItem {
    * 알아야 하므로 섞지 않는다. 해당 없으면 **필드 자체가 없다**.
    */
   ai_articles?: Array<{ article: string; title: string | null }>;
+  /**
+   * 이 법령의 시행 연혁 (TV3 step-3). `include_history` 를 켰을 때 **1위 항목에만** 붙는다.
+   *
+   * `현행연혁코드` 가 시행예정/현행/연혁을 가른다 — 섞여서 오므로 이걸 안 보고 첫 항목을
+   * 쓰면 아직 시행되지 않은 법을 현행으로 오해한다.
+   */
+  history?: Array<{ 시행일자: string; 현행연혁코드: string | null; 공포일자: string | null }>;
 }
 
 export interface LawSummary extends SearchLawItem {}

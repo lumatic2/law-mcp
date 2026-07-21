@@ -37,15 +37,25 @@ server.registerTool(
       + "needed. Falls back to law-name match, then full-text (body) search, then a relaxed query, "
       + "then revised legal terms. A warning field notes which channel was used; body-search "
       + "results are NOT relevance-ranked. `ai_articles` (relevance) and `linked_articles` "
-      + "(term-usage index) come from different sources and are kept separate.",
+      + "(term-usage index) come from different sources and are kept separate. "
+      + "Set `include_history` to also get the top law's enforcement history "
+      + "(시행일자/현행연혁코드/공포일자) — useful when the tax year matters, since the same "
+      + "article can differ by year. The list mixes 시행예정/현행/연혁, so read 현행연혁코드.",
     inputSchema: {
       query: z.string().min(1),
       limit: z.number().int().min(1).max(100).default(10),
+      include_history: z
+        .boolean()
+        .default(false)
+        .describe(
+          "1위 법령의 시행 연혁(시행일자·현행연혁코드·공포일자)을 함께 받는다. "
+          + "귀속연도가 중요한 질의에서 '언제 바뀌었나'를 볼 때 쓴다. 호출이 1 늘어나므로 기본 꺼짐.",
+        ),
     },
   },
-  async ({ query, limit }) => {
+  async ({ query, limit, include_history }) => {
     try {
-      const result = await provider.searchLaw(query, { limit });
+      const result = await provider.searchLaw(query, { limit, includeHistory: include_history });
       return {
         content: [{ type: "text", text: toText(result) }],
         structuredContent: toStructuredContent(result),
