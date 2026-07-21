@@ -95,7 +95,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
   - Failure probe: `--split holdout` 을 플래그 없이 실행해 **실제로 exit 1** 로 거절되는 것을 관측
     (봉인이 선언만 있고 안 도는 상태를 배제)
   - Commit: `changesets/20260721-tv1-tax-scoring/`
-- [ ] **step-3** 세법 기준선 — dev 반복측정으로 신뢰구간 붙은 출발점 확정
+- [x] **step-3** 세법 기준선 — dev 반복측정으로 신뢰구간 붙은 출발점 확정
   - Artifact: `evidence/bench/2026-07-21-tv1-tax-baseline.md` + `.json` — recall@1/@3, 조문 정확도,
     유형별 분해(어느 유형이 약한가), 표준편차. **유형별 분해가 TV2~TV5 의 우선순위 근거가 된다**
   - Files: write `evidence/bench/2026-07-21-tv1-tax-baseline.{md,json}`·

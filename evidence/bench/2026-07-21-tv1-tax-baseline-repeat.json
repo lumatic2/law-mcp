@@ -1,0 +1,20 @@
+{
+  "date": "2026-07-21",
+  "set": "golden-tax",
+  "split": "dev",
+  "mode": "blind",
+  "metric": "recall@3",
+  "stats": {
+    "n": 3,
+    "mean": 0.8333,
+    "sd": 0,
+    "min": 0.8333,
+    "max": 0.8333,
+    "threshold_2sd": 0,
+    "values": [
+      0.8333,
+      0.8333,
+      0.8333
+    ]
+  }
+}

@@ -1,0 +1,682 @@
+{
+  "date": "2026-07-21",
+  "set": "golden-tax",
+  "split": "dev",
+  "summary": {
+    "total": 30,
+    "scored": 30,
+    "errors": 0,
+    "recall_at_1": 0.6,
+    "recall_at_3": 0.8333,
+    "precedent_hit_rate": 0.7667,
+    "article_accuracy": 0.8095,
+    "article_checked": 21,
+    "by_domain": {
+      "세법": {
+        "total": 30,
+        "recall_at_3": 0.8333
+      }
+    },
+    "by_type": {
+      "손금·필요경비": {
+        "total": 5,
+        "recall_at_3": 1,
+        "article_accuracy": 1
+      },
+      "공제·감면": {
+        "total": 5,
+        "recall_at_3": 1,
+        "article_accuracy": 1
+      },
+      "비과세": {
+        "total": 4,
+        "recall_at_3": 0.75,
+        "article_accuracy": 0.5
+      },
+      "상속·증여": {
+        "total": 4,
+        "recall_at_3": 1,
+        "article_accuracy": 0.75
+      },
+      "신고·불복·기한": {
+        "total": 7,
+        "recall_at_3": 0.5714,
+        "article_accuracy": 1
+      },
+      "원천징수·가산세": {
+        "total": 5,
+        "recall_at_3": 0.8,
+        "article_accuracy": 0.3333
+      }
+    },
+    "as_of_accuracy": null,
+    "as_of_checked": 0
+  },
+  "outcomes": [
+    {
+      "query": "접대비 손금불산입 한도",
+      "domain": "세법",
+      "type": "손금·필요경비",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "법인세법",
+        "조세특례제한법",
+        "법인세법 시행령"
+      ],
+      "predictedArticles": [
+        "제25조",
+        "제23조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "감가상각비 손금불산입",
+      "domain": "세법",
+      "type": "손금·필요경비",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "법인세법",
+        "소득세법",
+        "법인세법 시행령"
+      ],
+      "predictedArticles": [
+        "제23조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "업무무관자산 관련 지급이자 손금 부인",
+      "domain": "세법",
+      "type": "손금·필요경비",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "법인세법",
+        "상속세 및 증여세법 시행령",
+        "소득세법 시행령"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "대손금 손금산입 요건",
+      "domain": "세법",
+      "type": "손금·필요경비",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "법인세법 시행령",
+        "법인세법",
+        "조세특례제한법"
+      ],
+      "predictedArticles": [
+        "제19조의2",
+        "제36조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "사업소득 필요경비 산입 범위",
+      "domain": "세법",
+      "type": "손금·필요경비",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "소득세법",
+        "소득세법 시행규칙",
+        "조세특례제한법"
+      ],
+      "predictedArticles": [
+        "제27조",
+        "제37조",
+        "제33조",
+        "제31조",
+        "제19조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "창업중소기업 세액감면 요건",
+      "domain": "세법",
+      "type": "공제·감면",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "조세특례제한법",
+        "조세특례제한법 시행령",
+        "법인세법"
+      ],
+      "predictedArticles": [
+        "제6조",
+        "제14조",
+        "제99조의9"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "연구인력개발비 세액공제",
+      "domain": "세법",
+      "type": "공제·감면",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "조세특례제한법 시행령",
+        "조세특례제한법",
+        "상속세 및 증여세법"
+      ],
+      "predictedArticles": [
+        "제10조",
+        "제10조의2"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "통합투자세액공제 대상 자산",
+      "domain": "세법",
+      "type": "공제·감면",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "조세특례제한법",
+        "조세특례제한법 시행령",
+        "법인세법"
+      ],
+      "predictedArticles": [
+        "제24조",
+        "제91조의20",
+        "제91조의28"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "자녀세액공제 금액",
+      "domain": "세법",
+      "type": "공제·감면",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "소득세법",
+        "지방세특례제한법",
+        "소득세법 시행령"
+      ],
+      "predictedArticles": [
+        "제59조의2",
+        "제47조",
+        "제59조",
+        "제61조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "매입세액 공제받지 못하는 경우",
+      "domain": "세법",
+      "type": "공제·감면",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "부가가치세법",
+        "조세특례제한법",
+        "법인세법"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "1세대 1주택 비과세 요건",
+      "domain": "세법",
+      "type": "비과세",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "소득세법",
+        "소득세법 시행령",
+        "지방세법"
+      ],
+      "predictedArticles": [
+        "제89조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "1세대 1주택 판정에서 1세대의 범위",
+      "domain": "세법",
+      "type": "비과세",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "지방세법",
+        "종합부동산세법",
+        "노인복지법"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "주택임대소득 비과세 기준",
+      "domain": "세법",
+      "type": "비과세",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "소득세법 시행령",
+        "종합부동산세법",
+        "소득세법"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "수출하는 재화 영세율 적용",
+      "domain": "세법",
+      "type": "비과세",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "부가가치세법",
+        "부가가치세법 시행령",
+        "농ㆍ축산ㆍ임ㆍ어업용 기자재 및 석유류에 대한 부가가치세 영세율 및 면세 적용 등에 관한 특례규정"
+      ],
+      "predictedArticles": [
+        "제22조",
+        "제21조",
+        "제25조",
+        "제56조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "배우자 상속공제 한도",
+      "domain": "세법",
+      "type": "상속·증여",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "상속세 및 증여세법",
+        "상속세 및 증여세법 시행령",
+        "국민연금법"
+      ],
+      "predictedArticles": [
+        "제19조",
+        "제20조",
+        "제18조의2",
+        "제18조의3",
+        "제24조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "상속세 일괄공제 금액",
+      "domain": "세법",
+      "type": "상속·증여",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "상속세 및 증여세법",
+        "상속세 및 증여세법 시행령",
+        "소득세법"
+      ],
+      "predictedArticles": [
+        "제21조",
+        "제20조",
+        "제18조",
+        "제24조",
+        "제18조의2"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "증여재산공제 한도",
+      "domain": "세법",
+      "type": "상속·증여",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "상속세 및 증여세법",
+        "상속세 및 증여세법 시행령",
+        "민법"
+      ],
+      "predictedArticles": [
+        "제53조의2",
+        "제53조",
+        "제31조",
+        "제33조",
+        "제24조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "상속세 신고기한",
+      "domain": "세법",
+      "type": "상속·증여",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "상속세 및 증여세법",
+        "상속세 및 증여세법 시행령",
+        "국세기본법"
+      ],
+      "predictedArticles": [
+        "제67조",
+        "제18조의3",
+        "제70조",
+        "제45조의2",
+        "제69조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "과세표준 신고 후 경정청구 기한",
+      "domain": "세법",
+      "type": "신고·불복·기한",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "국제조세조정에 관한 법률",
+        "지방세기본법",
+        "관세법"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "국세부과 제척기간",
+      "domain": "세법",
+      "type": "신고·불복·기한",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "국세기본법",
+        "국세기본법 시행령",
+        "국제조세조정에 관한 법률"
+      ],
+      "predictedArticles": [
+        "제26조의2",
+        "제47조의4",
+        "제21조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "국세징수권 소멸시효",
+      "domain": "세법",
+      "type": "신고·불복·기한",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "국세기본법",
+        "국세징수법",
+        "조세특례제한법"
+      ],
+      "predictedArticles": [
+        "제27조",
+        "제54조",
+        "제26조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "수정신고 할 수 있는 경우",
+      "domain": "세법",
+      "type": "신고·불복·기한",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "지방세기본법",
+        "관세법 시행령",
+        "지방세법"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "심판청구 청구기간",
+      "domain": "세법",
+      "type": "신고·불복·기한",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "국민건강보험법",
+        "행정심판법",
+        "검찰청법"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "법인세 과세표준 신고기한",
+      "domain": "세법",
+      "type": "신고·불복·기한",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "법인세법 시행령",
+        "법인세법",
+        "법인세법 시행규칙"
+      ],
+      "predictedArticles": [
+        "제60조",
+        "제76조의17",
+        "제62조의2",
+        "제110조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "양도소득 과세표준 예정신고 기한",
+      "domain": "세법",
+      "type": "신고·불복·기한",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "소득세법",
+        "소득세법 시행령",
+        "관세법"
+      ],
+      "predictedArticles": [
+        "제105조",
+        "제107조",
+        "제110조",
+        "제106조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "세금계산서 지연발급 가산세",
+      "domain": "세법",
+      "type": "원천징수·가산세",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "국세기본법",
+        "국세기본법 시행령",
+        "관세법"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "무신고 가산세율",
+      "domain": "세법",
+      "type": "원천징수·가산세",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "지방세기본법",
+        "국세기본법",
+        "관세법"
+      ],
+      "predictedArticles": [
+        "제47조의2",
+        "제48조",
+        "제47조의4",
+        "제49조",
+        "제47조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "과소신고 가산세",
+      "domain": "세법",
+      "type": "원천징수·가산세",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "관세법",
+        "지방세기본법",
+        "국세기본법"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "납부지연 가산세 계산",
+      "domain": "세법",
+      "type": "원천징수·가산세",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "관세법",
+        "국세기본법",
+        "재건축초과이익 환수에 관한 법률"
+      ],
+      "predictedArticles": [
+        "제22조",
+        "제48조",
+        "제47조"
+      ],
+      "articleCorrectAt3": false
+    },
+    {
+      "query": "사업소득 원천징수 대상",
+      "domain": "세법",
+      "type": "원천징수·가산세",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "소득세법",
+        "조세특례제한법 시행령",
+        "조세특례제한법"
+      ],
+      "predictedArticles": [
+        "제144조",
+        "제134조",
+        "제156조",
+        "제7조"
+      ],
+      "articleCorrectAt3": false
+    }
+  ]
+}

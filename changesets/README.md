@@ -28,6 +28,7 @@
 | 18 | [20260721-f20-accidental-name-match](20260721-f20-accidental-name-match/README.md) | 2026-07-21 | src/providers/lawgo-provider.ts(pickLawByName accidental·resolveLawId 거절), test/law-name-resolution.test.ts | ✅ | done |
 | 19 | [20260721-tv1-golden-tax](20260721-tv1-golden-tax/README.md) | 2026-07-21 | bench/golden-tax.json (신규), test/golden-tax.test.ts (신규) | ✅ | done |
 | 20 | [20260721-tv1-tax-scoring](20260721-tv1-tax-scoring/README.md) | 2026-07-21 | bench/scoring.ts(by_type·as_of 축), bench/run.ts(유형 출력), test/tax-scoring.test.ts (신규) | ✅ | done |
+| 21 | [20260721-tv1-tax-baseline](20260721-tv1-tax-baseline/README.md) | 2026-07-21 | evidence/bench/2026-07-21-tv1-tax-baseline.{md,json} (신규) | ✅ | done |
 
 ## 운영 원칙
 
