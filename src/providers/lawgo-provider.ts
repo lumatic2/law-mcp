@@ -34,6 +34,8 @@ import type {
 } from "../types.js";
 import type { LawProvider } from "./law-provider.js";
 import { tokenizeQuery } from "../article-match.js";
+import { ArticleIndexCache, extractArticles } from "../article-index.js";
+import { rerankByArticleTitle } from "../article-title-signal.js";
 import {
   TermLinkageCache,
   lookupTermLinkage,
@@ -742,6 +744,12 @@ export class LawGoProvider implements LawProvider {
   private readonly aiSearchCache = new AiSearchCache(100);
   private readonly aiSearchFetcher: AiSearchFetcher | undefined;
 
+  /**
+   * 조문제목 신호용 조문 인덱스 캐시 (TV4 step-1). 법령 전문이 771KB 라 같은 법을 두 번
+   * 받지 않는 것이 비용의 핵심이다. 영속 색인은 두지 않는다(설치 부담 → 목표와 충돌).
+   */
+  private readonly titleSignalCache = new ArticleIndexCache(40);
+
   constructor(
     linkageFetcher?: LinkageFetcher,
     delegationFetcher?: DelegationFetcher,
@@ -845,6 +853,11 @@ export class LawGoProvider implements LawProvider {
        * 비용을 얹지 않는다(plan 비용 예산: 시점 미지정 경로 호출 증가 0).
        */
       includeHistory?: boolean;
+      /**
+       * 조문제목 신호로 상위 후보를 재정렬한다 (TV4 step-1). **기본 꺼짐** — 채택 여부는
+       * TV4 step-3 의 교차 A/B(손실 0 AND 순 이득 ≥2)가 정한다. 켜고 끄는 지점은 여기 하나다.
+       */
+      titleSignal?: { enabled?: boolean; window?: number };
     } = {},
   ): Promise<SearchLawResult> {
     assertLawApiKey();
@@ -887,7 +900,61 @@ export class LawGoProvider implements LawProvider {
     const boostPromoted = boosted === base ? 0 : boosted.items.filter((item) => item.linked_articles).length;
     const merged = await this.mergeAiSearch(aiPending, boosted, limit, boostPromoted, options.aiSearch);
     const promoted = await this.promoteParentLaws(merged, limit, options.parentLaw?.enabled ?? true);
-    return options.includeHistory ? this.attachHistory(promoted) : promoted;
+    // 본법 승격 **뒤에** 재정렬한다 — 승격은 자리를 바꿀 뿐이므로, 승격된 본법도 제 조문제목으로
+    // 채점받아야 한다. 연혁 부착은 1위에 붙으므로 반드시 재정렬 **뒤**여야 한다.
+    const ranked = await this.applyTitleSignal(
+      query,
+      promoted,
+      options.titleSignal?.enabled ?? false,
+      options.titleSignal?.window,
+    );
+    return options.includeHistory ? this.attachHistory(ranked) : ranked;
+  }
+
+  /**
+   * 조문제목 신호로 상위 후보를 재정렬한다 (TV4 step-1).
+   *
+   * 순위를 정하는 신호가 지금은 **법령명 문자열뿐**이라, 이름에 쿼리 토큰이 없는 정답은 후보
+   * 풀에 있어도 못 올라온다. 조문제목은 곧 쟁점명이라 훨씬 강한 신호다.
+   *
+   * 비용: 제목만 주는 upstream 경로가 없어 법령 전문(771KB·약 1.1초)을 열어야 한다. 그래서
+   * **이름 신호가 이미 확신을 주는 검색에서는 한 건도 열지 않는다**(모듈의 값어치 게이트).
+   * 어떤 실패도 흡수한다 — 재정렬은 보정이고, 이것 때문에 검색이 죽으면 안 된다.
+   */
+  private async applyTitleSignal(
+    query: string,
+    base: SearchLawResult,
+    enabled: boolean,
+    window?: number,
+  ): Promise<SearchLawResult> {
+    if (!enabled || base.items.length < 2) return base;
+
+    try {
+      const outcome = await rerankByArticleTitle(
+        base.items,
+        query,
+        (lawId) => this.fetchArticlesForSignal(lawId),
+        window,
+      );
+      if (outcome.unchanged) return base;
+      return { ...base, items: outcome.items };
+    } catch {
+      return base;
+    }
+  }
+
+  /** 조문 인덱스 조회 + 캐시. 실패는 `null` 로 알린다 — 모듈이 그걸 보고 순서를 보존한다. */
+  private async fetchArticlesForSignal(lawId: string) {
+    const cached = this.titleSignalCache.get(lawId);
+    if (cached) return cached;
+    try {
+      const root = await fetchLawArticleRoot(lawId, "ID");
+      const articles = extractArticles(root);
+      this.titleSignalCache.set(lawId, articles);
+      return articles;
+    } catch {
+      return null;
+    }
   }
 
   /**
