@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-21
-> 상태: **horizon `tax-vertical` 실행 중** — 승인 2026-07-21, TV1·TV2 완료 (2/6).
+> 상태: **horizon `tax-vertical` 실행 중** — 승인 2026-07-21, TV1·TV2·TV3 완료 (3/6).
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -49,20 +49,22 @@
 
 - Completed at: 2026-07-21
 - Summary: 조세심판원 4688건·국세청 예규 1938건 편입, 구속력 등급 100% 표기, 도달 100%
-<!-- harness:milestone id="TV3" status="active" priority="P0" -->
+<!-- harness:milestone id="TV3" status="completed" priority="P0" evidence="changesets/20260721-tv3-effective-law · changesets/20260721-tv3-as-of-surface · changesets/20260721-tv3-law-history · changesets/20260721-tv3-asof-verdict · evidence/bench/2026-07-21-tv3-asof.md" -->
 ### TV3 — 과세연도 축
 - DoD: 소득세법 2023/2024/현행이 서로 다른 조문 집합으로 반환. `target=law&efYd` 무경고 함정이
   가드로 차단. 시점 인자 미지정 시 기존 동작·호출 수 불변. 모든 조문 응답에 `effective_date`.
   못 맞추면 명시 거절 — **조용한 현행 반환 0건**. 시점 정확도 100%. 범용 dev 셋 ≥88%.
-- Evidence: `evidence/bench/2026-07-21-tv3-asof.md` · `bench/tv3-asof.ts` ·
+- Evidence: changesets/20260721-tv3-effective-law · changesets/20260721-tv3-as-of-surface · changesets/20260721-tv3-law-history · changesets/20260721-tv3-asof-verdict · evidence/bench/2026-07-21-tv3-asof.md
   plan `plans/2026-07-21-tv3-tax-year-axis.md`
 - Gap: 세법은 "몇 년 귀속이냐"가 곧 답인데 우리는 항상 현행만 준다. 확인된 경쟁자 중 귀속연도
   인식을 표방한 곳이 없다 — 이 horizon 의 차별점.
 - Scale: changesets>=4; surfaces: eflaw 조회 경로·MCP 도구 인자·연혁 목록·시점 정확도 러너;
   capability: 그 해에 유효했던 조문을 준다
-- Status: [ ]
+- Status: [x]
 
-<!-- harness:milestone id="TV4" status="pending" priority="P1" -->
+- Completed at: 2026-07-22
+- Summary: as_of 시점 조회 + effective_date 상시 출하 + 연혁, 시점 정확도 100%/조용한 현행 0건
+<!-- harness:milestone id="TV4" status="active" priority="P1" -->
 ### TV4 — 세법 도달 결함 수리
 - DoD: 조문제목 신호에 법명·도메인·쿼리 토큰 하드코딩 없음. 추가 전문 조회 ≤3/검색. 상류 실패 시
   원상태 반환. 절단 경고 발화. `세금계산서 지연발급 가산세` → 부가가치세법 도달.
