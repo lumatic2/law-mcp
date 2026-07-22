@@ -1,0 +1,22 @@
+{"tool_ok":true,"agent":"h-1","results":[
+  {"case_id":"h01","turns":2,"law_name":"소득세법","article_no":"제12조","not_found":false,
+   "queries":["비과세소득"],"saw_vocab_warning":false},
+  {"case_id":"h02","turns":2,"law_name":"부가가치세법","article_no":"제26조","not_found":false,
+   "queries":["재화 또는 용역의 공급에 대한 면세"],"saw_vocab_warning":true},
+  {"case_id":"h03","turns":2,"law_name":"국세기본법","article_no":"제26조의2","not_found":false,
+   "queries":["국세부과의 제척기간"],"saw_vocab_warning":false},
+  {"case_id":"h04","turns":2,"law_name":"국세기본법","article_no":"제27조","not_found":false,
+   "queries":["국세징수권의 소멸시효"],"saw_vocab_warning":false},
+  {"case_id":"h05","turns":2,"law_name":"국세기본법","article_no":"제81조의4","not_found":false,
+   "queries":["세무조사권 남용 금지"],"saw_vocab_warning":false},
+  {"case_id":"h06","turns":2,"law_name":"조세특례제한법","article_no":"제121조의2","not_found":false,
+   "queries":["외국인투자에 대한 법인세 등의 감면"],"saw_vocab_warning":false},
+  {"case_id":"h07","turns":2,"law_name":"부가가치세법","article_no":"제39조","not_found":false,
+   "queries":["공제하지 아니하는 매입세액"],"saw_vocab_warning":false},
+  {"case_id":"h08","turns":2,"law_name":"소득세법","article_no":"제104조","not_found":false,
+   "queries":["양도소득세의 세율"],"saw_vocab_warning":false},
+  {"case_id":"h09","turns":2,"law_name":"소득세법","article_no":"제20조의3","not_found":false,
+   "queries":["연금소득"],"saw_vocab_warning":false},
+  {"case_id":"h10","turns":2,"law_name":"소득세법","article_no":"제70조","not_found":false,
+   "queries":["종합소득과세표준 확정신고"],"saw_vocab_warning":false}
+]}

@@ -78,7 +78,12 @@ export function toTrajectories(run: AgentRunFile, cases: AgenticCase[]): Traject
       //
       // 이 horizon 이 재려는 마찰은 "몇 번 **다시 물어야** 찾나"이므로 검색 횟수로 센다.
       // 그러면 `SR@1` = 첫 질의로 찾았나, `AT` = 평균 몇 번 물었나 가 된다.
-      turn_count: r.queries?.length ?? r.turns ?? 1,
+      //
+      // ⚠ **0 을 그대로 받지 않는다.** 대조군 arm 이 72건 중 15건에서 `queries: []` 를 보고했고,
+      // 길이 0 이 그대로 `turn_count 0` 이 되어 `SR@1`(t≤1)을 **부풀렸다**(88.3% → 실제 80%).
+      // 질의를 1회 미만 던지는 것은 불가능하다 — 0 은 데이터가 없다는 뜻이지 마찰이 없다는
+      // 뜻이 아니다. 비어 있으면 총 턴으로, 그것도 없으면 1 로 떨어뜨린다.
+      turn_count: (r.queries?.length || 0) > 0 ? (r.queries as string[]).length : (r.turns ?? 1),
       /** 총 턴은 따로 남긴다 — 비용 감각은 이쪽이다. */
       raw_turns: r.turns ?? null,
     } as Trajectory & { raw_turns: number | null };
@@ -91,7 +96,9 @@ async function main(): Promise<void> {
     throw new Error("실행 기록 파일을 하나 이상 달라 (반복 측정이라 보통 3개 이상)");
   }
 
-  const cases = loadAgenticSet("dev");
+  // 홀드아웃 채점은 `--holdout` 을 명시해야 한다 — 봉인은 세트 로더가 지킨다.
+  const useHoldout = process.argv.includes("--holdout");
+  const cases = loadAgenticSet(useHoldout ? "holdout" : "dev", useHoldout);
   const scores: CaseScore[] = [];
   for (const path of paths) {
     const run = JSON.parse(readFileSync(path, "utf8")) as AgentRunFile;
@@ -108,7 +115,9 @@ async function main(): Promise<void> {
 }
 
 function selftest(): void {
-  const cases = loadAgenticSet("dev");
+  // 홀드아웃 채점은 `--holdout` 을 명시해야 한다 — 봉인은 세트 로더가 지킨다.
+  const useHoldout = process.argv.includes("--holdout");
+  const cases = loadAgenticSet(useHoldout ? "holdout" : "dev", useHoldout);
   const probes: Array<[string, boolean, string]> = [];
 
   // ① 도구 실패 실행은 거부한다 — 이 파일의 존재 이유.

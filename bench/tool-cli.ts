@@ -21,10 +21,17 @@ async function main(): Promise<void> {
   const provider = new LawGoProvider();
 
   if (cmd === "search") {
-    const [query, limitRaw] = rest;
-    if (!query) throw new Error('사용법: search "질의" [limit]');
+    const args = rest.filter((a) => !a.startsWith("--"));
+    const [query, limitRaw] = args;
+    if (!query) throw new Error('사용법: search "질의" [limit] [--no-vocab-gap]');
     const limit = limitRaw ? Number(limitRaw) : 10;
-    const res = await provider.searchLaw(query, { limit });
+    // `--no-vocab-gap`: AR3 어휘 공백 경고를 끈다. **A/B 전용** — 수리 전 arm 을 만들기 위한
+    // 유일한 지점이다. 기본은 켜짐이므로 이 플래그가 없으면 제품 동작과 같다.
+    const noVocabGap = rest.includes("--no-vocab-gap");
+    const res = await provider.searchLaw(query, {
+      limit,
+      ...(noVocabGap ? { vocabGap: { enabled: false } } : {}),
+    });
     process.stdout.write(JSON.stringify(res, null, 2) + "\n");
     return;
   }

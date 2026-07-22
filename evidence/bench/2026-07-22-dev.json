@@ -87,7 +87,7 @@
       "returned": [
         "근로기준법",
         "직업교육훈련 촉진법",
-        "병역법"
+        "외국인근로자의 고용 등에 관한 법률"
       ],
       "predictedArticles": [
         "제114조",
@@ -148,15 +148,15 @@
       "query": "긴급체포 요건",
       "domain": "형사",
       "split": "dev",
-      "hit1": false,
+      "hit1": true,
       "hit3": true,
       "precHit": false,
       "articleChecked": true,
       "articleCorrect": true,
       "returned": [
-        "검찰사건사무규칙",
         "형사소송법",
-        "검사와 사법경찰관의 상호협력과 일반적 수사준칙에 관한 규정"
+        "검사와 사법경찰관의 상호협력과 일반적 수사준칙에 관한 규정",
+        "관세법"
       ],
       "predictedArticles": [
         "제200조의3",
@@ -243,8 +243,8 @@
       "articleCorrect": false,
       "returned": [
         "범죄수익은닉의 규제 및 처벌 등에 관한 법률",
-        "게임산업진흥에 관한 법률",
-        "검사와 사법경찰관의 상호협력과 일반적 수사준칙에 관한 규정"
+        "공무원범죄에 관한 몰수 특례법",
+        "게임산업진흥에 관한 법률"
       ],
       "articleShippingMiss": true
     },
@@ -306,7 +306,7 @@
       "returned": [
         "민법",
         "마약류 불법거래 방지에 관한 특례법",
-        "국회법"
+        "특허법"
       ],
       "predictedArticles": [
         "제281조",
@@ -481,15 +481,15 @@
       "query": "매입세액 불공제 대상",
       "domain": "세무",
       "split": "dev",
-      "hit1": true,
+      "hit1": false,
       "hit3": true,
       "precHit": true,
       "articleChecked": false,
       "articleCorrect": false,
       "returned": [
+        "부가가치세법 시행령",
         "부가가치세법",
-        "조세특례제한법",
-        "부가가치세법 시행규칙"
+        "조세특례제한법"
       ],
       "articleShippingMiss": true
     },
