@@ -947,12 +947,10 @@
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
     }
   },
-  "stop_reason": "secret_required",
+  "stop_reason": null,
   "stop_detail": {
-    "summary": "law-mcp 에이전트형 벤치(AR1)의 평가 루프는 다 만들고 검증했는데, 평가용 에이전트를 돌릴 Anthropic 자격증명이 없어 비용 실측에서 멈췄습니다. API 키를 주시거나 다른 방식으로 갈지 정해주시면 이어서 진행합니다.",
-    "step": "step-1",
-    "done": "루프 러너·트래젝토리·턴 상한·침묵/기권 구분 검증 완료(--selftest 4종 PASS). 실 LLM 에이전트(ClaudeAgent) 구현 완료 — tsc 통과, 단 실 API 왕복 미검증. npm test 302/302, src/ 0줄.",
-    "needed": "ANTHROPIC_API_KEY 또는 ant auth login 프로필 — 1케이스 왕복으로 비용 실측하면 step-1 종료"
+    "summary": "secret_required 해소 — 사용자 재지시(2026-07-22): 평가 에이전트를 새 API 호출로 만들지 않고 살아있는 에이전트 세션(Claude 본인 + Codex 블라인드)이 실 MCP 표면을 직접 쓴다. ClaudeAgent(SDK) 경로 폐기, 비용 0.",
+    "pivot": "agent=live-session"
   },
   "updated_at": "2026-07-22"
 }
