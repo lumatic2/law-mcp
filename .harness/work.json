@@ -1003,7 +1003,7 @@
       "work_id": "ar4-verdict",
       "horizon_id": "agentic-reach",
       "milestone_id": "AR4",
-      "status": "active",
+      "status": "completed",
       "plan_path": "plans/2026-07-22-ar4-verdict.md",
       "changeset_path": "changesets/20260723-ar4-verdict",
       "next_step": "step-1",
@@ -1043,7 +1043,8 @@
       ],
       "owner_session_uuid": "claude:a82173e0-8726-4be3-861c-256a5dadb83d",
       "updated_at": "2026-07-23",
-      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "**horizon 을 닫는다.** 닫는 기준 6종 전부 충족."
     }
   },
   "stop_reason": null,

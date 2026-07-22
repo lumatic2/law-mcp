@@ -1,7 +1,9 @@
 # ROADMAP
 
-> 마지막 업데이트: 2026-07-22
-> 상태: **horizon `agentic-reach` 실행 중** — 승인 2026-07-22, AR1 active — 직전 `tax-vertical` 은 2026-07-22 closed.
+> 마지막 업데이트: 2026-07-23
+> 상태: **horizon `agentic-reach` closed (2026-07-23)** — 닫는 기준 6/6 충족. active milestone 없음.
+> ⚠ 홀드아웃 수치는 신뢰하지 않는다(변별력 저하 — 주제를 에이전트가 골랐다). 과적합 기각만 채택.
+> 다음 horizon 미정 — 후보는 `plans/horizons/CANDIDATES.md`.
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -11,7 +13,7 @@
 <!-- harness:goal id="agentic-reach" -->
 목표: **우리 벤치는 사람이 라벨 문자열을 던진다고 가정한다. 실제 소비자는 맥락을 가진 에이전트다.**
 그 간극을 없애고 새 자로 잰 값을 올린다 — `recall@3`(단발 도달)에서 **도달 턴수 + 정직한 실패**로.
-(상세 plan → `plans/horizons/agentic-reach.md` · 예상 분량 ~11 changeset · 후보 백로그 → `plans/horizons/CANDIDATES.md`)
+(closed plan → `archive/horizons/agentic-reach.md` · 선언 ~11 / 실측 8 changeset · 후보 백로그 → `plans/horizons/CANDIDATES.md`)
 
 직전 horizon `tax-vertical` 은 2026-07-22 closed (닫는 기준 6종 중 5종 충족, recall@3 75.0% 미달).
 닫은 뒤 프로브가 밝힌 것: 미달의 상당 부분이 **측정 방식 탓**이었다 — MISS 5건에 분야 맥락 한 단어를
@@ -61,19 +63,21 @@
 
 - Completed at: 2026-07-23
 - Summary: 어휘 공백 신호 채택 — 순위 미변경(손실 0 구조적), 재현율 6/7·정밀도 75%. 서버 instructions 채움.
-<!-- harness:milestone id="AR4" status="pending" priority="P0" -->
+<!-- harness:milestone id="AR4" status="completed" priority="P0" evidence="changesets/20260723-ar4-verdict/ · changesets/20260723-ar3-vocab-gap/ · evidence/bench/2026-07-23-ar4-holdout.md · npm test 314/314 · 범용 dev 88.0% · src/ 0줄" -->
 ### AR4 — 판정
 - DoD: 새 홀드아웃 blind 1회 개봉(**≥5회 반복**). 닫는 기준 6종 `선언/실측/판정` 대조표. 프리모템
   5종 발화 대조. 크기 회고(선언 ~11 / 실측 M). 범용 dev ≥88%. `git diff --stat src/` 0 줄. 봉인이
   플래그 없이 여전히 거절. **실 MCP 표면에서 인용 체인 관측.** 미달은 미달로 기록.
-- Evidence: `plans/2026-07-22-ar4-verdict.md` · `evidence/bench/2026-07-22-ar4-holdout.md` ·
+- Evidence: changesets/20260723-ar4-verdict/ · changesets/20260723-ar3-vocab-gap/ · evidence/bench/2026-07-23-ar4-holdout.md · npm test 314/314 · 범용 dev 88.0% · src/ 0줄
   `archive/reports/2026-07-22-ar4-agentic-reach-close.md`
 - Gap: dev 수치는 튜닝 대상이라 과적합을 판정하지 못한다. 직전 두 horizon 에서 이 규율이 판정을
   살렸다(93.3% > 88.0% 로 과적합 기각 / 75% 미달을 미달로 기록).
 - Scale: changesets>=2; surfaces: 홀드아웃 러너·실 MCP 표면 E2E; capability: 이 자를 닫을 수 있는지
   판정한다
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-23
+- Summary: 홀드아웃 1회 개봉 — 닫는 기준 6/6 충족. 과적합 기각. 단 홀드아웃 변별력 낮아 절대 수치 미채택(사용자 확정).
 ## Next Candidates
 
 후보 백로그 정본 → `plans/horizons/CANDIDATES.md` (순서는 사용자 소유).
