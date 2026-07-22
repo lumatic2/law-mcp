@@ -12,3 +12,6 @@
 {"actual_changesets": 4, "declared_min": 4, "milestone_id": "TV3", "ts": "2026-07-22", "unresolved_refs": [], "verdict": "ok"}
 {"actual_changesets": 3, "declared_min": 3, "milestone_id": "TV4", "ts": "2026-07-22", "unresolved_refs": [], "verdict": "ok"}
 {"actual_changesets": 3, "declared_min": 3, "milestone_id": "TV7", "ts": "2026-07-22", "unresolved_refs": [], "verdict": "ok"}
+{"actual_changesets": 2, "declared_min": 2, "milestone_id": "TV5", "ts": "2026-07-22", "unresolved_refs": [], "verdict": "ok"}
+{"actual_changesets": 0, "declared_min": 2, "milestone_id": "TV6", "ts": "2026-07-22", "unresolved_refs": [], "verdict": "no-refs"}
+{"actual_changesets": 0, "declared_min": 3, "milestone_id": "AR1", "ts": "2026-07-22", "unresolved_refs": [], "verdict": "no-refs"}

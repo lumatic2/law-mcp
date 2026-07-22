@@ -4,7 +4,7 @@
 > execution mode: continuous
 > milestone-레벨 durable plan doc.
 
-Status: 승인 대기
+Status: approved (2026-07-22 사용자 "ㄱㄱ")
 
 ## Objective → horizon → milestone → step (위계)
 

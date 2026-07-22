@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-22
-> 상태: **horizon `agentic-reach` 설계(승인 대기)** — 직전 `tax-vertical` 은 2026-07-22 closed.
+> 상태: **horizon `agentic-reach` 실행 중** — 승인 2026-07-22, AR1 active — 직전 `tax-vertical` 은 2026-07-22 closed.
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -19,19 +19,21 @@
 
 ## Active Milestones
 
-<!-- harness:milestone id="AR1" status="pending" priority="P0" -->
+<!-- harness:milestone id="AR1" status="completed" priority="P0" evidence="archive/reports/2026-07-22-ar1-agentic-harness-close.md · selftest 4/4+9/9+5/5 · npm test 302/302 · src/ 0줄" -->
 ### AR1 — 에이전트형 평가 하네스
 - DoD: 맥락→에이전트 루프가 트래젝토리를 남기며 완주. 채점기에 **LLM 호출 0개**, 같은 로그 2회 채점
   결과 동일. 조문번호까지 일치해야 성공(법령만 맞으면 오답). `pass@3`·`pass^3`·범위 동시 출력,
   하나라도 빠지면 거부. 단일 반복 입력 거부. `AT`·`SR@t`·기권 정밀도/재현율 출력. 1케이스 비용 실측.
   에이전트 모델 ID 기록. `git diff --stat src/` 0 줄.
-- Evidence: `plans/2026-07-22-ar1-agentic-harness.md` · `evidence/bench/2026-07-22-ar1-cost.md`
+- Evidence: archive/reports/2026-07-22-ar1-agentic-harness-close.md · selftest 4/4+9/9+5/5 · npm test 302/302 · src/ 0줄
 - Gap: `bench/run.ts:140` 이 라벨 문자열을 맥락 없이 한 번 던지고 채점한다. 도구가 응답에 실어 보내는
   "쿼리를 좁혀 다시 물을 것" 경고를 **소비하는 층이 벤치에 없다.**
 - Scale: changesets>=3; surfaces: 루프 러너·결정적 채점기·신뢰도 보고; capability: 에이전트가 쓰는
   대로 재고, 그 값을 재현할 수 있다
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-22
+- Summary: 에이전트형 평가 하네스 3층 완성(루프·채점·집계), LLM judge 0개. SDK 경로 폐기로 비용 0.
 <!-- harness:milestone id="AR2" status="pending" priority="P0" -->
 ### AR2 — 맥락 세트 + 기준선
 - DoD: dev 20건 맥락 부착, 전건 유출 탐지기 통과. **일부러 유출시킨 문단은 거부**됨. 기권 케이스 포함·

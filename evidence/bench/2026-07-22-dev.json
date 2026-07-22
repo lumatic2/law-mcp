@@ -1,0 +1,566 @@
+{
+  "date": "2026-07-22",
+  "set": "golden-v2",
+  "split": "dev",
+  "summary": {
+    "total": 25,
+    "scored": 25,
+    "errors": 0,
+    "recall_at_1": 0.68,
+    "recall_at_3": 0.88,
+    "precedent_hit_rate": 0.64,
+    "article_accuracy": 0.7368,
+    "article_checked": 19,
+    "by_domain": {
+      "노동": {
+        "total": 5,
+        "recall_at_3": 1
+      },
+      "형사": {
+        "total": 5,
+        "recall_at_3": 0.8
+      },
+      "민사": {
+        "total": 5,
+        "recall_at_3": 1
+      },
+      "행정": {
+        "total": 5,
+        "recall_at_3": 0.6
+      },
+      "세무": {
+        "total": 5,
+        "recall_at_3": 1
+      }
+    },
+    "by_type": {},
+    "as_of_accuracy": null,
+    "as_of_checked": 0
+  },
+  "outcomes": [
+    {
+      "query": "임금체불 지연이자",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "근로기준법",
+        "근로복지기본법",
+        "외국인근로자의 고용 등에 관한 법률"
+      ],
+      "predictedArticles": [
+        "제37조",
+        "제43조의8",
+        "제36조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "육아휴직 신청 요건과 기간",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "고용보험법 시행규칙",
+        "남녀고용평등과 일ㆍ가정 양립 지원에 관한 법률",
+        "간호법"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "근로계약서 미교부 처벌",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "근로기준법",
+        "직업교육훈련 촉진법",
+        "병역법"
+      ],
+      "predictedArticles": [
+        "제114조",
+        "제17조",
+        "제5조",
+        "제108조",
+        "제113조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "경영상 이유에 의한 해고 요건",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "근로기준법",
+        "근로기준법 시행령",
+        "상법"
+      ],
+      "predictedArticles": [
+        "제24조",
+        "제27조",
+        "제23조",
+        "제26조",
+        "제2조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "실업급여 구직급여 수급 요건",
+      "domain": "노동",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "고용보험법",
+        "고용보험법 시행령",
+        "고용보험법 시행규칙"
+      ],
+      "predictedArticles": [
+        "제40조",
+        "제42조",
+        "제43조",
+        "제58조",
+        "제44조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "긴급체포 요건",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "검찰사건사무규칙",
+        "형사소송법",
+        "검사와 사법경찰관의 상호협력과 일반적 수사준칙에 관한 규정"
+      ],
+      "predictedArticles": [
+        "제200조의3",
+        "제200조의4"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "횡령죄 처벌",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "형법",
+        "군형법"
+      ],
+      "predictedArticles": [
+        "제355조",
+        "제356조",
+        "제261조",
+        "제100조",
+        "제194조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "스토킹 잠정조치",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "스토킹범죄의 처벌 등에 관한 법률",
+        "전자장치 부착 등에 관한 법률",
+        "관세법"
+      ],
+      "predictedArticles": [
+        "제9조",
+        "제10조",
+        "제8조",
+        "제4조",
+        "제17조의3"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "성폭력 피해자 신뢰관계인 동석",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "군검찰 사건사무규칙",
+        "성폭력범죄의 처벌 등에 관한 특례법",
+        "성폭력범죄 등 사건의 심리ㆍ재판 및 피해자 보호에 관한 규칙"
+      ],
+      "predictedArticles": [
+        "제34조",
+        "제36조",
+        "제40조",
+        "제31조",
+        "제37조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "범죄수익 몰수 추징",
+      "domain": "형사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "범죄수익은닉의 규제 및 처벌 등에 관한 법률",
+        "게임산업진흥에 관한 법률",
+        "검사와 사법경찰관의 상호협력과 일반적 수사준칙에 관한 규정"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "점유취득시효 완성",
+      "domain": "민사",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "민법",
+        "공유재산 및 물품 관리법",
+        "상법"
+      ],
+      "predictedArticles": [
+        "제192조",
+        "제245조",
+        "제200조",
+        "제247조",
+        "제246조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "유치권 성립 요건",
+      "domain": "민사",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "민법",
+        "국유재산법",
+        "민사집행법"
+      ],
+      "predictedArticles": [
+        "제321조",
+        "제1004조",
+        "제320조",
+        "제181조",
+        "제188조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "지상권 존속기간",
+      "domain": "민사",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "민법",
+        "마약류 불법거래 방지에 관한 특례법",
+        "국회법"
+      ],
+      "predictedArticles": [
+        "제281조",
+        "제280조",
+        "제284조",
+        "제287조",
+        "제283조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "공동불법행위자 연대책임",
+      "domain": "민사",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "민법",
+        "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법",
+        "독점규제 및 공정거래에 관한 법률"
+      ],
+      "predictedArticles": [
+        "제760조",
+        "제616조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "사용자책임 면책 사유",
+      "domain": "민사",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": false,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "재난 및 안전관리 기본법",
+        "민사소송 등에서의 전자문서 이용 등에 관한 규칙",
+        "민법"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "행정심판 청구 기간",
+      "domain": "행정",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "행정심판법",
+        "행정심판법 시행령",
+        "검찰청법"
+      ],
+      "predictedArticles": [
+        "제27조",
+        "제23조",
+        "제24조",
+        "제28조",
+        "제26조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "취소소송 제소기간",
+      "domain": "행정",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": false,
+      "returned": [
+        "행정소송법",
+        "행정소송규칙",
+        "관세법"
+      ],
+      "predictedArticles": [
+        "제41조",
+        "제37조",
+        "제20조",
+        "제44조",
+        "제5조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "정보공개 비공개 대상 정보",
+      "domain": "행정",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "공공기관의 정보공개에 관한 법률",
+        "법원정보공개규칙",
+        "개인정보 보호법"
+      ],
+      "predictedArticles": [
+        "제9조",
+        "제22조",
+        "제2조",
+        "제4조",
+        "제8조의2"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "처분 사전통지 의무",
+      "domain": "행정",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "질서위반행위규제법",
+        "행정조사기본법",
+        "징발법"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "과징금 부과 기준",
+      "domain": "행정",
+      "split": "dev",
+      "hit1": false,
+      "hit3": false,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "공인회계사법",
+        "신용정보의 이용 및 보호에 관한 법률",
+        "개인정보 보호법"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "종합소득세 확정신고 기한",
+      "domain": "세무",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "소득세법",
+        "소득세법 시행규칙",
+        "조세특례제한법"
+      ],
+      "predictedArticles": [
+        "제70조",
+        "제78조",
+        "제76조",
+        "제74조",
+        "제70조의2"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "매입세액 불공제 대상",
+      "domain": "세무",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": false,
+      "articleCorrect": false,
+      "returned": [
+        "부가가치세법",
+        "조세특례제한법",
+        "부가가치세법 시행규칙"
+      ],
+      "articleShippingMiss": true
+    },
+    {
+      "query": "상속세 신고 기한",
+      "domain": "세무",
+      "split": "dev",
+      "hit1": false,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "상속세 및 증여세법 시행령",
+        "상속세 및 증여세법",
+        "국세기본법"
+      ],
+      "predictedArticles": [
+        "제67조",
+        "제70조",
+        "제18조의3",
+        "제45조의2",
+        "제69조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "가산세 감면 사유",
+      "domain": "세무",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "국세기본법",
+        "관세법",
+        "국세기본법 시행규칙"
+      ],
+      "predictedArticles": [
+        "제48조",
+        "제47조의2",
+        "제47조",
+        "제47조의3",
+        "제49조"
+      ],
+      "articleCorrectAt3": true
+    },
+    {
+      "query": "국세 부과 제척기간",
+      "domain": "세무",
+      "split": "dev",
+      "hit1": true,
+      "hit3": true,
+      "precHit": true,
+      "articleChecked": true,
+      "articleCorrect": true,
+      "returned": [
+        "국세기본법",
+        "국세기본법 시행령",
+        "관세법"
+      ],
+      "predictedArticles": [
+        "제26조의2",
+        "제47조의4",
+        "제21조",
+        "제45조의2",
+        "제27조"
+      ],
+      "articleCorrectAt3": true
+    }
+  ]
+}
