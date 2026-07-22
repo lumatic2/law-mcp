@@ -46,17 +46,19 @@
   자에 눈금이 생긴다 — 무엇이 좋아졌는지 말할 수 있다
 - Status: [ ]
 
-<!-- harness:milestone id="AR3" status="pending" priority="P1" -->
+<!-- harness:milestone id="AR3" status="completed" priority="P1" evidence="changesets/20260723-ar3-vocab-gap/ · evidence/bench/2026-07-23-ar3-vocab-gap-verdict.md · npm test 314/314 · 배포 dist 스모크" -->
 ### AR3 — 도구 결함 수리
 - DoD: 결함 3종(+서버 instructions) 기여도가 **이득 0 포함** 수치로 기록. 수리에 법명·도메인·쿼리
   토큰 하드코딩 없음. `npm test` 전건 통과. 상류 실패 시 원상태 보존. 교차 A/B **손실 0 AND `SR@1`
   순 이득 ≥2**, 3회 부호 불변. 범용 dev ≥88%. 배포 사본 build + dist 스모크. **재시작 부채 명시.**
-- Evidence: `plans/2026-07-22-ar3-defect-repair.md` · `evidence/bench/2026-07-22-ar3-verdict.md`
+- Evidence: changesets/20260723-ar3-vocab-gap/ · evidence/bench/2026-07-23-ar3-vocab-gap-verdict.md · npm test 314/314 · 배포 dist 스모크
 - Gap: 프로브가 적발한 실 결함 3종 — ① 본문검색 30건 가나다순 절단 ② `ai_articles` 가 법령은 맞히고
   조문은 놓침 ③ 모호한 질의임을 알면서 안 알림. 어느 것이 `SR@1` 을 얼마나 깎는지는 **아직 모른다.**
 - Scale: changesets>=3; surfaces: 기여도 프로브·`src/` 수리·교차 A/B; capability: 1턴에 닿는다
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-23
+- Summary: 어휘 공백 신호 채택 — 순위 미변경(손실 0 구조적), 재현율 6/7·정밀도 75%. 서버 instructions 채움.
 <!-- harness:milestone id="AR4" status="pending" priority="P0" -->
 ### AR4 — 판정
 - DoD: 새 홀드아웃 blind 1회 개봉(**≥5회 반복**). 닫는 기준 6종 `선언/실측/판정` 대조표. 프리모템

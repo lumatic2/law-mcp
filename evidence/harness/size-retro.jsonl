@@ -15,3 +15,4 @@
 {"actual_changesets": 2, "declared_min": 2, "milestone_id": "TV5", "ts": "2026-07-22", "unresolved_refs": [], "verdict": "ok"}
 {"actual_changesets": 0, "declared_min": 2, "milestone_id": "TV6", "ts": "2026-07-22", "unresolved_refs": [], "verdict": "no-refs"}
 {"actual_changesets": 0, "declared_min": 3, "milestone_id": "AR1", "ts": "2026-07-22", "unresolved_refs": [], "verdict": "no-refs"}
+{"actual_changesets": 1, "declared_min": 3, "milestone_id": "AR3", "ts": "2026-07-23", "unresolved_refs": [], "verdict": "inflation-candidate"}
