@@ -153,7 +153,13 @@ test("aiSearch 가 죽어도 검색 결과는 기존과 동일하다", async () 
 test("빈 응답·스키마 변경에도 순위를 건드리지 않는다", async () => {
   for (const broken of [{}, { aiSearch: {} }, { other: 1 }, null, "문자열"]) {
     const provider = makeProvider(["상법", "국회법"], async () => broken);
-    const result = await provider.searchLaw("부당해고 구제신청", { limit: 3, aiSearch: { enabled: true } });
+    // 이 테스트는 **aiSearch 신호만** 격리해 본다. 어휘 공백(AR3)은 별도 신호이고
+    // 여기서는 정당하게 켜지므로(상법·국회법은 부당해고와 무관) 꺼서 격리를 지킨다.
+    const result = await provider.searchLaw("부당해고 구제신청", {
+      limit: 3,
+      aiSearch: { enabled: true },
+      vocabGap: { enabled: false },
+    });
 
     assert.deepEqual(result.items.map((item) => item.law_name), ["상법", "국회법"]);
     assert.deepEqual(result.warnings ?? [], [], "신호가 없으면 경고도 붙이지 않는다");

@@ -140,7 +140,9 @@ describe("파이프라인 배선", () => {
   });
 
   it("연혁 부착보다 먼저 재정렬한다 — 연혁은 1위에 붙는다", () => {
-    const order = provider.indexOf("applyRankingSignal(") < provider.indexOf("this.attachHistory(resignaled)");
+    // 변수명이 아니라 **호출 순서**를 본다 — 전에는 `attachHistory(resignaled)` 라는 리터럴을
+    // 찾다가 뒤에 단계가 하나 끼자(AR3 어휘 공백) 의도와 무관하게 깨졌다.
+    const order = provider.indexOf("applyRankingSignal(") < provider.lastIndexOf("this.attachHistory(");
     assert.ok(order, "재정렬 → 연혁 순서");
   });
 });

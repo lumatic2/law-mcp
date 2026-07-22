@@ -36,6 +36,7 @@ import type { LawProvider } from "./law-provider.js";
 import { tokenizeQuery } from "../article-match.js";
 import { ArticleIndexCache, extractArticles, readContent } from "../article-index.js";
 import { rerankByArticleTitle } from "../article-title-signal.js";
+import { vocabGapWarning } from "../vocab-gap.js";
 import { rerankByAiSignal } from "../ranking-signal.js";
 import {
   TermLinkageCache,
@@ -945,6 +946,11 @@ export class LawGoProvider implements LawProvider {
        * 끄는 지점은 여기 하나다.
        */
       rankingSignal?: { enabled?: boolean };
+      /**
+       * 어휘 공백 경고 (AR3). **기본 켜짐** — 순위를 바꾸지 않고 경고만 더하므로
+       * 결과가 나빠질 경로가 없다(손실 0 이 구조적으로 성립). 끄는 지점은 여기 하나다.
+       */
+      vocabGap?: { enabled?: boolean };
     } = {},
   ): Promise<SearchLawResult> {
     assertLawApiKey();
@@ -1008,7 +1014,31 @@ export class LawGoProvider implements LawProvider {
       aiPending,
       options.rankingSignal?.enabled ?? true,
     );
-    return options.includeHistory ? this.attachHistory(resignaled) : resignaled;
+    // 어휘 공백 신호 (AR3). **순서를 건드리지 않는다** — 경고만 더한다. 그래서 마지막이고,
+    // 최종 목록을 보고 판정한다. 끄는 지점은 여기 하나다.
+    const flagged = this.applyVocabGap(query, resignaled, options.vocabGap?.enabled ?? true);
+    return options.includeHistory ? this.attachHistory(flagged) : flagged;
+  }
+
+  /**
+   * 어휘 공백 경고를 붙인다 (AR3).
+   *
+   * 순위·구성은 그대로 두고 `warnings` 한 줄만 더한다. 실패해도 검색을 죽이지 않는다 —
+   * 경고를 못 만든 것이 결과를 못 주는 것보다 훨씬 가볍다.
+   */
+  private applyVocabGap(
+    query: string,
+    base: SearchLawResult,
+    enabled: boolean,
+  ): SearchLawResult {
+    if (!enabled || base.items.length === 0) return base;
+    try {
+      const warning = vocabGapWarning(query, base.items);
+      if (!warning) return base;
+      return { ...base, warnings: [...(base.warnings ?? []), warning] };
+    } catch {
+      return base;
+    }
   }
 
   /**
