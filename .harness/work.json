@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "ar1-agentic-harness",
+  "active_work_id": "ar2-context-set",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -946,6 +946,57 @@
       "updated_at": "2026-07-22",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
       "completion_summary": "에이전트가 **여러 턴 돌면서** 법령을 찾는 과정을 재는 자를 만들었다."
+    },
+    "ar2-context-set": {
+      "work_id": "ar2-context-set",
+      "horizon_id": "agentic-reach",
+      "milestone_id": "AR2",
+      "status": "active",
+      "plan_path": "plans/2026-07-22-ar2-context-set.md",
+      "changeset_path": "changesets/20260723-ar2-context-set",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1** 맥락 문단 제작 + 유출 탐지기",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2** 기권 케이스 + 새 홀드아웃 봉인",
+          "status": "pending"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3** 기준선 측정 + 단발 대조표",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-23",
+        "plan_sha256": "25a5a71ee5ed96cd6f161e6a355956b282e3e4ec399256aaed76cbf3707517bf"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "codex:a82173e0-8726-4be3-861c-256a5dadb83d",
+        "claude:a82173e0-8726-4be3-861c-256a5dadb83d"
+      ],
+      "owner_session_uuid": "claude:a82173e0-8726-4be3-861c-256a5dadb83d",
+      "updated_at": "2026-07-23",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
     }
   },
   "stop_reason": null,
