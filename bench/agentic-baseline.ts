@@ -70,8 +70,18 @@ export function toTrajectories(run: AgentRunFile, cases: AgenticCase[]): Traject
       turns: [],
       submitted,
       stop: submitted ? "submitted" : "turn_cap",
-      turn_count: r.turns ?? (r.queries?.length ?? 1),
-    } as Trajectory;
+      // ⚠ **마찰 축은 총 턴이 아니라 검색 횟수다** (2026-07-23 실측으로 정의를 고쳤다).
+      //
+      // 처음엔 총 턴을 썼는데 `SR@1` 이 24건 전부 0% 로 나왔다. 성능이 아니라 정의 오류였다 —
+      // 과제가 "지목 전 반드시 본문을 확인하라"를 요구하므로 검색 1 + 조문확인 1 = 최소 2턴이고,
+      // 1턴은 **구조적으로 불가능**했다. 조문 확인은 마찰이 아니라 정확성의 대가다.
+      //
+      // 이 horizon 이 재려는 마찰은 "몇 번 **다시 물어야** 찾나"이므로 검색 횟수로 센다.
+      // 그러면 `SR@1` = 첫 질의로 찾았나, `AT` = 평균 몇 번 물었나 가 된다.
+      turn_count: r.queries?.length ?? r.turns ?? 1,
+      /** 총 턴은 따로 남긴다 — 비용 감각은 이쪽이다. */
+      raw_turns: r.turns ?? null,
+    } as Trajectory & { raw_turns: number | null };
   });
 }
 

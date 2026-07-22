@@ -6,11 +6,12 @@
  * 반복이 1회뿐인 입력은 거부한다.
  *
  * 지표:
- *  · `SR@1`   1턴 성공률 — 2턴 걸리는 것은 성공이 아니라 마찰이다. 채택 판정의 주 지표.
+ *  · `SR@1`   **첫 질의**로 찾은 비율 — 다시 물어야 했다면 그건 마찰이다. 채택 판정의 주 지표.
+ *             (축은 검색 횟수다. 총 턴이 아니다 — `agentic-baseline.ts` 의 정의 메모 참조.)
  *  · `SR@t`   t턴 이내 누적 성공률 — 마찰이 어디서 풀리는지 보여준다.
  *  · `pass@k` k회 중 **한 번이라도** 성공 — 능력의 상한.
  *  · `pass^k` k회 **전부** 성공 — 신뢰성. τ-bench 의 그 지표다. 상한과 벌어지면 불안정하다.
- *  · `AT`     성공 케이스의 평균 턴 수.
+ *  · `AT`     성공 케이스의 평균 **검색** 횟수.
  *  · 기권 정밀도/재현율 — **둘 다** 낸다. 재현율만 보면 "항상 모르겠다"가 만점을 받는다.
  */
 import type { CaseScore } from "./agentic-score.js";
@@ -114,11 +115,11 @@ export function formatReport(r: Report): string {
   const lines = [
     `케이스 ${r.cases} × 반복 ${r.repeats}`,
     "",
-    `SR@1 (1턴 성공률)   ${r.sr_at_1}%`,
+    `SR@1 (첫 질의 성공률) ${r.sr_at_1}%`,
     `SR@t 누적           ${r.sr_at_t.map((v, i) => `t${i + 1}:${v}%`).join("  ")}`,
     `pass@${r.repeats} (한 번이라도) ${r.pass_at_k}%`,
     `pass^${r.repeats} (전부)       ${r.pass_pow_k}%`,
-    `AT (성공 시 평균턴) ${r.avg_turns_on_success ?? "—"}`,
+    `AT (성공 시 평균질의) ${r.avg_turns_on_success ?? "—"}`,
     `침묵률              ${r.silence_rate}%`,
     `기권 정밀도/재현율  ${r.abstain_precision ?? "—"}% / ${r.abstain_recall ?? "—"}%`,
   ];
