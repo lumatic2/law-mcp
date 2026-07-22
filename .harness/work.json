@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "tv5-article-body-loss",
+  "active_work_id": "tv6-verdict",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -849,6 +849,51 @@
       "updated_at": "2026-07-22",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
       "completion_summary": "조문 본문 유실 수리 — 세율표가 조문에 실린다(251자→1596자), 회귀 없음"
+    },
+    "tv6-verdict": {
+      "work_id": "tv6-verdict",
+      "horizon_id": "tax-vertical",
+      "milestone_id": "TV6",
+      "status": "active",
+      "plan_path": "plans/2026-07-21-tv6-verdict.md",
+      "changeset_path": "changesets/20260721-tv6",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1** 홀드아웃 개봉 판정 — 닫는 기준 6종 실측 대조",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2** 실소비 E2E + horizon 종료 보고",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-22",
+        "plan_sha256": "8a08d9d78d0e6b67dbb478e2fa410baf19018fdce00585737a763cf23387fbfd"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "claude:a82173e0-8726-4be3-861c-256a5dadb83d"
+      ],
+      "owner_session_uuid": "claude:a82173e0-8726-4be3-861c-256a5dadb83d",
+      "updated_at": "2026-07-22",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
     }
   }
 }

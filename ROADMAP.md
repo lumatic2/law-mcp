@@ -111,19 +111,21 @@
 - Status: [x]
 
 - Completed at: 2026-07-22
-<!-- harness:milestone id="TV6" status="pending" priority="P0" -->
+<!-- harness:milestone id="TV6" status="completed" priority="P0" evidence="archive/reports/2026-07-21-tv6-tax-vertical-close.md" -->
 ### TV6 — 세법 판정
 - DoD: 홀드아웃 20건 blind 1회 개봉. 닫는 기준 6종 `선언/실측/판정` 대조표. 프리모템 5종 발화
   대조. 크기 회고(선언 ~18 / 실측 M). 범용 dev 셋 ≥88%. `git diff --stat src/` 0 줄. 봉인이
   플래그 없이 여전히 거절. **실 MCP 표면에서 인용 체인 관측.** 미달은 미달로 기록.
-- Evidence: `evidence/bench/2026-07-21-tv6-holdout.md` ·
+- Evidence: archive/reports/2026-07-21-tv6-tax-vertical-close.md
   `archive/reports/2026-07-21-tv6-tax-vertical-close.md` · plan `plans/2026-07-21-tv6-verdict.md`
 - Gap: dev 수치는 튜닝 대상이라 과적합을 판정하지 못한다. 직전 horizon 에서 이 규율이 close 판정을
   살렸다(홀드아웃 93.3% > dev 88.0%).
 - Scale: changesets>=2; surfaces: 홀드아웃 러너·실 MCP 표면 E2E; capability: 이 분야를 닫을 수
   있는지 판정한다
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-22
+- Summary: 기준 5/6 충족, 회귀 0. 기준 #2(recall@3 ≥90%) 미달(75.0%) 명시 기록.
 ## Next Candidates
 
 - 다음 분야 vertical(노동·부동산) — 세법에서 만든 골격("법령 + 구속력 등급 해석자료 + 시점축")을
