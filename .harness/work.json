@@ -952,5 +952,8 @@
     "summary": "secret_required 해소 — 사용자 재지시(2026-07-22): 평가 에이전트를 새 API 호출로 만들지 않고 살아있는 에이전트 세션(Claude 본인 + Codex 블라인드)이 실 MCP 표면을 직접 쓴다. ClaudeAgent(SDK) 경로 폐기, 비용 0.",
     "pivot": "agent=live-session"
   },
-  "updated_at": "2026-07-22"
+  "updated_at": "2026-07-22",
+  "completed_tasks": [
+    "ar1-step1"
+  ]
 }
