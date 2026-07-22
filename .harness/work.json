@@ -999,10 +999,13 @@
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
     }
   },
-  "stop_reason": null,
+  "stop_reason": "blocked",
   "stop_detail": {
-    "summary": "secret_required 해소 — 사용자 재지시(2026-07-22): 평가 에이전트를 새 API 호출로 만들지 않고 살아있는 에이전트 세션(Claude 본인 + Codex 블라인드)이 실 MCP 표면을 직접 쓴다. ClaudeAgent(SDK) 경로 폐기, 비용 0.",
-    "pivot": "agent=live-session"
+    "summary": "블라인드 기준선(AR2 step-3)이 막혔습니다. Codex 서브에이전트 샌드박스에 네트워크가 없어(connect EACCES 443) 법제처 API를 못 칩니다. 도구·세트·채점·집계는 전부 완성됐고 남은 것은 측정 실행 하나입니다.",
+    "step": "ar2 step-3",
+    "evidence": "3차 시도 오류: connect EACCES 27.101.207.66:443. 1차=npx 실패, 2차=tsx EPERM(temp dir 이름이 tsx-CodexSandboxOffline), 3차=순수 node 로 tsx 우회했으나 네트워크 자체가 차단.",
+    "why_not_claude": "Claude 본인은 맥락 문단을 직접 작성했고 정답도 안다 — 오염되어 상한선만 잴 수 있다.",
+    "needed": "네트워크가 되는 블라인드 에이전트. 후보: (1) orca orchestration send 로 실제 Codex 세션에 위임 (2) 사용자가 직접 실행 (3) 프록시 방식(Codex가 질의를 정하고 Claude가 기계적으로 실행만) (4) 오염 명시한 Claude arm 을 상한선으로만 기록"
   },
   "updated_at": "2026-07-22",
   "completed_tasks": [
