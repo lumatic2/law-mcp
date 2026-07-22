@@ -1,0 +1,226 @@
+{
+  "tool_ok": true,
+  "agent": "blind-1",
+  "results": [
+    {
+      "case_id": "d01",
+      "turns": 2,
+      "law_name": "법인세법",
+      "article_no": "제24조",
+      "not_found": false,
+      "queries": ["회사가 기부한 돈 비용 인정 한도"],
+      "saw_vocab_warning": true
+    },
+    {
+      "case_id": "d02",
+      "turns": 3,
+      "law_name": "법인세법 시행령",
+      "article_no": "제44조",
+      "not_found": false,
+      "queries": ["임원 퇴직금 비용 인정 한도", "임원 퇴직급여 손금불산입"],
+      "saw_vocab_warning": true
+    },
+    {
+      "case_id": "d03",
+      "turns": 3,
+      "law_name": "법인세법",
+      "article_no": "제52조",
+      "not_found": false,
+      "queries": ["특수관계인 저가 양도 정상가격 과세", "부당행위계산의 부인"],
+      "saw_vocab_warning": true
+    },
+    {
+      "case_id": "d04",
+      "turns": 2,
+      "law_name": "소득세법",
+      "article_no": "제59조",
+      "not_found": false,
+      "queries": ["근로소득 세액공제 한도"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d05",
+      "turns": 2,
+      "law_name": "소득세법 시행령",
+      "article_no": "제118조의5",
+      "not_found": false,
+      "queries": ["의료비 세액공제 대상"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d06",
+      "turns": 2,
+      "law_name": "법인세법",
+      "article_no": "제57조",
+      "not_found": false,
+      "queries": ["외국납부세액공제 한도"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d07",
+      "turns": 2,
+      "law_name": "조세특례제한법",
+      "article_no": "제7조",
+      "not_found": false,
+      "queries": ["중소기업에 대한 특별세액감면"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d08",
+      "turns": 2,
+      "law_name": "조세특례제한법",
+      "article_no": "제69조",
+      "not_found": false,
+      "queries": ["자경농지에 대한 양도소득세 감면"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d09",
+      "turns": 2,
+      "law_name": "조세특례제한법 시행령",
+      "article_no": "제67조",
+      "not_found": false,
+      "queries": ["농지대토 양도소득세 감면요건"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d10",
+      "turns": 2,
+      "law_name": "소득세법 시행령",
+      "article_no": "제155조",
+      "not_found": false,
+      "queries": ["일시적 2주택 1세대1주택 비과세 특례"],
+      "saw_vocab_warning": true
+    },
+    {
+      "case_id": "d11",
+      "turns": 2,
+      "law_name": "상속세 및 증여세법",
+      "article_no": "제4조의2",
+      "not_found": false,
+      "queries": ["증여자의 연대납세의무"],
+      "saw_vocab_warning": true
+    },
+    {
+      "case_id": "d12",
+      "turns": 2,
+      "law_name": "상속세 및 증여세법",
+      "article_no": "제18조의2",
+      "not_found": false,
+      "queries": ["가업상속공제 요건"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d13",
+      "turns": 2,
+      "law_name": "국세기본법",
+      "article_no": "제45조의3",
+      "not_found": false,
+      "queries": ["기한 후 신고"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d14",
+      "turns": 2,
+      "law_name": "국세기본법",
+      "article_no": "제55조",
+      "not_found": false,
+      "queries": ["국세 불복 이의신청 심사청구"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d15",
+      "turns": 2,
+      "law_name": "부가가치세법",
+      "article_no": "제61조",
+      "not_found": false,
+      "queries": ["간이과세 적용 범위 기준금액"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d16",
+      "turns": 2,
+      "law_name": "부가가치세법",
+      "article_no": "제5조",
+      "not_found": false,
+      "queries": ["부가가치세 과세기간"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d17",
+      "turns": 2,
+      "law_name": "소득세법",
+      "article_no": "제128조",
+      "not_found": false,
+      "queries": ["원천징수세액의 납부 기한"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d18",
+      "turns": 2,
+      "law_name": "소득세법",
+      "article_no": "제137조",
+      "not_found": false,
+      "queries": ["근로소득세액의 연말정산"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "d19",
+      "turns": 3,
+      "law_name": "소득세법",
+      "article_no": "제164조",
+      "not_found": false,
+      "queries": ["지급명세서의 제출", "소득세 원천징수 지급명세서 제출의무"],
+      "saw_vocab_warning": true
+    },
+    {
+      "case_id": "d20",
+      "turns": 2,
+      "law_name": "국세기본법",
+      "article_no": "제48조",
+      "not_found": false,
+      "queries": ["가산세 감면 등"],
+      "saw_vocab_warning": false
+    },
+    {
+      "case_id": "a01",
+      "turns": 2,
+      "law_name": null,
+      "article_no": null,
+      "not_found": true,
+      "queries": ["토지초과이득세", "토지초과이득세법"],
+      "saw_vocab_warning": true,
+      "note": "법령명 검색 0건 — 현행 법령에 해당 세목 없음(토지초과이득세법은 현행 목록에 잡히지 않음). 기권."
+    },
+    {
+      "case_id": "a02",
+      "turns": 2,
+      "law_name": null,
+      "article_no": null,
+      "not_found": true,
+      "queries": ["방위세", "방위세법"],
+      "saw_vocab_warning": true,
+      "note": "검색 결과가 방위사업 관련 법령뿐 — 현행 세법에 방위세 근거 없음. 기권."
+    },
+    {
+      "case_id": "a03",
+      "turns": 2,
+      "law_name": null,
+      "article_no": null,
+      "not_found": true,
+      "queries": ["가상자산 양도 기타소득 과세", "소득세법 제21조 본문 확인"],
+      "saw_vocab_warning": false,
+      "note": "소득세법 제21조에 가상자산소득 규정 문언은 있으나 현행본 기준이며, 2022년 귀속분에 시행 중이던 조문을 이 도구(as_of 미지원)로 확인할 수 없었다. 확인 못 한 조문을 지목하지 않고 기권."
+    },
+    {
+      "case_id": "a04",
+      "turns": 2,
+      "law_name": null,
+      "article_no": null,
+      "not_found": true,
+      "queries": ["반려동물 보유세", "동물세 세율"],
+      "saw_vocab_warning": true,
+      "note": "원 쿼리 0건, 결과는 동물보호법·가축전염병예방법 등 비세법 — 현행법에 반려동물 관련 세목 없음. 기권."
+    }
+  ]
+}

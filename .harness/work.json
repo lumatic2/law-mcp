@@ -951,7 +951,7 @@
       "work_id": "ar2-context-set",
       "horizon_id": "agentic-reach",
       "milestone_id": "AR2",
-      "status": "active",
+      "status": "completed",
       "plan_path": "plans/2026-07-22-ar2-context-set.md",
       "changeset_path": "changesets/20260723-ar2-context-set",
       "next_step": "step-1",
@@ -996,10 +996,11 @@
       ],
       "owner_session_uuid": "claude:a82173e0-8726-4be3-861c-256a5dadb83d",
       "updated_at": "2026-07-23",
-      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "**잴 것을 만들고 기준선을 박았다.** 세트: dev 24건(구 홀드아웃 20건에 맥락 부착 + 기권 4건) · holdout 10건(신규·봉인)."
     }
   },
-  "stop_reason": "blocked",
+  "stop_reason": null,
   "stop_detail": {
     "summary": "블라인드 기준선(AR2 step-3)이 막혔습니다. Codex 서브에이전트 샌드박스에 네트워크가 없어(connect EACCES 443) 법제처 API를 못 칩니다. 도구·세트·채점·집계는 전부 완성됐고 남은 것은 측정 실행 하나입니다.",
     "step": "ar2 step-3",
@@ -1010,6 +1011,7 @@
   "updated_at": "2026-07-22",
   "completed_tasks": [
     "ar1-step1",
-    "ar2-step12"
+    "ar2-step12",
+    "ar2-step3"
   ]
 }

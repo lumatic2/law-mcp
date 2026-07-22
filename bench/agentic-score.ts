@@ -29,6 +29,8 @@ export type CaseScore = {
   wrong: boolean;
   /** 기권이 옳았나 (정답이 없는 케이스에서 기권). `expect_abstain` 이 있을 때만 의미 있다. */
   abstain_correct: boolean;
+  /** 이 케이스가 원래 기권해야 하는 것이었나. 리포터가 정답률 축에서 빼는 데 쓴다. */
+  expect_abstain: boolean;
   turn_count: number;
   stop: Trajectory["stop"];
   /** 채점이 왜 그렇게 났는지 — 사람이 표본 검토할 때 읽는다. */
@@ -62,6 +64,7 @@ export function scoreTrajectory(traj: Trajectory): CaseScore {
     agent: traj.agent,
     turn_count: traj.turn_count,
     stop: traj.stop,
+    expect_abstain: traj.expect_abstain === true,
   };
 
   const s = traj.submitted;

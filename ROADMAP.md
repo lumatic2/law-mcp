@@ -34,18 +34,20 @@
 
 - Completed at: 2026-07-22
 - Summary: 에이전트형 평가 하네스 3층 완성(루프·채점·집계), LLM judge 0개. SDK 경로 폐기로 비용 0.
-<!-- harness:milestone id="AR2" status="pending" priority="P0" -->
+<!-- harness:milestone id="AR2" status="completed" priority="P0" evidence="changesets/20260723-ar2-context-set/ · changesets/20260723-ar2-baseline/ · evidence/bench/2026-07-23-ar2-baseline.md · npm test 314/314 · src/ 0줄" -->
 ### AR2 — 맥락 세트 + 기준선
 - DoD: dev 20건 맥락 부착, 전건 유출 탐지기 통과. **일부러 유출시킨 문단은 거부**됨. 기권 케이스 포함·
   별도 분류. 새 홀드아웃 봉인(플래그 없이 exit 1). 기준선에 `pass@3`·`pass^3`·범위·`AT`·`SR@t`·
   기권 정밀도/재현율 전부 포함. **단발 75% 대비 대조표.** 범용 dev ≥88%. 기준선 100% 아님(변별력 존재).
-- Evidence: `plans/2026-07-22-ar2-context-set.md` · `evidence/bench/2026-07-22-ar2-baseline.md`
+- Evidence: changesets/20260723-ar2-context-set/ · changesets/20260723-ar2-baseline/ · evidence/bench/2026-07-23-ar2-baseline.md · npm test 314/314 · src/ 0줄
 - Gap: 구 홀드아웃은 소진됐고, 맥락을 가진 케이스가 아예 없다. 맥락을 사람이 쓰면 정답이 새어 벤치가
   낙관적으로 왜곡된다(리서치 실측: 유출 완화 전후 24.2%→45.3%).
 - Scale: changesets>=3; surfaces: 유출 탐지기·맥락 세트·홀드아웃 봉인·기준선 보고서; capability:
   자에 눈금이 생긴다 — 무엇이 좋아졌는지 말할 수 있다
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-23
+- Summary: 맥락 세트 34건(유출 0·봉인) + 블라인드 3회 기준선: pass^3 90%, SR@1 80%, 기권 100%/100%. 단발 75% 대비 +15%p.
 <!-- harness:milestone id="AR3" status="completed" priority="P1" evidence="changesets/20260723-ar3-vocab-gap/ · evidence/bench/2026-07-23-ar3-vocab-gap-verdict.md · npm test 314/314 · 배포 dist 스모크" -->
 ### AR3 — 도구 결함 수리
 - DoD: 결함 3종(+서버 instructions) 기여도가 **이득 0 포함** 수치로 기록. 수리에 법명·도메인·쿼리

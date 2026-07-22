@@ -39,8 +39,18 @@ function pct(n: number, d: number): number {
  *
  * @throws 반복이 1회인 케이스가 있으면 던진다 — 단발 판정 금지를 기계로 막는다.
  */
-export function buildReport(scores: CaseScore[], maxTurn = 6): Report {
-  if (scores.length === 0) throw new Error("채점 결과가 비어 있다");
+export function buildReport(allScores: CaseScore[], maxTurn = 6): Report {
+  if (allScores.length === 0) throw new Error("채점 결과가 비어 있다");
+
+  // ⚠ **기권 케이스를 정답률 축에서 뺀다** (2026-07-23 실측에서 적발한 내 리포터 결함).
+  //
+  // 기권 케이스는 정답이 없으므로 `correct` 가 영원히 false 다. 그대로 섞으면 **옳게 기권해도
+  // pass@k 를 깎아** 정답률이 구조적으로 상한을 못 넘는다(기권 4/24 면 최대 83.3%).
+  // 실제로 첫 집계에서 pass@3 83.3% 가 나왔는데 정답 케이스만 보면 100% 였다.
+  // 기권은 **별도 축**(정밀도/재현율)으로 이미 재고 있으므로 여기서 두 번 벌주면 안 된다.
+  const abstainScores = allScores.filter((s) => s.abstain_correct || s.expect_abstain === true);
+  const scores = allScores.filter((s) => !abstainScores.includes(s));
+  if (scores.length === 0) throw new Error("정답 케이스가 하나도 없다 — 정답률을 낼 수 없다");
 
   const byCase = new Map<string, CaseScore[]>();
   for (const s of scores) {
@@ -87,13 +97,14 @@ export function buildReport(scores: CaseScore[], maxTurn = 6): Report {
     : null;
 
   // 기권 정밀도 = 기권한 것 중 옳게 기권한 비율 / 재현율 = 기권했어야 할 것 중 기권한 비율.
-  const abstained = scores.filter((s) => s.abstained);
-  const shouldAbstain = scores.filter((s) => s.abstain_correct || (s.wrong && s.detail.includes("정답 없는")));
+  // 기권 축은 **전체 집합**으로 잰다 — 정답 케이스에서 잘못 기권한 것도 정밀도를 깎아야 한다.
+  const abstained = allScores.filter((s) => s.abstained);
+  const shouldAbstain = allScores.filter((s) => s.expect_abstain);
   const abstainPrecision = abstained.length > 0
     ? pct(abstained.filter((s) => s.abstain_correct).length, abstained.length)
     : null;
   const abstainRecall = shouldAbstain.length > 0
-    ? pct(scores.filter((s) => s.abstain_correct).length, shouldAbstain.length)
+    ? pct(allScores.filter((s) => s.abstain_correct).length, shouldAbstain.length)
     : null;
 
   return {
@@ -139,7 +150,7 @@ export function formatReport(r: Report): string {
 function selftest(): void {
   const mk = (case_id: string, correct: boolean, turn_count: number, over: Partial<CaseScore> = {}): CaseScore => ({
     case_id, agent: "f", correct, abstained: false, silent: false, wrong: !correct,
-    abstain_correct: false, turn_count, stop: "submitted", detail: "", ...over,
+    abstain_correct: false, expect_abstain: false, turn_count, stop: "submitted", detail: "", ...over,
   });
 
   const probes: Array<[string, boolean, string]> = [];
@@ -170,9 +181,11 @@ function selftest(): void {
   probes.push(["④ SR@t 단조 증가", mono, r.sr_at_t.join(" ≤ ")]);
 
   // ⑤ 기권 재현율만 보면 "항상 기권"이 만점 — 정밀도가 같이 나와야 한다.
+  //    a = 기권해야 할 케이스에서 옳게 기권 / b = 정답이 있는데 기권(남발).
+  //    b 가 정답률 축에 남아야 하므로 expect_abstain 을 켜지 않는다.
   const alwaysAbstain = buildReport([
-    mk("a", false, 1, { abstained: true, abstain_correct: true, wrong: false }),
-    mk("a", false, 1, { abstained: true, abstain_correct: true, wrong: false }),
+    mk("a", false, 1, { abstained: true, abstain_correct: true, wrong: false, expect_abstain: true }),
+    mk("a", false, 1, { abstained: true, abstain_correct: true, wrong: false, expect_abstain: true }),
     mk("b", false, 1, { abstained: true, abstain_correct: false, wrong: false }),
     mk("b", false, 1, { abstained: true, abstain_correct: false, wrong: false }),
   ]);
@@ -180,6 +193,18 @@ function selftest(): void {
     "⑤ 기권 정밀도가 남발을 적발",
     alwaysAbstain.abstain_precision === 50 && alwaysAbstain.abstain_recall === 100,
     `정밀도 ${alwaysAbstain.abstain_precision}% / 재현율 ${alwaysAbstain.abstain_recall}%`,
+  ]);
+
+  // ⑥ 옳은 기권이 정답률을 깎지 않는다 — 2026-07-23 실측에서 적발한 결함의 회귀 방어.
+  const withAbstain = buildReport([
+    mk("a", true, 1), mk("a", true, 1),
+    mk("z", false, 1, { abstained: true, abstain_correct: true, wrong: false, expect_abstain: true }),
+    mk("z", false, 1, { abstained: true, abstain_correct: true, wrong: false, expect_abstain: true }),
+  ]);
+  probes.push([
+    "⑥ 옳은 기권은 pass@k 를 안 깎는다",
+    withAbstain.pass_at_k === 100 && withAbstain.cases === 1 && withAbstain.abstain_recall === 100,
+    `pass@k=${withAbstain.pass_at_k}% 정답케이스=${withAbstain.cases} 기권재현율=${withAbstain.abstain_recall}%`,
   ]);
 
   let failed = 0;
