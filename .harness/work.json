@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "tv6-verdict",
+  "active_work_id": "ar1-agentic-harness",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -895,6 +895,64 @@
       "updated_at": "2026-07-22",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
       "completion_summary": "horizon close: 기준 5/6 충족, 기준 #2 미달(75.0%) 명시 기록. 사용자 판정 대기."
+    },
+    "ar1-agentic-harness": {
+      "work_id": "ar1-agentic-harness",
+      "horizon_id": "agentic-reach",
+      "milestone_id": "AR1",
+      "status": "active",
+      "plan_path": "plans/2026-07-22-ar1-agentic-harness.md",
+      "changeset_path": "changesets/20260722-ar1-loop-runner",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1** 루프 러너 골격 + 비용 실측",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2** 결정적 채점기",
+          "status": "pending"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3** 반복·신뢰도 보고",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-22",
+        "plan_sha256": "a934c453dcb7519902998bf219fb9283b4e92a5fda0b13586ea80649bd3009aa"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "claude:a82173e0-8726-4be3-861c-256a5dadb83d"
+      ],
+      "owner_session_uuid": "claude:a82173e0-8726-4be3-861c-256a5dadb83d",
+      "updated_at": "2026-07-22",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
     }
-  }
+  },
+  "stop_reason": "secret_required",
+  "stop_detail": {
+    "summary": "law-mcp 에이전트형 벤치(AR1)의 평가 루프는 다 만들고 검증했는데, 평가용 에이전트를 돌릴 Anthropic 자격증명이 없어 비용 실측에서 멈췄습니다. API 키를 주시거나 다른 방식으로 갈지 정해주시면 이어서 진행합니다.",
+    "step": "step-1",
+    "done": "루프 러너·트래젝토리·턴 상한·침묵/기권 구분 검증 완료(--selftest 4종 PASS, npm test 302/302, src/ 0줄)",
+    "needed": "ANTHROPIC_API_KEY 또는 ant auth login 프로필"
+  },
+  "updated_at": "2026-07-22"
 }
