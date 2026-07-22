@@ -1,138 +1,78 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-22
-> 상태: **horizon `tax-vertical` 실행 중** — 승인 2026-07-21, TV1~TV5·TV7 완료 (6/7) — 남은 것은 TV6 판정.
+> 상태: **horizon `agentic-reach` 설계(승인 대기)** — 직전 `tax-vertical` 은 2026-07-22 closed.
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
 
 ## Current Horizon
 
-<!-- harness:goal id="tax-vertical" -->
-목표: **넓이를 1%p 씩 미는 대신 한 분야를 끝까지 판다. 첫 분야는 세법.**
-답의 단위를 조문 하나에서 **인용 체인**(조문 + 그 연도의 시행일자 + 예규 + 심판례)으로 옮긴다.
-(상세 plan → `plans/horizons/tax-vertical.md` · 예상 분량 ~18 changeset)
+<!-- harness:goal id="agentic-reach" -->
+목표: **우리 벤치는 사람이 라벨 문자열을 던진다고 가정한다. 실제 소비자는 맥락을 가진 에이전트다.**
+그 간극을 없애고 새 자로 잰 값을 올린다 — `recall@3`(단발 도달)에서 **도달 턴수 + 정직한 실패**로.
+(상세 plan → `plans/horizons/agentic-reach.md` · 예상 분량 ~11 changeset · 후보 백로그 → `plans/horizons/CANDIDATES.md`)
 
-직전 horizon `upstream-delivery` 는 2026-07-21 closed (recall@3 76% → 홀드아웃 93.3%).
-그 축은 수확체감이다 — 행정 도메인 A/B 는 **이득 0 / 손실 0** 이었다.
+직전 horizon `tax-vertical` 은 2026-07-22 closed (닫는 기준 6종 중 5종 충족, recall@3 75.0% 미달).
+닫은 뒤 프로브가 밝힌 것: 미달의 상당 부분이 **측정 방식 탓**이었다 — MISS 5건에 분야 맥락 한 단어를
+얹자 5/5 정답 조문까지 도달했다(`evidence/bench/2026-07-22-context-effect-probe.md`).
 
 ## Active Milestones
 
-<!-- harness:milestone id="TV1" status="completed" priority="P0" evidence="evidence/bench/2026-07-21-tv1-tax-baseline.md" -->
-### TV1 — 세법 평가 세트
-- DoD: `bench/golden-tax.json` dev 30 / holdout 20, 유형당 ≥5, 전건 정답 조문이 실 API 조회로
-  존재 확인. 홀드아웃이 개봉 플래그 없이 exit 1 거절. 조문 정확도 채점축 반영. dev 기준선이
-  n=3 표준편차·유형별 분해와 함께 기록. `src/` diff 0 줄.
-- Evidence: `changesets/20260721-tv1-golden-tax` · `changesets/20260721-tv1-tax-scoring` ·
-  `changesets/20260721-tv1-tax-baseline` · `evidence/bench/2026-07-21-tv1-tax-baseline.md` ·
-  `npx tsx bench/verify-labels.ts --set golden-tax` · plan `plans/2026-07-21-tv1-tax-eval-set.md`
-- Gap: 홀드아웃 15건은 직전 horizon close 에서 소진됐고 세법 전용 라벨은 애초에 없다. 세트 없이
-  TV2~TV5 를 채택하면 그게 F5 과적합이다(행정 진단이 이미 이 이유로 멈췄다).
-- Scale: changesets>=3; surfaces: 라벨 검증기·벤치 러너·기준선 보고서; capability: 세법 품질을
-  과적합 없이 판정할 수 있다
-- Status: [x]
+<!-- harness:milestone id="AR1" status="pending" priority="P0" -->
+### AR1 — 에이전트형 평가 하네스
+- DoD: 맥락→에이전트 루프가 트래젝토리를 남기며 완주. 채점기에 **LLM 호출 0개**, 같은 로그 2회 채점
+  결과 동일. 조문번호까지 일치해야 성공(법령만 맞으면 오답). `pass@3`·`pass^3`·범위 동시 출력,
+  하나라도 빠지면 거부. 단일 반복 입력 거부. `AT`·`SR@t`·기권 정밀도/재현율 출력. 1케이스 비용 실측.
+  에이전트 모델 ID 기록. `git diff --stat src/` 0 줄.
+- Evidence: `plans/2026-07-22-ar1-agentic-harness.md` · `evidence/bench/2026-07-22-ar1-cost.md`
+- Gap: `bench/run.ts:140` 이 라벨 문자열을 맥락 없이 한 번 던지고 채점한다. 도구가 응답에 실어 보내는
+  "쿼리를 좁혀 다시 물을 것" 경고를 **소비하는 층이 벤치에 없다.**
+- Scale: changesets>=3; surfaces: 루프 러너·결정적 채점기·신뢰도 보고; capability: 에이전트가 쓰는
+  대로 재고, 그 값을 재현할 수 있다
+- Status: [ ]
 
-- Completed at: 2026-07-21
-- Summary: 세법 평가 세트 dev30/holdout20 + 채점축 + 기준선 recall@3 83.3%(n=3, σ0.0%p)
-<!-- harness:milestone id="TV2" status="completed" priority="P0" evidence="changesets/20260721-tv2-tribunal-adapter · changesets/20260721-tv2-rulings-adapter · changesets/20260721-tv2-authority-grade · changesets/20260721-tv2-contribution · evidence/bench/2026-07-21-tv2-contribution.md" -->
-### TV2 — 심판례·예규 편입
-- DoD: 조세심판원·국세청 예규가 `source` enum 에서 조회 가능하고 전문(재결요지·이유) 도달.
-  해석자료 응답 100% 에 `authority` 구속력 등급 + `data_as_of`. 대표 질의 도달률 ≥70%.
-  범용 dev 셋 ≥88%. 도구 개수 11 불변. 배포 사본 dist 스모크.
-- Evidence: changesets/20260721-tv2-tribunal-adapter · changesets/20260721-tv2-rulings-adapter · changesets/20260721-tv2-authority-grade · changesets/20260721-tv2-contribution · evidence/bench/2026-07-21-tv2-contribution.md
-  plan `plans/2026-07-21-tv2-tribunal-and-rulings.md`
-- Gap: 세법 실무의 답이 나오는 층이 통째로 비어 있다 — 조세심판원 4,688건·국세청 예규 1,938건이
-  실측으로 열려 있는데 enum 14종에 둘 다 없다(선행 조사가 target 어순을 뒤집어 "없음"으로 적었다).
-- Scale: changesets>=4; surfaces: source-adapter·MCP enum·구속력 등급·기여도 게이트;
-  capability: 법령 밖 해석자료를 구속력 등급과 함께 준다
-- Status: [x]
+<!-- harness:milestone id="AR2" status="pending" priority="P0" -->
+### AR2 — 맥락 세트 + 기준선
+- DoD: dev 20건 맥락 부착, 전건 유출 탐지기 통과. **일부러 유출시킨 문단은 거부**됨. 기권 케이스 포함·
+  별도 분류. 새 홀드아웃 봉인(플래그 없이 exit 1). 기준선에 `pass@3`·`pass^3`·범위·`AT`·`SR@t`·
+  기권 정밀도/재현율 전부 포함. **단발 75% 대비 대조표.** 범용 dev ≥88%. 기준선 100% 아님(변별력 존재).
+- Evidence: `plans/2026-07-22-ar2-context-set.md` · `evidence/bench/2026-07-22-ar2-baseline.md`
+- Gap: 구 홀드아웃은 소진됐고, 맥락을 가진 케이스가 아예 없다. 맥락을 사람이 쓰면 정답이 새어 벤치가
+  낙관적으로 왜곡된다(리서치 실측: 유출 완화 전후 24.2%→45.3%).
+- Scale: changesets>=3; surfaces: 유출 탐지기·맥락 세트·홀드아웃 봉인·기준선 보고서; capability:
+  자에 눈금이 생긴다 — 무엇이 좋아졌는지 말할 수 있다
+- Status: [ ]
 
-- Completed at: 2026-07-21
-- Summary: 조세심판원 4688건·국세청 예규 1938건 편입, 구속력 등급 100% 표기, 도달 100%
-<!-- harness:milestone id="TV3" status="completed" priority="P0" evidence="changesets/20260721-tv3-effective-law · changesets/20260721-tv3-as-of-surface · changesets/20260721-tv3-law-history · changesets/20260721-tv3-asof-verdict · evidence/bench/2026-07-21-tv3-asof.md" -->
-### TV3 — 과세연도 축
-- DoD: 소득세법 2023/2024/현행이 서로 다른 조문 집합으로 반환. `target=law&efYd` 무경고 함정이
-  가드로 차단. 시점 인자 미지정 시 기존 동작·호출 수 불변. 모든 조문 응답에 `effective_date`.
-  못 맞추면 명시 거절 — **조용한 현행 반환 0건**. 시점 정확도 100%. 범용 dev 셋 ≥88%.
-- Evidence: changesets/20260721-tv3-effective-law · changesets/20260721-tv3-as-of-surface · changesets/20260721-tv3-law-history · changesets/20260721-tv3-asof-verdict · evidence/bench/2026-07-21-tv3-asof.md
-  plan `plans/2026-07-21-tv3-tax-year-axis.md`
-- Gap: 세법은 "몇 년 귀속이냐"가 곧 답인데 우리는 항상 현행만 준다. 확인된 경쟁자 중 귀속연도
-  인식을 표방한 곳이 없다 — 이 horizon 의 차별점.
-- Scale: changesets>=4; surfaces: eflaw 조회 경로·MCP 도구 인자·연혁 목록·시점 정확도 러너;
-  capability: 그 해에 유효했던 조문을 준다
-- Status: [x]
+<!-- harness:milestone id="AR3" status="pending" priority="P1" -->
+### AR3 — 도구 결함 수리
+- DoD: 결함 3종(+서버 instructions) 기여도가 **이득 0 포함** 수치로 기록. 수리에 법명·도메인·쿼리
+  토큰 하드코딩 없음. `npm test` 전건 통과. 상류 실패 시 원상태 보존. 교차 A/B **손실 0 AND `SR@1`
+  순 이득 ≥2**, 3회 부호 불변. 범용 dev ≥88%. 배포 사본 build + dist 스모크. **재시작 부채 명시.**
+- Evidence: `plans/2026-07-22-ar3-defect-repair.md` · `evidence/bench/2026-07-22-ar3-verdict.md`
+- Gap: 프로브가 적발한 실 결함 3종 — ① 본문검색 30건 가나다순 절단 ② `ai_articles` 가 법령은 맞히고
+  조문은 놓침 ③ 모호한 질의임을 알면서 안 알림. 어느 것이 `SR@1` 을 얼마나 깎는지는 **아직 모른다.**
+- Scale: changesets>=3; surfaces: 기여도 프로브·`src/` 수리·교차 A/B; capability: 1턴에 닿는다
+- Status: [ ]
 
-- Completed at: 2026-07-22
-- Summary: as_of 시점 조회 + effective_date 상시 출하 + 연혁, 시점 정확도 100%/조용한 현행 0건
-<!-- harness:milestone id="TV4" status="completed" priority="P1" evidence="changesets/20260721-tv4-article-title-signal · changesets/20260721-tv4-body-pool · changesets/20260721-tv4-verdict · evidence/bench/2026-07-22-tv4-verdict.md" -->
-### TV4 — 세법 도달 결함 수리
-- DoD: 조문제목 신호에 법명·도메인·쿼리 토큰 하드코딩 없음. 추가 전문 조회 ≤3/검색. 상류 실패 시
-  원상태 반환. 절단 경고 발화. `세금계산서 지연발급 가산세` → 부가가치세법 도달.
-  교차 A/B **손실 0 AND 순 이득 ≥2**. 범용 dev 셋 ≥88%. 스키마·도구 불변(재시작 불요).
-- Evidence: `evidence/bench/2026-07-22-tv4-verdict.md` · plan `plans/2026-07-21-tv4-reachability.md`
-- Gap: 본문검색은 가나다순인데 앞 30건만 받아 뒷글자 법령(부가가치세법)이 구조적으로 탈락한다.
-  행정 진단이 규명했으나 **평가 세트가 없어** 채택을 못 하고 멈춘 건 — TV1 이 전제조건을 채운다.
-- Scale: changesets>=3; surfaces: 조문제목 신호·본문검색 풀·교차 A/B; capability: 후보 풀에
-  못 들어와 못 찾던 법을 찾는다
-- 판정: **재정렬·풀 확대 미채택**(순 이득 0, 재정렬은 손실 1). 절단은 실재했으나
-  (도달 19/30 → 29/30) recall@3 은 80.0% 그대로 — **정답이 후보에 들어와도 위로 못 올라온다.**
-  남은 결함은 도달이 아니라 **순위 신호**이며 다음 milestone 의 입력이다.
-  출하된 것은 순위가 아닌 정직성 둘: `totalCnt` 오독 수정 · 절단 경고.
-- Status: [x]
-
-- Completed at: 2026-07-22
-<!-- harness:milestone id="TV7" status="completed" priority="P0" evidence="changesets/20260722-tv7-aisearch-signal · changesets/20260722-tv7-ranking-rerank · changesets/20260722-tv7-verdict · evidence/bench/2026-07-22-tv7-verdict.md" -->
-### TV7 — 순위 신호
-- DoD: 재정렬 규칙에 법명·도메인·쿼리 토큰 하드코딩 없음. **추가 HTTP 호출 0**. aiSearch 실패·
-  빈 결과 시 원래 순서 보존. 세법 dev 교차 A/B **손실 0 AND 순 이득 ≥2**. 범용 dev 셋 ≥88%.
-  지연 TV4 기본 대비 +200ms 이내. 스키마·도구 불변(재시작 불요).
-- Evidence: `evidence/bench/2026-07-22-tv7-verdict.md` · plan `plans/2026-07-22-tv7-ranking-signal.md`
-- Gap: TV4 가 판정한 진짜 결함 — 도달은 고쳤는데 순위가 안 움직였다. 순위 신호가 법령명
-  문자열뿐이라 이름과 글자를 안 나누는 정답이 밀린다. `aiSearch` 가 조문제목·순위를 **추가 비용
-  0** 으로 이미 주는데 안 쓰고 있었다(프로브: 정답 법이 display=30 안에 30/30 존재).
-- Scale: changesets>=3; surfaces: aiSearch 신호 추출·후보 재정렬·교차 A/B; capability: 이름이
-  안 걸리는 정답을 위로 올린다
-- 판정: **채택** — 세법 dev recall@3 80.0% → **86.7%**(이득 2·손실 0, 2회 동일), 범용 교차 A/B
-  손실 0. 추가 HTTP 호출 0·지연 증가 없음. TV4 가 못 산 신호를 **이미 사 놓고 안 쓰던 곳**에서 꺼냈다.
-- Status: [x]
-
-- Completed at: 2026-07-22
-<!-- harness:milestone id="TV5" status="completed" priority="P2" evidence="changesets/20260722-tv5-article-body-loss · changesets/20260722-tv5-verdict · evidence/bench/2026-07-22-tv5-verdict.md" -->
-### TV5 — 조문 본문 유실 수리 (구 "세율표(별표)")
-- DoD: 세율 질의에서 별표 메타(별표명·번호·링크) 도달, 별표 없는 법령에서 무오류, 추가 호출 ≤1.
-  추출 스파이크 결과가 **채택이든 기각이든** 수치로 기록. 채택 시 성공률 ≥70%·지연 ≤3초·
-  부분 표 미출하. 범용 dev 셋 ≥88%.
-- Evidence: `evidence/bench/2026-07-22-tv5-verdict.md` · plan `plans/2026-07-22-tv5-article-body-loss.md`
-- Gap: 세법의 실제 숫자를 못 준다. **원 전제(별표·licbyl·PDF)는 실측으로 반증** —
-  세율표는 우리가 이미 받는 JSON 전문 안에 있었고 우리 추출기가 버리고 있었다.
-- Scale: changesets>=2; surfaces: 조문 본문 추출·전문 조회 캐시; capability: 세율표에 닿는다
-- 판정: **채택** — `소득세법 제55조` 본문 251자 → **1596자**(세율표 도달), 회귀 없음
-  (범용 88.0%·세법 83.3%). 순수 추가 지연 +263ms. `as_of` 와 함께 그 시점 판 세율표가 나온다.
-- Status: [x]
-
-- Completed at: 2026-07-22
-<!-- harness:milestone id="TV6" status="completed" priority="P0" evidence="archive/reports/2026-07-21-tv6-tax-vertical-close.md" -->
-### TV6 — 세법 판정
-- DoD: 홀드아웃 20건 blind 1회 개봉. 닫는 기준 6종 `선언/실측/판정` 대조표. 프리모템 5종 발화
-  대조. 크기 회고(선언 ~18 / 실측 M). 범용 dev 셋 ≥88%. `git diff --stat src/` 0 줄. 봉인이
+<!-- harness:milestone id="AR4" status="pending" priority="P0" -->
+### AR4 — 판정
+- DoD: 새 홀드아웃 blind 1회 개봉(**≥5회 반복**). 닫는 기준 6종 `선언/실측/판정` 대조표. 프리모템
+  5종 발화 대조. 크기 회고(선언 ~11 / 실측 M). 범용 dev ≥88%. `git diff --stat src/` 0 줄. 봉인이
   플래그 없이 여전히 거절. **실 MCP 표면에서 인용 체인 관측.** 미달은 미달로 기록.
-- Evidence: archive/reports/2026-07-21-tv6-tax-vertical-close.md
-  `archive/reports/2026-07-21-tv6-tax-vertical-close.md` · plan `plans/2026-07-21-tv6-verdict.md`
-- Gap: dev 수치는 튜닝 대상이라 과적합을 판정하지 못한다. 직전 horizon 에서 이 규율이 close 판정을
-  살렸다(홀드아웃 93.3% > dev 88.0%).
-- Scale: changesets>=2; surfaces: 홀드아웃 러너·실 MCP 표면 E2E; capability: 이 분야를 닫을 수
-  있는지 판정한다
-- Status: [x]
+- Evidence: `plans/2026-07-22-ar4-verdict.md` · `evidence/bench/2026-07-22-ar4-holdout.md` ·
+  `archive/reports/2026-07-22-ar4-agentic-reach-close.md`
+- Gap: dev 수치는 튜닝 대상이라 과적합을 판정하지 못한다. 직전 두 horizon 에서 이 규율이 판정을
+  살렸다(93.3% > 88.0% 로 과적합 기각 / 75% 미달을 미달로 기록).
+- Scale: changesets>=2; surfaces: 홀드아웃 러너·실 MCP 표면 E2E; capability: 이 자를 닫을 수 있는지
+  판정한다
+- Status: [ ]
 
-- Completed at: 2026-07-22
-- Summary: 기준 5/6 충족, 회귀 0. 기준 #2(recall@3 ≥90%) 미달(75.0%) 명시 기록.
 ## Next Candidates
 
-- 다음 분야 vertical(노동·부동산) — 세법에서 만든 골격("법령 + 구속력 등급 해석자료 + 시점축")을
-  복제. **세법 close 이후 사용자 결정.**
-- `oldAndNew` 신구법 비교 · `admbyl` 행정규칙 별표 · `lsStmd` 법령체계도 · `dlytrm` 재평가
-- 남은 빈 응답 target(`lsRlt`·`couseLs`·`drlaw`) **어순 재확인** — 이번 프로브에서 어순 오류가
-  3건 확인됐다(`specialDeccTt`→`ttSpecialDecc`, `cgmExpc{코드}`→`ntsCgmExpc`).
+후보 백로그 정본 → `plans/horizons/CANDIDATES.md` (순서는 사용자 소유).
+요약: 다음 분야 vertical(노동·부동산) · 서버 instructions(AR3 후보로 편입) · 남은 upstream 자료원 ·
+위임조문 지연(3.3초) · 공개 배포·발견성.
 
 **범위 밖(사용자 발화가 착수 신호)**: 공개 배포 · npm · 발견성.
 
