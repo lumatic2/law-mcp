@@ -854,7 +854,7 @@
       "work_id": "tv6-verdict",
       "horizon_id": "tax-vertical",
       "milestone_id": "TV6",
-      "status": "active",
+      "status": "completed",
       "plan_path": "plans/2026-07-21-tv6-verdict.md",
       "changeset_path": "changesets/20260721-tv6",
       "next_step": "step-1",
@@ -893,7 +893,8 @@
       ],
       "owner_session_uuid": "claude:a82173e0-8726-4be3-861c-256a5dadb83d",
       "updated_at": "2026-07-22",
-      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "horizon close: 기준 5/6 충족, 기준 #2 미달(75.0%) 명시 기록. 사용자 판정 대기."
     }
   }
 }
