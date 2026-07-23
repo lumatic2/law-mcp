@@ -18,7 +18,7 @@ import { LawGoProvider } from "../src/providers/lawgo-provider.js";
 import { SOURCE_DESCRIPTORS } from "../src/providers/source-adapter.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const golden = JSON.parse(fs.readFileSync(path.resolve(__dirname, "golden.json"), "utf-8")) as {
+const golden = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../archive/bench/golden.json"), "utf-8")) as {
   items: Array<{ query: string; domain: string; split: string }>;
 };
 

@@ -45,9 +45,18 @@ export function toTrajectories(run: AgentRunFile, cases: AgenticCase[]): Traject
     );
   }
 
+  // TF1 통합으로 case_id 에 출처 접두어가 붙었다(`d01` → `ag-d01`). 통합 *전에* 기록된 실행
+  // 로그를 그대로 다시 채점할 수 있어야 "합치다 깨지지 않았나"를 판정할 수 있으므로, 접두어를
+  // 뗀 옛 id 도 같이 색인한다. 옛 id 가 둘 이상에 걸리면 모호하니 색인하지 않는다.
   const byId = new Map(cases.map((c) => [c.case_id, c]));
+  const legacy = new Map<string, AgenticCase | null>();
+  for (const c of cases) {
+    const short = c.case_id.replace(/^[a-z0-9]+-/, "");
+    if (short === c.case_id || byId.has(short)) continue;
+    legacy.set(short, legacy.has(short) ? null : c);
+  }
   return run.results.map((r) => {
-    const kase = byId.get(r.case_id);
+    const kase = byId.get(r.case_id) ?? legacy.get(r.case_id) ?? undefined;
     if (!kase) throw new Error(`세트에 없는 case_id: ${r.case_id}`);
     const { expected, expect_abstain } = toExpected(kase);
 

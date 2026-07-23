@@ -19,7 +19,7 @@ import { LawGoProvider } from "../src/providers/lawgo-provider.js";
 import { isSameArticle, parseArticleLabel } from "./scoring.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const golden = JSON.parse(fs.readFileSync(path.resolve(__dirname, "golden.json"), "utf-8")) as {
+const golden = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../archive/bench/golden.json"), "utf-8")) as {
   items: Array<{ query: string; split: string; domain: string; expected_article?: string }>;
 };
 const items = golden.items.filter((item) => item.split === "dev" && item.expected_article);

@@ -102,7 +102,7 @@ export function detectLeaks(items: LeakCase[]): LeakFinding[] {
 
 /** CLI: 세트 파일을 검열한다. 유출이 하나라도 있으면 exit 1 — 통과를 눈으로 판단하지 않는다. */
 async function main(): Promise<void> {
-  const path = process.argv[2] ?? "bench/golden-tax-agentic.json";
+  const path = process.argv[2] ?? "bench/corpus.json";
   const { readFileSync } = await import("node:fs");
   const data = JSON.parse(readFileSync(path, "utf8")) as {
     items: Array<LeakCase & { split?: string }>;

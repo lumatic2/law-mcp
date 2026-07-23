@@ -31,7 +31,7 @@ async function fetchArticles(lawId: string) {
 }
 
 async function main() {
-  const golden = JSON.parse(readFileSync(new URL("./golden.json", import.meta.url), "utf8")) as { items: Item[] };
+  const golden = JSON.parse(readFileSync(new URL("../archive/bench/golden.json", import.meta.url), "utf8")) as { items: Item[] };
   const items = golden.items.filter((i) => i.split === "dev");
 
   let beforeHit3 = 0, afterHit3 = 0, beforeHit1 = 0, afterHit1 = 0;

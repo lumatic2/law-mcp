@@ -44,7 +44,23 @@
   `query`↔`context` 를 서로 채울 수 있다 — TF2 작성 부담이 90건 → 65건으로 준다.
   구 4파일 이동은 러너 배선(step-3) 뒤로 미룸(중간 상태에서 읽는 쪽이 깨지지 않게).
 
+## step-3 — 러너 2종 배선과 재현 검증
+
+- Goal: 러너가 코퍼스를 읽게 하고 통합 전 수치를 재현한다.
+- Evidence Contract — Scenario: `--provenance` 로 표본을 통합 전과 같게 좁혀 범용을 실측,
+  에이전트는 저장된 실행 로그를 결정적 채점기로 재채점. Failure probe: 구 파일로 돌린 값과
+  나란히 대조 — 8개 지표 전부.
+- Verification
+  - [x] 범용 dev `recall@3` **88.0%** (선언 88.0%) · `recall@1` 68.0% — 일치
+  - [x] 에이전트 dev `pass^3` **90%** · `SR@1` 80% · `AT` 1.16 · 기권 100%/100% — 전부 일치
+  - [x] 흔들리는 케이스 목록까지 일치 (d05 1/3 · d09 2/3)
+  - [x] 구 4파일 `archive/bench/` 이동 · 계약 테스트 2종 동결본으로 재배선
+  - [x] 홀드아웃 봉인 유지 확인 (플래그 없이 throw)
+  - [x] `npm test` 314/314 · `git diff --stat src/` 0줄
+- Result: 통합 성공 — 8개 지표 전부 일치. `evidence/bench/2026-07-23-tf1-reproduction.md`
+
 ## Result
 
-- Status: in_progress (step 2/3)
-- Evidence: `docs/adr/0001-...md` · `bench/corpus.json` · `bench/migrate-corpus.ts`
+- Status: done (step 3/3)
+- Evidence: `evidence/bench/2026-07-23-tf1-reproduction.md` · `bench/corpus.json` ·
+  `docs/adr/0001-본법-시행령-정답-라벨-규약.md`

@@ -11,7 +11,7 @@ import { isHitAtK } from "./scoring.js";
 import { LawGoProvider, type TermBoostConfig } from "../src/providers/lawgo-provider.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const golden = JSON.parse(fs.readFileSync(path.resolve(__dirname, "golden.json"), "utf-8")) as {
+const golden = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../archive/bench/golden.json"), "utf-8")) as {
   items: Array<{ query: string; domain: string; split: string; expected_laws: string[] }>;
 };
 const items = golden.items.filter((item) => item.split === "dev");

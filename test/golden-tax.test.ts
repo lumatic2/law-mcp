@@ -26,8 +26,12 @@ type Item = {
   source: string;
 };
 
+/**
+ * TF1 통합 이후 구 세트 4파일은 `archive/bench/` 에 동결돼 있다. 이 계약 테스트는 그 동결된
+ * 판을 계속 지킨다 — 코퍼스는 이 판을 그대로 흡수했으므로 여기가 깨지면 흡수한 내용도 틀린다.
+ */
 function load(name: string): { items: Item[]; types?: string[] } {
-  return JSON.parse(readFileSync(new URL(`../bench/${name}.json`, import.meta.url), "utf8"));
+  return JSON.parse(readFileSync(new URL(`../archive/bench/${name}.json`, import.meta.url), "utf8"));
 }
 
 const tax = load("golden-tax");

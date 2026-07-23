@@ -10,3 +10,4 @@
 {"event": "undocumented_stop", "next_task": "step-1** 맥락 문단 제작 + 유출 탐지기", "remaining": 3, "runtime": "claude", "total": 3, "ts": "2026-07-22T19:48:21.611864+00:00", "unhonored_reason": null, "work_id": "ar2-context-set"}
 {"event": "undocumented_stop", "next_task": "step-1** 맥락 문단 제작 + 유출 탐지기", "remaining": 3, "runtime": "claude", "total": 3, "ts": "2026-07-22T19:50:48.189189+00:00", "unhonored_reason": null, "work_id": "ar2-context-set"}
 {"event": "undocumented_stop", "next_task": "step-1** 홀드아웃 개봉 판정 — 닫는 기준 6종 실측 대조", "remaining": 2, "runtime": "claude", "total": 2, "ts": "2026-07-22T20:00:32.489027+00:00", "unhonored_reason": null, "work_id": "ar4-verdict"}
+{"event": "undocumented_stop", "next_task": "step-1 — 라벨 규약 ADR", "remaining": 3, "runtime": "claude", "total": 3, "ts": "2026-07-23T04:42:31.740256+00:00", "unhonored_reason": null, "work_id": "tf1-corpus"}

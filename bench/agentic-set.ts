@@ -23,20 +23,34 @@ export type AgenticCase = {
   abstain_reason?: string;
 };
 
-export const AGENTIC_SET_PATH = new URL("./golden-tax-agentic.json", import.meta.url);
+/** TF1 이후 정본은 단일 코퍼스다. 구 `golden-tax-agentic.json` 은 `archive/bench/` 로 갔다. */
+export const AGENTIC_SET_PATH = new URL("./corpus.json", import.meta.url);
 
 /**
  * split 하나를 읽는다. `holdout` 은 `sealBroken` 없이는 **던진다**.
  *
  * 기본값을 `false` 로 둔 것이 요점이다 — 실수로 부르면 열리지 않는다.
+ *
+ * 코퍼스는 형식 중립이라 맥락(`context`)이 없는 레코드가 섞여 있다 — 에이전트 루프는 맥락을
+ * 던지는 쪽이라 맥락 없는 레코드는 **걸러낸다**(TF2 가 전건을 채우면 자연히 전부 들어온다).
+ * `provenance` 를 주면 특정 옛 세트로 좁혀 **과거 측정을 그대로 재현**할 수 있다.
  */
 export function loadAgenticSet(
   split: "dev" | "holdout",
   sealBroken = false,
+  opts: { provenance?: string } = {},
 ): AgenticCase[] {
   assertHoldoutSeal(split, sealBroken);
-  const data = JSON.parse(readFileSync(AGENTIC_SET_PATH, "utf8")) as { items: AgenticCase[] };
-  return data.items.filter((item) => item.split === split);
+  const data = JSON.parse(readFileSync(AGENTIC_SET_PATH, "utf8")) as {
+    items: (AgenticCase & { context: string | null; provenance?: string })[];
+  };
+  return data.items.filter(
+    (item) =>
+      item.split === split
+      && typeof item.context === "string"
+      && item.context.trim().length > 0
+      && (!opts.provenance || item.provenance === opts.provenance),
+  );
 }
 
 /** 채점기가 쓰는 모양으로 바꾼다 — 기권 케이스는 `expected` 가 `null` 이다. */
@@ -88,7 +102,7 @@ function selftest(): void {
     `${abstain.length}건, 전부 사유 있음`,
   ]);
 
-  const mapped = toExpected(dev.find((c) => c.case_id === "d02")!);
+  const mapped = toExpected(dev.find((c) => c.case_id === "ag-d02")!);
   probes.push([
     "⑤ 법령명·조문번호 분리",
     mapped.expected?.law_name === "법인세법 시행령" && mapped.expected?.article_no === "제44조",

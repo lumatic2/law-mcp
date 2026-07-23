@@ -21,8 +21,9 @@ type Item = {
   source: string;
 };
 
+/** TF1 통합 이후 구 세트는 `archive/bench/` 에 동결돼 있다(코퍼스가 이 판을 그대로 흡수했다). */
 function load(name: string): { items: Item[] } {
-  return JSON.parse(readFileSync(new URL(`../bench/${name}.json`, import.meta.url), "utf8"));
+  return JSON.parse(readFileSync(new URL(`../archive/bench/${name}.json`, import.meta.url), "utf8"));
 }
 
 const v2 = load("golden-v2");

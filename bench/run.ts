@@ -33,6 +33,8 @@ type Item = {
   expected_article?: string;
   split: string;
   source: string;
+  /** 코퍼스(TF1)에만 있다 — 어느 옛 세트에서 온 레코드인지. `--provenance` 로 좁힐 때 쓴다. */
+  provenance?: string;
 };
 
 function parseArgs(argv: string[]) {
@@ -41,8 +43,13 @@ function parseArgs(argv: string[]) {
     return index >= 0 ? argv[index + 1] : undefined;
   };
   return {
-    set: get("--set") ?? "golden",
+    set: get("--set") ?? "corpus",
     split: get("--split") ?? "dev",
+    /**
+     * 코퍼스(TF1)는 옛 세트들의 합집합이라 그냥 돌리면 과거 측정과 표본이 달라진다.
+     * `--provenance golden-v2.json` 처럼 출처를 좁히면 **과거 수치를 그대로 재현**할 수 있다.
+     */
+    provenance: get("--provenance"),
     label: get("--label"),
     limit: get("--limit") ? Number(get("--limit")) : undefined,
     repeat: get("--repeat") ? Number(get("--repeat")) : 1,
@@ -205,6 +212,10 @@ async function main() {
   ) as { items: Item[] };
 
   let items = golden.items.filter((i) => i.split === args.split);
+  // 코퍼스에는 맥락(context)만 갖고 라벨 문자열이 없는 레코드가 섞여 있다 — 이 러너는 질의를
+  // 던지는 쪽이라 `query` 없는 레코드는 돌릴 수 없다. 조용히 실패시키지 말고 여기서 거른다.
+  items = items.filter((i) => typeof i.query === "string" && i.query.trim().length > 0);
+  if (args.provenance) items = items.filter((i) => i.provenance === args.provenance);
   if (args.limit) items = items.slice(0, args.limit);
 
   if (args.dryRun) {

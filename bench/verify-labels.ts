@@ -19,9 +19,9 @@ type Item = {
 
 const p = new LawGoProvider();
 
-// --set <이름> 으로 검증 대상 세트를 고른다(기본 golden). UD1 에서 golden-v2 가 생겼다.
+// --set <이름> 으로 검증 대상 세트를 고른다. TF1 이후 정본은 단일 코퍼스다.
 const setArg = process.argv.indexOf("--set");
-const setName = setArg >= 0 ? process.argv[setArg + 1] : "golden";
+const setName = setArg >= 0 ? process.argv[setArg + 1] : "corpus";
 const golden = JSON.parse(readFileSync(new URL(`./${setName}.json`, import.meta.url), "utf8")) as {
   items: Item[];
 };

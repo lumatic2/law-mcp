@@ -1,6 +1,6 @@
 /**
  * 골든셋 스키마 완전성 검사 (LB1 step-1 Verify + Failure probe).
- * 사용: npx tsx bench/check-schema.ts [path]  (기본 bench/golden.json)
+ * 사용: npx tsx bench/check-schema.ts [path]  (기본 bench/corpus.json)
  * 라벨 근거(source) 누락·빈 expected_laws 를 실패로 잡는다 — 추정 라벨 방지 장치.
  */
 import { readFileSync } from "node:fs";
@@ -15,7 +15,7 @@ const REQUIRED = ["query", "domain", "expected_laws", "split", "source"] as cons
 const CORPUS_REQUIRED = ["case_id", "provenance", "topic_id", "domain", "split"] as const;
 const VALID_SPLITS = new Set(["dev", "holdout"]);
 
-const path = resolve(process.argv[2] ?? "bench/golden.json");
+const path = resolve(process.argv[2] ?? "bench/corpus.json");
 const data = JSON.parse(readFileSync(path, "utf8")) as { items?: unknown };
 const items = Array.isArray(data.items) ? (data.items as Record<string, unknown>[]) : null;
 const isCorpus = Boolean(items?.length && "topic_id" in items[0]);

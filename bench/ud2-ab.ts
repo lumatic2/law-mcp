@@ -82,7 +82,7 @@ function parseArgs(argv: string[]) {
     limit: get("--limit") ? Number(get("--limit")) : undefined,
     date: get("--date") ?? "2026-07-21",
     minNet: get("--min-net") ? Number(get("--min-net")) : 3,
-    set: get("--set") ?? "golden-v2",
+    set: get("--set") ?? "corpus",
     variants: get("--variants") ?? "ud4",
     out: get("--out"),
   };
