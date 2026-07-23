@@ -23,20 +23,22 @@
 
 ## Active Milestones
 
-<!-- harness:milestone id="TF1" status="active" priority="P0" evidence="" -->
+<!-- harness:milestone id="TF1" status="completed" priority="P0" evidence="archive/reports/2026-07-23-tf1-corpus-close.md · evidence/bench/2026-07-23-tf1-reproduction.md · changesets/20260723-tf1-corpus/" -->
 ### TF1 — 단일 코퍼스
 - DoD: `bench/corpus.json` 단일 파일에 distinct 124건, 스키마 검증 exit 0. 러너 2종이 통합 전
   수치를 **재현**(범용 dev `recall@3` ≥88.0% · agentic dev `pass^3` ≥90%) — 미달은 통합 실패로
   판정한다. 본법/시행령 정답 규약이 ADR 로 존재하고 위임 지점 케이스 전수가 규약대로 라벨링됨.
   `npm test` 전건 · `git diff --stat src/` 0줄.
-- Evidence: (plan → `plans/2026-07-23-tf1-corpus.md`)
+- Evidence: archive/reports/2026-07-23-tf1-corpus-close.md · evidence/bench/2026-07-23-tf1-reproduction.md · changesets/20260723-tf1-corpus/
 - Gap: 골드 세트가 4파일로 흩어져 있고 형식이 갈린다 — `golden`·`golden-v2`·`golden-tax` 는
   `query`(라벨 문자열), `golden-tax-agentic` 만 `context`(자연어 맥락). 그래서 124건 중 34건만
   에이전트 하네스가 쓸 수 있고 90건이 사장돼 있다.
 - Scale: changesets>=3; surfaces: 라벨 규약 ADR·마이그레이션·러너 2종 재현; capability: 케이스를
   형식과 무관하게 보관한다 — 형식이 바뀌어도 데이터를 다시 안 만든다
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-23
+- Summary: 골드 4파일 → bench/corpus.json 124레코드/92topic. 8개 지표 전부 재현 일치. 라벨 규약 ADR 0001 확정·4건 적용.
 <!-- harness:milestone id="TF2" status="pending" priority="P0" evidence="" -->
 ### TF2 — 맥락 전건 부착
 - DoD: 맥락 커버리지 100%(전건 `query`+`context`), 유출 탐지기 적발 0, 일부러 유출시킨 문단은
