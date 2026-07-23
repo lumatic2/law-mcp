@@ -20,7 +20,7 @@ function bare(value: string): string {
 
 export type LeakCase = {
   case_id: string;
-  context: string;
+  context: string | null;
   expected_laws?: string[] | null;
   expected_article?: string | null;
 };
@@ -68,6 +68,9 @@ export function articleForms(articleRef: string): string[] {
 
 /** 문단 한 건을 검열한다. 유출이 없으면 빈 배열. */
 export function detectLeak(item: LeakCase): LeakFinding[] {
+  // 코퍼스(TF1)에는 아직 맥락이 없는 레코드가 섞여 있다 — 없는 문단은 유출도 없다.
+  // 여기서 던지면 세트 전체 검열이 중단돼 오히려 유출을 못 잡는다.
+  if (typeof item.context !== "string" || !item.context.trim()) return [];
   const haystack = bare(item.context);
   const findings: LeakFinding[] = [];
 

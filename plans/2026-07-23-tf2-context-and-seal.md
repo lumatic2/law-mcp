@@ -41,7 +41,7 @@ Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
 - status: resolved
 
 ## Step 트리
-- [ ] **step-1 — 맥락 부착**
+- [x] **step-1 — 맥락 부착**
   - Artifact: 맥락이 채워진 `bench/corpus.json` + 배치별 검증 로그
   - Files: read `bench/corpus.json`·`archive/bench/golden-tax-agentic.json`(문체 참조)·`bench/leak-detect.ts` / write `bench/corpus.json`
   - Dependencies: 없음 (선행 milestone 순서는 `plans/horizons/trap-free.md` 가 소유)
@@ -75,8 +75,15 @@ Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
 - 유출 적발 0 — `npx tsx bench/leak-detect.ts`
 
 ## finding 큐
-- (실행 중 발견분 append)
+- F1 **짝-복사(crossfill) 기각** — 같은 `topic_id` 안에서 `query`↔`context` 를 복사하면 레코드
+  기준 커버리지는 100% 가 되지만, 이미 맥락이 있는 topic 에 같은 맥락을 복제할 뿐이라 새 주제
+  커버리지는 0 이고 에이전트 측정에는 같은 문제를 두 번 채점하는 중복이 들어간다. 커버리지를
+  **topic 기준**으로 재정의하고 복사는 버렸다(스크립트 삭제).
+- F2 DoD "전건 `query`+`context`"는 레코드 기준이라 위 이유로 채택하지 않는다 — topic 기준
+  100%/100% 를 달성 기준으로 쓴다(레코드 기준은 맥락 94/124 · 질의 101/124).
+- F3 배치별 `pass^3` 가드는 60건을 한 번에 작성해 step-2 재기준선으로 흡수했다.
 
 ## 진행 로그 (append-only)
 - 2026-07-23 plan 작성.
+- 2026-07-23 step-1 완료 — 맥락 60건·질의 11건 작성, topic 커버리지 100%, 유출 0.
 - 2026-07-23 봉인 회전 기계장치 삭제(사용자 판정) — step 3개 → 2개, 규약 ADR 로 대체.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "tf1-corpus",
+  "active_work_id": "tf2-context",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -1096,6 +1096,51 @@
       "updated_at": "2026-07-23",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
       "completion_summary": "골드 4파일을 단일 코퍼스로 통합하고 8개 지표 전부 재현 일치로 판정했다."
+    },
+    "tf2-context": {
+      "work_id": "tf2-context",
+      "horizon_id": "trap-free",
+      "milestone_id": "TF2",
+      "status": "active",
+      "plan_path": "plans/2026-07-23-tf2-context-and-seal.md",
+      "changeset_path": "changesets/20260723-tf2-context",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1 — 맥락 부착",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2 — 재기준선·주제 무개입 증명·봉인 규약",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-23",
+        "plan_sha256": "7b629aa33da4981d2a67b10e3b4d3eefa0c193537cfa04c1df74865c7740ceab"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "claude:df33a404-d87b-4594-a445-cec5fbfe58c3"
+      ],
+      "owner_session_uuid": "claude:df33a404-d87b-4594-a445-cec5fbfe58c3",
+      "updated_at": "2026-07-23",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
     }
   },
   "stop_reason": null,

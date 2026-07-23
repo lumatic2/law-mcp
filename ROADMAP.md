@@ -39,7 +39,7 @@
 
 - Completed at: 2026-07-23
 - Summary: 골드 4파일 → bench/corpus.json 124레코드/92topic. 8개 지표 전부 재현 일치. 라벨 규약 ADR 0001 확정·4건 적용.
-<!-- harness:milestone id="TF2" status="pending" priority="P0" evidence="" -->
+<!-- harness:milestone id="TF2" status="active" priority="P0" evidence="" -->
 ### TF2 — 맥락 전건 부착
 - DoD: 맥락 커버리지 100%(전건 `query`+`context`), 유출 탐지기 적발 0, 일부러 유출시킨 문단은
   거부. **신규 주제 0건**이 스크립트로 증명됨(모든 `expected_article` 이 통합 전 4파일에 존재).
