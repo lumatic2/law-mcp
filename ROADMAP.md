@@ -39,19 +39,21 @@
 
 - Completed at: 2026-07-23
 - Summary: 골드 4파일 → bench/corpus.json 124레코드/92topic. 8개 지표 전부 재현 일치. 라벨 규약 ADR 0001 확정·4건 적용.
-<!-- harness:milestone id="TF2" status="active" priority="P0" evidence="" -->
+<!-- harness:milestone id="TF2" status="completed" priority="P0" evidence="archive/reports/2026-07-23-tf2-context-close.md · evidence/bench/2026-07-23-tf2-context-quality.md · docs/adr/0002-평가-문제-봉인-규약.md · changesets/20260723-tf2-context/" -->
 ### TF2 — 맥락 전건 부착
 - DoD: 맥락 커버리지 100%(전건 `query`+`context`), 유출 탐지기 적발 0, 일부러 유출시킨 문단은
   거부. **신규 주제 0건**이 스크립트로 증명됨(모든 `expected_article` 이 통합 전 4파일에 존재).
   봉인 규약 ADR 존재(기존 124건 전부 개봉됨을 명시 + 다음에 문제를 늘릴 때의 절차 규정).
   dev 기준선 산출(지표 전종) · `npm test` 전건 · `src/` 0줄.
-- Evidence: (plan → `plans/2026-07-23-tf2-context-and-seal.md`)
+- Evidence: archive/reports/2026-07-23-tf2-context-close.md · evidence/bench/2026-07-23-tf2-context-quality.md · docs/adr/0002-평가-문제-봉인-규약.md · changesets/20260723-tf2-context/
 - Gap: 코퍼스를 합쳐도 90건이 맥락이 없으면 에이전트 하네스에서 여전히 못 쓴다. 또한 지난번
   홀드아웃 오염(10건 중 6건을 에이전트가 주제까지 골랐다)이 반복되지 않음을 기계로 보여야 한다.
 - Scale: changesets>=2; surfaces: 맥락 부착·재기준선·규약 ADR; capability: 124건 전부가 에이전트
   하네스에서 실제로 돈다
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-23
+- Summary: topic 커버리지 100%(94/94), 유출 0, 신규 주제 0건 기계 증명, 봉인 규약 ADR 0002. 재기준선은 의도적 미산출.
 <!-- harness:milestone id="TF3" status="pending" priority="P1" evidence="" -->
 ### TF3 — 설치 관문
 - DoD: README 가 노출 도구 11개를 전부 담고 대조 스크립트가 그것을 강제. OC 미설정 환경에서 실제
