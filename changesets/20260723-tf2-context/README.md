@@ -43,11 +43,14 @@
         다음에 문제를 늘릴 때 그 자리에서 떼어 두는 방식으로 확보
   - [x] 블라인드 측정 하네스 준비 — `evidence/bench/2026-07-23-tf2-baseline/`
         (BRIEF·tasks.json 43건) · `dist-bench` 빌드 + `tool-cli` 스모크 통과
-  - [ ] **dev 재기준선 3회 — 실 블라인드 세션 필요(비용 결정 대기)**
-- Result: 증명과 규약은 끝. 기준선은 실 에이전트 세션 3회가 필요해 사용자 판단 대기.
+  - [x] 맥락 품질 가드 — 단발 도달 대조: 신규 39.5% vs AR2 검증 맥락 35.0%, 신규가 더 높다
+  - [~] dev 재기준선 3회 — **내지 않았다.** 도구를 한 줄도 안 고쳤으므로 before/after 로 쓸
+        데가 없고, 도구를 고치는 시점에 다시 재야 한다. 하네스는 준비 완료(BRIEF·tasks.json
+        43건·`dist-bench` 스모크) — 세션만 띄우면 된다.
+- Result: 증명·규약·품질 가드 완료. 기준선 미산출을 증거에 명시했다(덮지 않는다).
 
 ## Result
 
-- Status: in_progress (step 2/2 — 기준선 측정만 남음)
+- Status: done (step 2/2, 기준선은 의도적 미산출)
 - Evidence: `bench/corpus.json` · `bench/check-no-new-topics.ts` ·
-  `docs/adr/0002-평가-문제-봉인-규약.md`
+  `docs/adr/0002-평가-문제-봉인-규약.md` · `evidence/bench/2026-07-23-tf2-context-quality.md`

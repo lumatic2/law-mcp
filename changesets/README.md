@@ -38,7 +38,7 @@
 | 28 | [20260721-tv3-law-history](20260721-tv3-law-history/README.md) | 2026-07-21 | src/providers/lawgo-provider.ts(attachHistory·fetchLawVersions), src/index.ts(include_history), src/types.ts, test/law-history.test.ts (신규) | ✅ | done |
 | 29 | [20260721-tv3-asof-verdict](20260721-tv3-asof-verdict/README.md) | 2026-07-21 | bench/tv3-asof.ts (신규), evidence/bench/2026-07-21-tv3-asof.{md,json} | ✅ | done |
 | 30 | [20260723-tf1-corpus](20260723-tf1-corpus/README.md) | 2026-07-23 | 골드 4파일 → 단일 코퍼스 통합 + 재현 검증 (TF1) | ✅ | done |
-| 31 | [20260723-tf2-context](20260723-tf2-context/README.md) | 2026-07-23 | 맥락 60건·질의 11건 부착, topic 커버리지 100% (TF2) | 1/2 | in_progress |
+| 31 | [20260723-tf2-context](20260723-tf2-context/README.md) | 2026-07-23 | 맥락 60건·질의 11건 부착, topic 커버리지 100% (TF2) | ✅ | done |
 
 ## 운영 원칙
 

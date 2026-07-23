@@ -50,7 +50,7 @@ Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
     배치별 `pass^3` >= 70%
   - Failure probe: 정답 조문번호를 일부러 넣은 맥락 1건을 배치에 섞어 유출 탐지기가 잡는지 확인
   - Commit: `feat(bench): 코퍼스 90건 맥락 부착 (커버리지 100%)`
-- [ ] **step-2 — 재기준선·주제 무개입 증명·봉인 규약**
+- [x] **step-2 — 재기준선·주제 무개입 증명·봉인 규약**
   - Artifact: `evidence/bench/2026-07-23-tf2-baseline.md` · `bench/check-no-new-topics.ts` ·
     `docs/adr/<NNNN>-평가-문제-봉인-규약.md`
   - Files: read `bench/corpus.json`·`archive/bench/golden*.json` / write `evidence/bench/2026-07-23-tf2-baseline.md`·`bench/check-no-new-topics.ts`·`docs/adr/` 신규 1개
@@ -81,9 +81,13 @@ Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
   **topic 기준**으로 재정의하고 복사는 버렸다(스크립트 삭제).
 - F2 DoD "전건 `query`+`context`"는 레코드 기준이라 위 이유로 채택하지 않는다 — topic 기준
   100%/100% 를 달성 기준으로 쓴다(레코드 기준은 맥락 94/124 · 질의 101/124).
-- F3 배치별 `pass^3` 가드는 60건을 한 번에 작성해 step-2 재기준선으로 흡수했다.
+- F3 배치별 `pass^3` 가드는 60건을 한 번에 작성해 step-2 품질 가드로 흡수했다.
+- F4 **재기준선 미산출** — 도구를 한 줄도 안 고친 상태에서 낸 기준선은 before/after 로 쓸 데가
+  없고 도구를 고치는 시점에 다시 재야 한다. 대신 맥락 품질만 단발 도달 대조로 확인했다
+  (신규 39.5% vs AR2 검증 맥락 35.0%). 하네스는 준비 완료 — 세션만 띄우면 된다.
 
 ## 진행 로그 (append-only)
 - 2026-07-23 plan 작성.
+- 2026-07-23 step-2 완료 — 주제 무개입 증명 PASS, 봉인 규약 ADR 0002, 맥락 품질 가드 통과.
 - 2026-07-23 step-1 완료 — 맥락 60건·질의 11건 작성, topic 커버리지 100%, 유출 0.
 - 2026-07-23 봉인 회전 기계장치 삭제(사용자 판정) — step 3개 → 2개, 규약 ADR 로 대체.
