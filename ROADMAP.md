@@ -1,88 +1,71 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-23
-> 상태: **horizon `agentic-reach` closed (2026-07-23)** — 닫는 기준 6/6 충족. active milestone 없음.
-> ⚠ 홀드아웃 수치는 신뢰하지 않는다(변별력 저하 — 주제를 에이전트가 골랐다). 과적합 기각만 채택.
-> 다음 horizon 미정 — 후보는 `plans/horizons/CANDIDATES.md`.
+> 상태: **horizon `trap-free` (함정 없음) 개설 — 승인 대기.** TF1~TF3.
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
 
 ## Current Horizon
 
-<!-- harness:goal id="agentic-reach" -->
-목표: **우리 벤치는 사람이 라벨 문자열을 던진다고 가정한다. 실제 소비자는 맥락을 가진 에이전트다.**
-그 간극을 없애고 새 자로 잰 값을 올린다 — `recall@3`(단발 도달)에서 **도달 턴수 + 정직한 실패**로.
-(closed plan → `archive/horizons/agentic-reach.md` · 선언 ~11 / 실측 8 changeset · 후보 백로그 → `plans/horizons/CANDIDATES.md`)
+<!-- harness:goal id="trap-free" -->
+목표: **함정 없음** 축을 양쪽에서 민다 — 사용자가 만나는 함정(설치 첫 화면의 `LAW_API_OC`)과
+우리가 만나는 함정(개선을 잴 때마다 자를 새로 만들어 비교선이 끊긴다).
+한 문장: 처음 붙이는 사람이 막히지 않고, 우리가 잰 값이 다음 horizon 에도 유효하다.
+(plan → `plans/horizons/trap-free.md` · 예상 분량 ~9 changeset · 리서치 →
+`research/2026-07-23-trap-free-install-gate.md`)
 
-직전 horizon `tax-vertical` 은 2026-07-22 closed (닫는 기준 6종 중 5종 충족, recall@3 75.0% 미달).
-닫은 뒤 프로브가 밝힌 것: 미달의 상당 부분이 **측정 방식 탓**이었다 — MISS 5건에 분야 맥락 한 단어를
-얹자 5/5 정답 조문까지 도달했다(`evidence/bench/2026-07-22-context-effect-probe.md`).
+직전 horizon `agentic-reach` 는 2026-07-23 closed (닫는 기준 6/6, 단 홀드아웃 변별력 저하로
+절대 수치 미채택). 그 원인이 이 horizon 의 출발점이다 — 골드 세트를 4번 만들었고(124건 중
+34건만 에이전트 하네스가 쓴다), 홀드아웃이 소진될 때마다 데이터를 급조해 보충해왔다.
 
 ## Active Milestones
 
-<!-- harness:milestone id="AR1" status="completed" priority="P0" evidence="archive/reports/2026-07-22-ar1-agentic-harness-close.md · selftest 4/4+9/9+5/5 · npm test 302/302 · src/ 0줄" -->
-### AR1 — 에이전트형 평가 하네스
-- DoD: 맥락→에이전트 루프가 트래젝토리를 남기며 완주. 채점기에 **LLM 호출 0개**, 같은 로그 2회 채점
-  결과 동일. 조문번호까지 일치해야 성공(법령만 맞으면 오답). `pass@3`·`pass^3`·범위 동시 출력,
-  하나라도 빠지면 거부. 단일 반복 입력 거부. `AT`·`SR@t`·기권 정밀도/재현율 출력. 1케이스 비용 실측.
-  에이전트 모델 ID 기록. `git diff --stat src/` 0 줄.
-- Evidence: archive/reports/2026-07-22-ar1-agentic-harness-close.md · selftest 4/4+9/9+5/5 · npm test 302/302 · src/ 0줄
-- Gap: `bench/run.ts:140` 이 라벨 문자열을 맥락 없이 한 번 던지고 채점한다. 도구가 응답에 실어 보내는
-  "쿼리를 좁혀 다시 물을 것" 경고를 **소비하는 층이 벤치에 없다.**
-- Scale: changesets>=3; surfaces: 루프 러너·결정적 채점기·신뢰도 보고; capability: 에이전트가 쓰는
-  대로 재고, 그 값을 재현할 수 있다
-- Status: [x]
+<!-- harness:milestone id="TF1" status="active" priority="P0" evidence="" -->
+### TF1 — 단일 코퍼스
+- DoD: `bench/corpus.json` 단일 파일에 distinct 124건, 스키마 검증 exit 0. 러너 2종이 통합 전
+  수치를 **재현**(범용 dev `recall@3` ≥88.0% · agentic dev `pass^3` ≥90%) — 미달은 통합 실패로
+  판정한다. 본법/시행령 정답 규약이 ADR 로 존재하고 위임 지점 케이스 전수가 규약대로 라벨링됨.
+  `npm test` 전건 · `git diff --stat src/` 0줄.
+- Evidence: (plan → `plans/2026-07-23-tf1-corpus.md`)
+- Gap: 골드 세트가 4파일로 흩어져 있고 형식이 갈린다 — `golden`·`golden-v2`·`golden-tax` 는
+  `query`(라벨 문자열), `golden-tax-agentic` 만 `context`(자연어 맥락). 그래서 124건 중 34건만
+  에이전트 하네스가 쓸 수 있고 90건이 사장돼 있다.
+- Scale: changesets>=3; surfaces: 라벨 규약 ADR·마이그레이션·러너 2종 재현; capability: 케이스를
+  형식과 무관하게 보관한다 — 형식이 바뀌어도 데이터를 다시 안 만든다
+- Status: [ ]
 
-- Completed at: 2026-07-22
-- Summary: 에이전트형 평가 하네스 3층 완성(루프·채점·집계), LLM judge 0개. SDK 경로 폐기로 비용 0.
-<!-- harness:milestone id="AR2" status="completed" priority="P0" evidence="changesets/20260723-ar2-context-set/ · changesets/20260723-ar2-baseline/ · evidence/bench/2026-07-23-ar2-baseline.md · npm test 314/314 · src/ 0줄" -->
-### AR2 — 맥락 세트 + 기준선
-- DoD: dev 20건 맥락 부착, 전건 유출 탐지기 통과. **일부러 유출시킨 문단은 거부**됨. 기권 케이스 포함·
-  별도 분류. 새 홀드아웃 봉인(플래그 없이 exit 1). 기준선에 `pass@3`·`pass^3`·범위·`AT`·`SR@t`·
-  기권 정밀도/재현율 전부 포함. **단발 75% 대비 대조표.** 범용 dev ≥88%. 기준선 100% 아님(변별력 존재).
-- Evidence: changesets/20260723-ar2-context-set/ · changesets/20260723-ar2-baseline/ · evidence/bench/2026-07-23-ar2-baseline.md · npm test 314/314 · src/ 0줄
-- Gap: 구 홀드아웃은 소진됐고, 맥락을 가진 케이스가 아예 없다. 맥락을 사람이 쓰면 정답이 새어 벤치가
-  낙관적으로 왜곡된다(리서치 실측: 유출 완화 전후 24.2%→45.3%).
-- Scale: changesets>=3; surfaces: 유출 탐지기·맥락 세트·홀드아웃 봉인·기준선 보고서; capability:
-  자에 눈금이 생긴다 — 무엇이 좋아졌는지 말할 수 있다
-- Status: [x]
+<!-- harness:milestone id="TF2" status="pending" priority="P0" evidence="" -->
+### TF2 — 맥락 전건 + 봉인 회전
+- DoD: 맥락 커버리지 100%(전건 `query`+`context`), 유출 탐지기 적발 0, 일부러 유출시킨 문단은
+  거부. 봉인 슬라이스가 플래그 없이 exit 1 하고 재개봉을 영구 거절. **신규 주제 0건**이 스크립트로
+  증명됨(모든 `expected_article` 이 통합 전 4파일에 존재). dev 기준선 3회 산출(지표 전종).
+  `npm test` 전건 · `src/` 0줄.
+- Evidence: (plan → `plans/2026-07-23-tf2-context-and-seal.md`)
+- Gap: 홀드아웃이 소진될 때마다 데이터를 급조해왔고, 그 급조가 `agentic-reach` 오염의 직접 원인이다
+  (10건 중 6건을 에이전트가 주제까지 골랐다). 유출 탐지기는 문자열만 보므로 구성에 의한 오염을
+  못 잡는다.
+- Scale: changesets>=3; surfaces: 맥락 부착·봉인 기계장치·재기준선; capability: 홀드아웃이
+  데이터가 아니라 봉인이 된다 — 새 horizon 마다 세트를 만들 필요가 없다
+- Status: [ ]
 
-- Completed at: 2026-07-23
-- Summary: 맥락 세트 34건(유출 0·봉인) + 블라인드 3회 기준선: pass^3 90%, SR@1 80%, 기권 100%/100%. 단발 75% 대비 +15%p.
-<!-- harness:milestone id="AR3" status="completed" priority="P1" evidence="changesets/20260723-ar3-vocab-gap/ · evidence/bench/2026-07-23-ar3-vocab-gap-verdict.md · npm test 314/314 · 배포 dist 스모크" -->
-### AR3 — 도구 결함 수리
-- DoD: 결함 3종(+서버 instructions) 기여도가 **이득 0 포함** 수치로 기록. 수리에 법명·도메인·쿼리
-  토큰 하드코딩 없음. `npm test` 전건 통과. 상류 실패 시 원상태 보존. 교차 A/B **손실 0 AND `SR@1`
-  순 이득 ≥2**, 3회 부호 불변. 범용 dev ≥88%. 배포 사본 build + dist 스모크. **재시작 부채 명시.**
-- Evidence: changesets/20260723-ar3-vocab-gap/ · evidence/bench/2026-07-23-ar3-vocab-gap-verdict.md · npm test 314/314 · 배포 dist 스모크
-- Gap: 프로브가 적발한 실 결함 3종 — ① 본문검색 30건 가나다순 절단 ② `ai_articles` 가 법령은 맞히고
-  조문은 놓침 ③ 모호한 질의임을 알면서 안 알림. 어느 것이 `SR@1` 을 얼마나 깎는지는 **아직 모른다.**
-- Scale: changesets>=3; surfaces: 기여도 프로브·`src/` 수리·교차 A/B; capability: 1턴에 닿는다
-- Status: [x]
+<!-- harness:milestone id="TF3" status="pending" priority="P1" evidence="" -->
+### TF3 — 설치 관문
+- DoD: README 가 노출 도구 11개를 전부 담고 대조 스크립트가 그것을 강제. OC 미설정 환경에서 실제
+  MCP 클라이언트가 받는 안내 메시지가 증거로 남음(스택트레이스 아님). 발급 절차의 외부 URL 전부
+  접근일 병기. `npm test` 전건 · 배포 사본 build + dist 스모크 · **재시작 부채 명시**.
+- Evidence: (plan → `plans/2026-07-23-tf3-install-gate.md`)
+- Gap: README 는 도구 11개 중 4개만 적고 OC 를 어디서 받는지 한 줄도 없다. 상류(법제처)도 절차를
+  공개하지 않는다(공개 페이지 3곳 실측). 신규 사용자 100%가 만나는 첫 관문이 무주공산이다.
+- Scale: changesets>=3; surfaces: README 대조 스크립트·런타임 진단·무자격 E2E; capability: 처음
+  붙이는 사람이 자력으로 통과한다
+- Status: [ ]
 
-- Completed at: 2026-07-23
-- Summary: 어휘 공백 신호 채택 — 순위 미변경(손실 0 구조적), 재현율 6/7·정밀도 75%. 서버 instructions 채움.
-<!-- harness:milestone id="AR4" status="completed" priority="P0" evidence="changesets/20260723-ar4-verdict/ · changesets/20260723-ar3-vocab-gap/ · evidence/bench/2026-07-23-ar4-holdout.md · npm test 314/314 · 범용 dev 88.0% · src/ 0줄" -->
-### AR4 — 판정
-- DoD: 새 홀드아웃 blind 1회 개봉(**≥5회 반복**). 닫는 기준 6종 `선언/실측/판정` 대조표. 프리모템
-  5종 발화 대조. 크기 회고(선언 ~11 / 실측 M). 범용 dev ≥88%. `git diff --stat src/` 0 줄. 봉인이
-  플래그 없이 여전히 거절. **실 MCP 표면에서 인용 체인 관측.** 미달은 미달로 기록.
-- Evidence: changesets/20260723-ar4-verdict/ · changesets/20260723-ar3-vocab-gap/ · evidence/bench/2026-07-23-ar4-holdout.md · npm test 314/314 · 범용 dev 88.0% · src/ 0줄
-  `archive/reports/2026-07-22-ar4-agentic-reach-close.md`
-- Gap: dev 수치는 튜닝 대상이라 과적합을 판정하지 못한다. 직전 두 horizon 에서 이 규율이 판정을
-  살렸다(93.3% > 88.0% 로 과적합 기각 / 75% 미달을 미달로 기록).
-- Scale: changesets>=2; surfaces: 홀드아웃 러너·실 MCP 표면 E2E; capability: 이 자를 닫을 수 있는지
-  판정한다
-- Status: [x]
-
-- Completed at: 2026-07-23
-- Summary: 홀드아웃 1회 개봉 — 닫는 기준 6/6 충족. 과적합 기각. 단 홀드아웃 변별력 낮아 절대 수치 미채택(사용자 확정).
 ## Next Candidates
 
 후보 백로그 정본 → `plans/horizons/CANDIDATES.md` (순서는 사용자 소유).
-요약: 다음 분야 vertical(노동·부동산) · 서버 instructions(AR3 후보로 편입) · 남은 upstream 자료원 ·
-위임조문 지연(3.3초) · 공개 배포·발견성.
+요약: 다음 분야 vertical(노동·부동산) · 남은 upstream 자료원 · 위임조문 지연(3.3초) ·
+벤더 교차 측정 · AR3 어휘 공백 경고 유지 여부 · `as_of` 가 법령ID 를 못 받는 결함.
 
 **범위 밖(사용자 발화가 착수 신호)**: 공개 배포 · npm · 발견성.
 
