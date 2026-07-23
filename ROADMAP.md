@@ -7,7 +7,7 @@
 > ⚠ 재시작 부채: 사용자가 MCP 서버를 재시작해야 TF3·TF4 의 `src/` 변경이 반영된다.
 > 다음 horizon 미정 — 후보는 `plans/horizons/CANDIDATES.md`.
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
-> 된다 (전문 → `OBJECTIVE.md`)
+> 된다 (전문 → `CLAUDE.md` 「북극성」 절)
 > line budget: <=150
 
 ## Current Horizon
