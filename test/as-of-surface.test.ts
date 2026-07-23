@@ -52,3 +52,39 @@ test("도구 설명이 시점 축과 실패 방식을 알린다", () => {
   assert.match(index, /FAILS rather than\s*"?\s*\+?\s*"?silently returning the current version/,
     "조용한 현행 반환을 하지 않는다고 명시");
 });
+
+/**
+ * TF4 — 검색→시점조회 체인 회귀 계약.
+ *
+ * `search_law` 는 `law_id` 를 주는데 시점 해석은 법령**명**으로만 된다(상류 시행판 목록이
+ * 이름 질의 + 이름 정확일치다). 예전에는 `resolveAsOfVersion(lawId, ...)` 로 ID 를 이름 자리에
+ * 넘겨서 그 체인이 통째로 끊겼다. 실 API 동작은 프로브로 관측했고(changeset README),
+ * 여기서는 **되돌아가면 안 되는 배선**을 잠근다.
+ */
+test("시점 해석에는 법령ID 가 아니라 법령명이 들어간다", () => {
+  assert.ok(
+    !/this\.resolveAsOfVersion\(\s*lawId\s*,/.test(provider),
+    "lawId 를 그대로 넘기면 시행판 목록이 0건이 되어 검색→시점조회가 끊긴다",
+  );
+  assert.match(
+    provider,
+    /this\.resolveAsOfVersion\(\s*asOfLawName\s*,/,
+    "이름으로 해석한 값을 넘겨야 한다",
+  );
+});
+
+test("법령ID → 법령명 해석은 추측하지 않고 상류에서 받아 온다", () => {
+  assert.match(provider, /private async resolveLawName\(/, "해석 경로가 존재한다");
+  const body = provider.slice(provider.indexOf("private async resolveLawName("));
+  assert.match(body.slice(0, 600), /target: "law"/, "본문 조회로 이름을 받는다");
+  assert.match(body.slice(0, 600), /법령명_한글|법령명한글/, "상류 필드에서 이름을 읽는다");
+});
+
+test("이름 해석에 실패하면 시점 조회를 하지 않는다", () => {
+  // 이름을 못 받았는데 그대로 진행하면 다시 ID 가 이름 자리에 들어간다.
+  assert.match(
+    provider,
+    /options\.asOf && asOfLawName/,
+    "이름이 없으면 시점 경로로 들어가지 않는다",
+  );
+});

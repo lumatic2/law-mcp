@@ -1472,6 +1472,25 @@ export class LawGoProvider implements LawProvider {
    * 이 두 줄이 없으면 `get_law_article("민법","제245조")` 가 새마을금고법 조문을 HTTP 200 으로
    * 조용히 반환한다(UD0 에서 실측 재현). LB3 `ordin` 사고와 같은 부류 — **틀린 답이 성공처럼 온다.**
    */
+  /**
+   * 법령 식별자 → 법령**명**.
+   *
+   * 시점 조회는 이름으로만 된다(상류 시행판 목록이 이름 질의 + 이름 정확일치다). 입력이 이미
+   * 이름이면 그대로 쓰고, 숫자 ID 면 본문 조회로 이름을 받아 온다 — 이름을 **추측하지 않는다**.
+   */
+  private async resolveLawName(input: string, resolvedLawId: string): Promise<string | null> {
+    if (!/^\d+$/.test(input)) return input;
+    const root = await fetchLawApi(LAW_SERVICE_BASE_URL, {
+      OC: LAW_API_OC,
+      target: "law",
+      type: "JSON",
+      ID: resolvedLawId,
+    });
+    const basic = asObject(asObject(asObject(root).법령).기본정보);
+    const name = pickString(basic, ["법령명_한글", "법령명한글"]);
+    return name && name.trim() ? name.trim() : null;
+  }
+
   private async resolveLawId(lawId: string): Promise<string> {
     if (/^\d+$/.test(lawId)) return lawId;
 
@@ -1532,7 +1551,13 @@ export class LawGoProvider implements LawProvider {
 
     // 시점 지정 경로 (TV3). 못 맞추면 **현행으로 대체하지 않고 거절한다** —
     // 조용한 현행 반환이 이 milestone 이 없애려는 결함 그 자체다.
-    const asOfPlan = options.asOf ? this.resolveAsOfVersion(lawId, options.asOf) : null;
+    // ⚠ **법령ID 를 이름 자리에 넘기면 안 된다.** 시행판 목록 조회는 법령*명*으로 질의하고
+    //    이름 정확일치로 거르므로, `search_law` 가 준 `law_id`("001586")를 그대로 넘기면 0건이
+    //    되어 검색→시점조회 경로가 통째로 끊긴다(TF4 에서 실측 재현).
+    const asOfLawName = options.asOf ? await this.resolveLawName(lawId, resolvedLawId) : null;
+    const asOfPlan = options.asOf && asOfLawName
+      ? this.resolveAsOfVersion(asOfLawName, options.asOf)
+      : null;
     const resolved = asOfPlan ? await asOfPlan : null;
 
     if (resolved) {
