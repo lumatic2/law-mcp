@@ -781,7 +781,7 @@
     {
       "case_id": "tax-04",
       "provenance": "golden-tax.json",
-      "topic_id": "법인세법 제19조의2",
+      "topic_id": "법인세법 시행령 제19조의2",
       "split": "dev",
       "domain": "세법",
       "type": "손금·필요경비",
@@ -789,12 +789,13 @@
       "query": "대손금 손금산입 요건",
       "context": null,
       "expected_laws": [
-        "법인세법"
+        "법인세법 시행령"
       ],
-      "expected_article": "법인세법 제19조의2",
+      "expected_article": "법인세법 시행령 제19조의2",
       "expect_abstain": false,
       "abstain_reason": null,
-      "source": "법인세법 제19조의2(대손금의 손금불산입)"
+      "source": "법인세법 제19조의2(대손금의 손금불산입)",
+      "label_rule": "ADR-0001 규칙2 — 본법이 통째로 위임"
     },
     {
       "case_id": "tax-05",
@@ -1033,7 +1034,7 @@
     {
       "case_id": "tax-18",
       "provenance": "golden-tax.json",
-      "topic_id": "소득세법 제89조",
+      "topic_id": "소득세법 시행령 제154조",
       "split": "dev",
       "domain": "세법",
       "type": "비과세",
@@ -1041,12 +1042,13 @@
       "query": "1세대 1주택 비과세 요건",
       "context": null,
       "expected_laws": [
-        "소득세법"
+        "소득세법 시행령"
       ],
-      "expected_article": "소득세법 제89조",
+      "expected_article": "소득세법 시행령 제154조",
       "expect_abstain": false,
       "abstain_reason": null,
-      "source": "소득세법 제89조(비과세 양도소득) — 회귀 고정(2026-07-21 실측 성공건)"
+      "source": "소득세법 제89조(비과세 양도소득) — 회귀 고정(2026-07-21 실측 성공건)",
+      "label_rule": "ADR-0001 규칙2 — 본법이 통째로 위임"
     },
     {
       "case_id": "tax-19",
@@ -1699,7 +1701,7 @@
     {
       "case_id": "ag-d05",
       "provenance": "golden-tax-agentic.json",
-      "topic_id": "소득세법 제59조의4",
+      "topic_id": "소득세법 시행령 제118조의5",
       "split": "dev",
       "domain": "세법",
       "type": "공제·감면",
@@ -1707,12 +1709,13 @@
       "query": null,
       "context": "작년에 부모님 병원비랑 제 수술비를 꽤 많이 냈습니다. 연말정산에서 병원비 쓴 걸로 세금을 덜 낼 수 있다고 들었는데, 어떤 지출이 그 대상이 되는지 정확히 정해둔 조문을 찾고 있습니다. 안경이나 건강검진도 되는지 궁금하고요.",
       "expected_laws": [
-        "소득세법"
+        "소득세법 시행령"
       ],
-      "expected_article": "소득세법 제59조의4",
+      "expected_article": "소득세법 시행령 제118조의5",
       "expect_abstain": false,
       "abstain_reason": null,
-      "source": null
+      "source": null,
+      "label_rule": "ADR-0001 규칙2 — 본법이 통째로 위임"
     },
     {
       "case_id": "ag-d06",
@@ -1771,7 +1774,7 @@
     {
       "case_id": "ag-d09",
       "provenance": "golden-tax-agentic.json",
-      "topic_id": "조세특례제한법 제70조",
+      "topic_id": "조세특례제한법 시행령 제67조",
       "split": "dev",
       "domain": "세법",
       "type": "비과세",
@@ -1779,12 +1782,13 @@
       "query": null,
       "context": "농사짓던 땅을 팔고 다른 지역에 농지를 새로 샀습니다. 이렇게 갈아타는 경우엔 땅 팔 때 생기는 세금을 깎아준다고 하던데, 새 땅까지 거리 조건이나 계속 농사지어야 하는 기간 같은 요건이 있다고 합니다. 그 요건을 정한 조문을 찾습니다.",
       "expected_laws": [
-        "조세특례제한법"
+        "조세특례제한법 시행령"
       ],
-      "expected_article": "조세특례제한법 제70조",
+      "expected_article": "조세특례제한법 시행령 제67조",
       "expect_abstain": false,
       "abstain_reason": null,
-      "source": null
+      "source": null,
+      "label_rule": "ADR-0001 규칙2 — 본법이 통째로 위임"
     },
     {
       "case_id": "ag-d10",

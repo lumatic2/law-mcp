@@ -59,8 +59,20 @@
   - [x] `npm test` 314/314 · `git diff --stat src/` 0줄
 - Result: 통합 성공 — 8개 지표 전부 일치. `evidence/bench/2026-07-23-tf1-reproduction.md`
 
+## step-4 — 라벨 규약 적용 (재현 검증 뒤)
+
+- Goal: ADR 0001 규약을 4건에 적용하고 그 효과를 재현 수치와 **분리해** 기록한다.
+- Verification
+  - [x] 4건 적용 — 대상이 각각 정확히 1건임을 스크립트가 확인 (아니면 exit 1)
+  - [x] 스키마 검증 exit 0
+  - [x] 효과 측정: `pass^3` 90% 불변, 흔들리는 케이스가 d05↔d09 로 **뒤바뀜**
+  - [x] 세법 dev `recall@3` 83.3% — 변경 2건 모두 여전히 HIT (도달 축 손실 0)
+- Result: 규약 적용이 합계를 바꾸지 않았다. 대신 **에이전트가 본법/시행령 사이에서 실제로
+  진동한다**는 사실이 드러났다 — 라벨 문제가 아니라 도구가 위임 관계를 소비층에 못 전달하는
+  문제. 후속 후보로 적재.
+
 ## Result
 
-- Status: done (step 3/3)
+- Status: done (step 4/4)
 - Evidence: `evidence/bench/2026-07-23-tf1-reproduction.md` · `bench/corpus.json` ·
   `docs/adr/0001-본법-시행령-정답-라벨-규약.md`
