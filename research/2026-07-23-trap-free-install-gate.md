@@ -51,6 +51,19 @@ OC 없이 살아남는 것:
 - 인증 실패는 `Known Edge Cases` 에 한 줄로 밀려 있는데, 실제로는 신규 사용자 100%가 만나는
   첫 관문이다.
 
+## 2b. 추가 실측 — 신청 경로는 있다 (2026-07-23)
+
+`guideList.do` 의 좌측 메뉴에서 경로가 확인된다:
+
+- **OPEN API 신청**: `https://open.law.go.kr/LSO/openApi/cuAskList.do` — 미로그인으로 접근하면
+  "회원 로그인 / 국가법령정보 공동활용에 오신것을 환영합니다. 메일주소와 비밀번호를 입력하신 후
+  로그인 버튼을 클릭해 주세요." 로 이동한다. 즉 **메일주소 계정 가입 → 로그인 → 신청** 순서다.
+- **API인증키관리**: `https://open.law.go.kr/LSO/usr/usrOcInfoMod.do` — 발급된 인증값 확인·수정.
+
+따라서 README 는 화면 단계를 재현 서술하지 않고 **이 링크들 + "여기서 발급받아야 한다"** 로 쓴다
+(2026-07-23 사용자 확정). 상류 화면은 바뀌므로 복제한 절차는 곧 낡는다.
+IP/도메인 등록 필요 여부는 여전히 공개 페이지에서 확인되지 않아 **쓰지 않는다**.
+
 ## 종료 신호
 
 포화 — 상류 공개 페이지 3곳에서 절차 서술이 마르는 것을 확인했고, 레포 측 사실은 코드에서
@@ -62,3 +75,5 @@ OC 없이 살아남는 것:
 - 법제처 OpenAPI 가이드 목록 — https://open.law.go.kr/LSO/openApi/guideList.do (2026-07-23)
 - 판례 본문 조회 API 가이드 — https://open.law.go.kr/LSO/openApi/guideResult.do?htmlName=precInfoGuide (2026-07-23)
 - 공공데이터포털 법제처 국가법령정보 공유서비스 — https://www.data.go.kr/data/15000115/openapi.do (2026-07-23)
+- OPEN API 신청 — https://open.law.go.kr/LSO/openApi/cuAskList.do (2026-07-23, 로그인 필요)
+- API인증키관리 — https://open.law.go.kr/LSO/usr/usrOcInfoMod.do (2026-07-23)

@@ -36,21 +36,28 @@ Status: pending-approval
 ## 결정 로그
 - D-TF3-1 degraded 모드 채택 여부 — 선택지 ① 미채택(안내와 진단으로 간다) ② 채택(무자격이면 로컬
   2도구 + NTS 만 노출). 추천 ① — 근거는 위 non-goals.
-  확정값: (승인 게이트에서 기록)
-- D-TF3-2 OC 발급 절차의 사실관계 — 상류 공개 페이지 3곳에 절차 서술이 없다(리서치 §2). 발급 화면
-  실제 문구와 IP/도메인 등록 필요 여부는 실제 발급자인 사용자만 안다. 사용자 확인이 step-1 착수
-  조건이며 확인 전에는 추정으로 쓰지 않는다.
-  확정값: (승인 게이트에서 기록)
+  확정값: **① 미채택 — 안내와 진단으로 간다** (2026-07-23 사용자 확정)
+- D-TF3-2 OC 발급 절차를 어떻게 쓰나 — 화면 단계를 재현 서술하지 않고 **법제처 신청 페이지 링크 +
+  "여기서 발급받아야 한다"** 로 쓴다(2026-07-23 사용자 확정). 상류 화면은 바뀌므로 우리가 복제한
+  절차는 곧 낡는다.
+  확정값: README 는 아래 3개 URL 만 제시한다 —
+  ① OPEN API 신청 `https://open.law.go.kr/LSO/openApi/cuAskList.do` (로그인 필요 — 미로그인 시
+  "회원 로그인" 페이지로 이동, 메일주소 계정. 접근 2026-07-23)
+  ② API인증키관리 `https://open.law.go.kr/LSO/usr/usrOcInfoMod.do` (발급된 인증값 확인, 접근 2026-07-23)
+  ③ 이용안내 `https://open.law.go.kr/LSO/openApi/guideList.do` (접근 2026-07-23)
+  `OC` 의 상류 정의는 원문 그대로 "신청한 API인증값" 이다. IP/도메인 등록 필요 여부는 공개 페이지에서
+  확인되지 않으므로 **쓰지 않는다**(추정 금지) — 대신 인증 실패 시 진단 문구가 이 가능성을 안내한다.
 - D-TF3-3 npm 공개 배포를 이 horizon 에 담을지 — 범위 밖으로 두는 것이 기본이다
   (`plans/horizons/CANDIDATES.md` E: 사용자 발화가 착수 신호).
-  확정값: (승인 게이트에서 기록)
-- status: (승인 게이트에서 resolved 로 기록)
+  확정값: **제외** (2026-07-23 사용자 확정)
+- status: resolved
 
 ## Step 트리
 - [ ] **step-1 — README 실물화**
   - Artifact: 도구 11개와 발급 절차를 담은 `README.md` · `.env.example` · `scripts/check-readme-tools.ts`
   - Files: read `src/index.ts`·`research/2026-07-23-trap-free-install-gate.md` / write `README.md`·`.env.example`·`scripts/check-readme-tools.ts`
   - Dependencies: 없음 (D-TF3-2 사용자 확인이 착수 조건)
+  - Risk: 없음 (문서와 대조 스크립트만)
   - Verify: `npx tsx scripts/check-readme-tools.ts` 가 README 표와 `src/index.ts` 등록 목록이 일치할
     때만 exit 0 · 발급 절차의 모든 외부 URL 에 접근일 병기
   - Failure probe: README 표에서 도구 1개를 지우고 대조 스크립트가 exit 1 하는지 확인
@@ -59,6 +66,7 @@ Status: pending-approval
   - Artifact: 사람이 읽는 OC 미설정·인증 실패 진단 문구
   - Files: read `src/config.ts`·`src/mcp-error.ts`·`src/providers/lawgo-provider.ts` / write `src/config.ts`·`src/mcp-error.ts`
   - Dependencies: step-1
+  - Risk: 위험 (에러 경로 문구 변경이 기존 에러 처리 테스트를 막을 수 있다)
   - Verify: OC 없이 기동한 메시지가 ① 무엇이 없는지 ② 어디서 받는지(URL) ③ 어디에 넣는지를 담는다 ·
     `npm test` 전건 통과
   - Failure probe: 잘못된 OC 값을 넣고 인증 실패 응답이 무엇이 잘못됐는지 말하는지 확인 — 현재는
@@ -68,6 +76,7 @@ Status: pending-approval
   - Artifact: `evidence/2026-07-23-tf3-no-credential-e2e.md`(클라이언트 로그 원문 첨부)
   - Files: read `src/mcp-smoke-client.ts` / write `evidence/2026-07-23-tf3-no-credential-e2e.md`
   - Dependencies: step-2
+  - Risk: 없음
   - Verify: `LAW_API_OC` 를 비운 환경에서 `npm run smoke:mcp` 실행 후 클라이언트가 받은 메시지 원문을
     증거에 붙인다 · 배포 사본 build + dist 스모크 · 재시작 부채 명시
   - Failure probe: 메시지가 스택트레이스나 내부 경로를 노출하면 실패로 기록하고 step-2 로 되돌린다
