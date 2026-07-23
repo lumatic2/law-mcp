@@ -4,7 +4,7 @@
 > 개정 2026-07-23: 봉인 회전 기계장치를 **삭제**했다(사용자 판정). 지금 점수를 보며 튜닝할 대상이
 > 없어 장치가 놀고, 대신 규약 ADR 한 줄로 다음에 문제를 늘릴 때를 대비한다.
 
-Status: pending-approval
+Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
 - execution mode: continuous
 
 ## 위계

@@ -2,7 +2,7 @@
 
 > 생성: 2026-07-23 · 산출물: changeset(tooling) · scope: 검색→시점조회 경로 복구
 
-Status: pending-approval
+Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
 - execution mode: continuous
 
 ## 위계

@@ -2,7 +2,7 @@
 
 > 생성: 2026-07-23 · 산출물: changeset(tooling) · scope: OC 발급 안내 · 무자격 진단 · README 실물화
 
-Status: pending-approval
+Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
 - execution mode: continuous
 
 ## 위계
