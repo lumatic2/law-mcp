@@ -53,7 +53,7 @@ Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
 - status: resolved
 
 ## Step 트리
-- [ ] **step-1 — README 실물화**
+- [x] **step-1 — README 실물화**
   - Artifact: 도구 11개와 발급 절차를 담은 `README.md` · `.env.example` · `scripts/check-readme-tools.ts`
   - Files: read `src/index.ts`·`research/2026-07-23-trap-free-install-gate.md` / write `README.md`·`.env.example`·`scripts/check-readme-tools.ts`
   - Dependencies: 없음 (D-TF3-2 사용자 확인이 착수 조건)
@@ -62,7 +62,7 @@ Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
     때만 exit 0 · 발급 절차의 모든 외부 URL 에 접근일 병기
   - Failure probe: README 표에서 도구 1개를 지우고 대조 스크립트가 exit 1 하는지 확인
   - Commit: `docs: README 를 실제 노출 도구 11개 + OC 발급 절차로 실물화`
-- [ ] **step-2 — 무자격 진단 메시지**
+- [x] **step-2 — 무자격 진단 메시지**
   - Artifact: 사람이 읽는 OC 미설정·인증 실패 진단 문구
   - Files: read `src/config.ts`·`src/mcp-error.ts`·`src/providers/lawgo-provider.ts` / write `src/config.ts`·`src/mcp-error.ts`
   - Dependencies: step-1
@@ -72,7 +72,7 @@ Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
   - Failure probe: 잘못된 OC 값을 넣고 인증 실패 응답이 무엇이 잘못됐는지 말하는지 확인 — 현재는
     상류 문구가 그대로 노출된다
   - Commit: `feat: OC 미설정·인증 실패를 사람이 읽는 진단으로`
-- [ ] **step-3 — 무자격 실표면 관측**
+- [x] **step-3 — 무자격 실표면 관측**
   - Artifact: `evidence/2026-07-23-tf3-no-credential-e2e.md`(클라이언트 로그 원문 첨부)
   - Files: read `src/mcp-smoke-client.ts` / write `evidence/2026-07-23-tf3-no-credential-e2e.md`
   - Dependencies: step-2
@@ -88,7 +88,10 @@ Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
 - `npm test` 전건 통과 · 배포 사본 build + dist 스모크 · 재시작 부채 명시.
 
 ## finding 큐
-- (실행 중 발견분 append)
+- F1 **상류 5xx 오분류** — 잘못된 인증값에 상류가 경로별로 200+오류본문 / 5xx 로 갈린다. 후자는
+  "일시 장애(재시도 가능)"가 되어 인증 문제인 사용자가 영원히 재시도한다. 메시지 보완까지만 했고
+  근본 수리(5xx 시 검증용 재조회로 재분류)는 후속 후보.
+- F2 IP·도메인 등록 필요는 상류 응답 문구로 확인했으나 **실제 등록은 해 보지 않았다**.
 
 ## 진행 로그 (append-only)
 - 2026-07-23 plan 작성.

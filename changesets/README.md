@@ -39,6 +39,7 @@
 | 29 | [20260721-tv3-asof-verdict](20260721-tv3-asof-verdict/README.md) | 2026-07-21 | bench/tv3-asof.ts (신규), evidence/bench/2026-07-21-tv3-asof.{md,json} | ✅ | done |
 | 30 | [20260723-tf1-corpus](20260723-tf1-corpus/README.md) | 2026-07-23 | 골드 4파일 → 단일 코퍼스 통합 + 재현 검증 (TF1) | ✅ | done |
 | 31 | [20260723-tf2-context](20260723-tf2-context/README.md) | 2026-07-23 | 맥락 60건·질의 11건 부착, topic 커버리지 100% (TF2) | ✅ | done |
+| 32 | [20260723-tf3-install](20260723-tf3-install/README.md) | 2026-07-23 | 설치 관문 — README 11도구·OC 발급 안내·무자격 진단 (TF3) | ✅ | done |
 
 ## 운영 원칙
 
