@@ -54,18 +54,20 @@
 
 - Completed at: 2026-07-23
 - Summary: topic 커버리지 100%(94/94), 유출 0, 신규 주제 0건 기계 증명, 봉인 규약 ADR 0002. 재기준선은 의도적 미산출.
-<!-- harness:milestone id="TF3" status="pending" priority="P1" evidence="" -->
+<!-- harness:milestone id="TF3" status="completed" priority="P1" evidence="archive/reports/2026-07-23-tf3-install-close.md · evidence/2026-07-23-tf3-no-credential-e2e.md · changesets/20260723-tf3-install/" -->
 ### TF3 — 설치 관문
 - DoD: README 가 노출 도구 11개를 전부 담고 대조 스크립트가 그것을 강제. OC 미설정 환경에서 실제
   MCP 클라이언트가 받는 안내 메시지가 증거로 남음(스택트레이스 아님). 발급 절차의 외부 URL 전부
   접근일 병기. `npm test` 전건 · 배포 사본 build + dist 스모크 · **재시작 부채 명시**.
-- Evidence: (plan → `plans/2026-07-23-tf3-install-gate.md`)
+- Evidence: archive/reports/2026-07-23-tf3-install-close.md · evidence/2026-07-23-tf3-no-credential-e2e.md · changesets/20260723-tf3-install/
 - Gap: README 는 도구 11개 중 4개만 적고 OC 를 어디서 받는지 한 줄도 없다. 상류(법제처)도 절차를
   공개하지 않는다(공개 페이지 3곳 실측). 신규 사용자 100%가 만나는 첫 관문이 무주공산이다.
 - Scale: changesets>=3; surfaces: README 대조 스크립트·런타임 진단·무자격 E2E; capability: 처음
   붙이는 사람이 자력으로 통과한다
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-23
+- Summary: README 도구 4→11, OC 발급 링크+IP등록 근거, 무자격·인증실패 사람이 읽는 진단, 실 MCP 무자격 관측 + 배포 사본 스모크.
 <!-- harness:milestone id="TF4" status="pending" priority="P1" evidence="" -->
 ### TF4 — `as_of` 가 법령ID 를 받게
 - DoD: `get_law_article(law_id=..., as_of=...)` 가 동작하고 회귀 테스트가 고정. 실 MCP 클라이언트에서

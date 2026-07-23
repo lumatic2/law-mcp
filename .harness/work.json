@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "tf2-context",
+  "active_work_id": "tf3-install",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -1142,6 +1142,57 @@
       "updated_at": "2026-07-23",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
       "completion_summary": "맥락 60건·질의 11건으로 topic 커버리지 100%. 주제 무개입 기계 증명 + 봉인 규약 ADR."
+    },
+    "tf3-install": {
+      "work_id": "tf3-install",
+      "horizon_id": "trap-free",
+      "milestone_id": "TF3",
+      "status": "completed",
+      "plan_path": "plans/2026-07-23-tf3-install-gate.md",
+      "changeset_path": "changesets/20260723-tf3-install",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1 — README 실물화",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2 — 무자격 진단 메시지",
+          "status": "pending"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3 — 무자격 실표면 관측",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-23",
+        "plan_sha256": "1fd8c086879a540de2acf930b0148ce3a0bb886b93ccb6d40a027cd02634f072"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "claude:df33a404-d87b-4594-a445-cec5fbfe58c3"
+      ],
+      "owner_session_uuid": "claude:df33a404-d87b-4594-a445-cec5fbfe58c3",
+      "updated_at": "2026-07-23",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "README 4→11 도구, OC 발급 안내, 무자격·인증실패 진단, 실 MCP 무자격 관측."
     }
   },
   "stop_reason": null,

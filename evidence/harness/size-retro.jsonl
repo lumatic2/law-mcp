@@ -21,3 +21,4 @@
 {"actual_changesets": 1, "declared_min": 3, "milestone_id": "TF1", "ts": "2026-07-23", "unresolved_refs": [], "verdict": "inflation-candidate"}
 {"ts": "2026-07-23", "milestone_id": "TF1", "actual_changesets": 1, "declared_min": 3, "verdict": "metric-artifact", "supersedes": "TF1@2026-07-23 inflation-candidate", "note": "기록-합본 규약(OI5, 2026-07-23) 아래서 milestone 은 changeset 디렉터리 1개를 갖고 step 이 그 README 의 절이 된다. 실측은 디렉터리 1개 / step 4개 / 커밋 4개이고, 자동 카운트는 디렉터리를 세므로 선언(changesets>=3)과 어긋난 것처럼 보인다. 인플레가 아니라 카운트 기준 불일치다."}
 {"actual_changesets": 1, "declared_min": 2, "milestone_id": "TF2", "ts": "2026-07-23", "unresolved_refs": [], "verdict": "inflation-candidate"}
+{"actual_changesets": 1, "declared_min": 3, "milestone_id": "TF3", "ts": "2026-07-23", "unresolved_refs": [], "verdict": "inflation-candidate"}
