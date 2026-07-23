@@ -125,6 +125,14 @@
   에이전트가 주제까지 골랐다. Evidence: `evidence/bench/2026-07-23-ar4-holdout.md`.
   남은 gap: 이 오염이 horizon `trap-free` TF2 의 출발점.
 
+- **horizon `trap-free` (함정 없음)** (2026-07-23) — 닫는 기준 7종 중 6종 충족, 1종(형식 중립
+  커버리지)은 지표 정의 오류로 topic 기준 재정의. TF1 단일 코퍼스(124 레코드/94 topic, 8개 지표
+  재현 일치) · TF2 맥락 60건·질의 11건(유출 0, 신규 주제 0건 기계 증명, ADR 0002 봉인 규약) ·
+  TF3 설치 관문(README 4→11 도구, OC 발급·IP 등록 안내, 무자격 진단 + 실 관측) ·
+  TF4 `as_of` 가 법령ID 를 받게(검색→시점조회 체인 복구).
+  Evidence: `archive/reports/2026-07-23-trap-free-close.md`. 남은 gap: 에이전트 새 기준선 없음 ·
+  미개봉 문제 0개 · 상류 5xx 오분류 근본 수리 · 본법/시행령 진동 전달 문제.
+
 ## Deferred
 
 - (아직 없음)

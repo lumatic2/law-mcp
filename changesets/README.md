@@ -40,6 +40,7 @@
 | 30 | [20260723-tf1-corpus](20260723-tf1-corpus/README.md) | 2026-07-23 | 골드 4파일 → 단일 코퍼스 통합 + 재현 검증 (TF1) | ✅ | done |
 | 31 | [20260723-tf2-context](20260723-tf2-context/README.md) | 2026-07-23 | 맥락 60건·질의 11건 부착, topic 커버리지 100% (TF2) | ✅ | done |
 | 32 | [20260723-tf3-install](20260723-tf3-install/README.md) | 2026-07-23 | 설치 관문 — README 11도구·OC 발급 안내·무자격 진단 (TF3) | ✅ | done |
+| 33 | [20260723-tf4-asof](20260723-tf4-asof/README.md) | 2026-07-23 | as_of 가 법령ID 를 받게 — 검색→시점조회 경로 복구 (TF4) | ✅ | done |
 
 ## 운영 원칙
 

@@ -46,7 +46,7 @@ Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
 - status: none-required
 
 ## Step 트리
-- [ ] **step-1 — 법령ID 입력 경로 수리**
+- [x] **step-1 — 법령ID 입력 경로 수리**
   - Artifact: `law_id` 와 법령명 양쪽을 받는 시점 해석 + 회귀 테스트
   - Files: read `src/providers/lawgo-provider.ts`·`src/effective-law.ts`·`src/index.ts` / write `src/providers/lawgo-provider.ts`·`test/` 신규 테스트
   - Dependencies: 없음
@@ -55,7 +55,7 @@ Status: approved (2026-07-23 사용자 승인 — horizon 전체 연쇄)
     법령명 입력 경로가 기존과 동일하게 동작한다 · `npm test` 전건 통과
   - Failure probe: 존재하지 않는 연도(예 `as_of="1800"`)를 주면 현행으로 대체하지 않고 거절하는지 확인
   - Commit: `fix: as_of 가 법령ID 를 받게 — 검색→시점조회 경로 복구`
-- [ ] **step-2 — 실 MCP 표면 체인 관측**
+- [x] **step-2 — 실 MCP 표면 체인 관측**
   - Artifact: `evidence/2026-07-23-tf4-asof-chain-e2e.md`(클라이언트 응답 원문 첨부)
   - Files: read `src/mcp-smoke-client.ts` / write `evidence/2026-07-23-tf4-asof-chain-e2e.md`
   - Dependencies: step-1

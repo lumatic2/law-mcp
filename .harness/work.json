@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "tf3-install",
+  "active_work_id": "tf4-asof",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -1193,6 +1193,52 @@
       "updated_at": "2026-07-23",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
       "completion_summary": "README 4→11 도구, OC 발급 안내, 무자격·인증실패 진단, 실 MCP 무자격 관측."
+    },
+    "tf4-asof": {
+      "work_id": "tf4-asof",
+      "horizon_id": "trap-free",
+      "milestone_id": "TF4",
+      "status": "completed",
+      "plan_path": "plans/2026-07-23-tf4-asof-law-id.md",
+      "changeset_path": "changesets/20260723-tf4-asof",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1 — 법령ID 입력 경로 수리",
+          "status": "pending"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2 — 실 MCP 표면 체인 관측",
+          "status": "pending"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-23",
+        "plan_sha256": "03e4977034917da20e769730a77694cb2b87acbd7ce825b7fd49c98e534f839e"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "claude:df33a404-d87b-4594-a445-cec5fbfe58c3"
+      ],
+      "owner_session_uuid": "claude:df33a404-d87b-4594-a445-cec5fbfe58c3",
+      "updated_at": "2026-07-23",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "as_of 가 법령ID 를 받게 고쳐 검색→시점조회 체인 복구."
     }
   },
   "stop_reason": null,

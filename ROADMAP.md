@@ -1,7 +1,11 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-23
-> 상태: **horizon `trap-free` (함정 없음) 개설 — 승인 대기.** TF1~TF4.
+> 상태: **horizon `trap-free` (함정 없음) closed (2026-07-23)** — 닫는 기준 7종 중 6종 충족,
+> 1종(형식 중립 커버리지)은 지표 정의 오류로 topic 기준 재정의. active milestone 없음.
+> ⚠ 에이전트 지표의 새 기준선은 없다 — 유효한 값은 여전히 AR2 dev 20건 `pass^3` 90%.
+> ⚠ 재시작 부채: 사용자가 MCP 서버를 재시작해야 TF3·TF4 의 `src/` 변경이 반영된다.
+> 다음 horizon 미정 — 후보는 `plans/horizons/CANDIDATES.md`.
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `OBJECTIVE.md`)
 > line budget: <=150
@@ -12,8 +16,8 @@
 목표: **함정 없음** 축을 양쪽에서 민다 — 사용자가 만나는 함정(설치 첫 화면의 `LAW_API_OC`)과
 우리가 만나는 함정(평가 문제가 4파일로 흩어져 124건 중 34건만 쓰인다).
 한 문장: 처음 붙이는 사람이 막히지 않고, 우리가 가진 문제를 전부 쓸 수 있다.
-(plan → `plans/horizons/trap-free.md` · 예상 분량 ~10 changeset · 리서치 →
-`research/2026-07-23-trap-free-install-gate.md`)
+(closed plan → `plans/horizons/trap-free.md` · 종료 보고 →
+`archive/reports/2026-07-23-trap-free-close.md` · 선언 ~10 / 실측 11 step)
 
 직전 horizon `agentic-reach` 는 2026-07-23 closed (닫는 기준 6/6, 단 홀드아웃 변별력 저하로
 절대 수치 미채택). 그 원인이 이 horizon 의 출발점이다 — 골드 세트를 4번 만들었고(124건 중
@@ -68,20 +72,22 @@
 
 - Completed at: 2026-07-23
 - Summary: README 도구 4→11, OC 발급 링크+IP등록 근거, 무자격·인증실패 사람이 읽는 진단, 실 MCP 무자격 관측 + 배포 사본 스모크.
-<!-- harness:milestone id="TF4" status="pending" priority="P1" evidence="" -->
+<!-- harness:milestone id="TF4" status="completed" priority="P1" evidence="archive/reports/2026-07-23-tf4-asof-close.md · evidence/2026-07-23-tf4-asof-chain-e2e.md · changesets/20260723-tf4-asof/" -->
 ### TF4 — `as_of` 가 법령ID 를 받게
 - DoD: `get_law_article(law_id=..., as_of=...)` 가 동작하고 회귀 테스트가 고정. 실 MCP 클라이언트에서
   `search_law` → `law_id` → `as_of` 체인이 성공하고 응답 원문이 증거로 남음. 과거 연도와 현행의
   조문 내용이 실제로 다름을 확인. 해석 실패 시 현행으로 대체하지 않는다. `npm test` 전건 ·
   배포 사본 build + dist 스모크 · 재시작 부채 명시.
-- Evidence: (plan → `plans/2026-07-23-tf4-asof-law-id.md`)
+- Evidence: archive/reports/2026-07-23-tf4-asof-close.md · evidence/2026-07-23-tf4-asof-chain-e2e.md · changesets/20260723-tf4-asof/
 - Gap: `getLawArticle` 이 `resolveAsOfVersion(lawId, ...)` 로 **ID 를 이름 자리에 넘긴다**
   (`src/providers/lawgo-provider.ts:1477` → :1537 `fetchLawVersions(lawName)`). 서버가 에이전트에게
   "세금·연도 질문은 `as_of` 를 쓰라"고 지시해 놓고(`src/index.ts:42`) 그 경로가 끊겨 있다.
 - Scale: changesets>=2; surfaces: 시점 해석 수리·회귀 테스트·실 MCP 체인; capability: 검색으로 찾은
   법령을 그대로 귀속연도 시점으로 조회한다
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-23
+- Summary: resolveLawName 추가로 검색→시점조회 체인 복구. 실 MCP 관측 + 연도별 본문 차이 확인.
 ## Next Candidates
 
 후보 백로그 정본 → `plans/horizons/CANDIDATES.md` (순서는 사용자 소유).
