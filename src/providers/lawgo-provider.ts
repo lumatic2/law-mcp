@@ -1,6 +1,8 @@
 import axios from "axios";
 import {
   assertLawApiKey,
+  OC_ISSUE_URL,
+  OC_MANAGE_URL,
   LAW_API_OC,
   LAW_SEARCH_BASE_URL,
   LAW_SERVICE_BASE_URL,
@@ -465,6 +467,26 @@ function buildUpstreamError(message: string, code: string, retryable: boolean, u
   });
 }
 
+/**
+ * 인증 실패는 상류 문구를 그대로 흘리면 "무엇이 잘못됐는지"를 말해 주지 않는다.
+ * 처음 붙이는 사람이 실제로 확인해야 할 것을 여기서 덧붙인다.
+ */
+const AUTH_HINT = [
+  "확인할 것:",
+  "  · LAW_API_OC 값이 발급받은 인증값과 같은지 (" + OC_MANAGE_URL + ")",
+  "  · 신청이 승인 대기 상태는 아닌지 (" + OC_ISSUE_URL + ")",
+  "  · 상류가 호출 출처(IP·도메인) 등록을 요구하는 계정 설정인지 — 그렇다면 인증키관리에서 확인",
+].join("\n");
+
+/**
+ * ⚠ **상류는 잘못된 인증값에도 5xx 를 주는 경로가 있다**(2026-07-23 실측). 그러면 "일시 장애,
+ * 재시도하세요"로 분류돼 인증 문제인 사용자가 영원히 재시도하게 된다. 우리가 상류의 분류를
+ * 고칠 수는 없으니, 반복될 때 무엇을 의심해야 하는지를 메시지에 남긴다.
+ */
+const PERSISTENT_HINT =
+  "이 오류가 반복되면 일시 장애가 아니라 인증값 문제일 수 있습니다 — 위 인증키관리에서 값과 "
+  + "IP·도메인 등록 상태를 확인하세요.";
+
 function throwIfAuthError(root: Record<string, unknown>, upstreamStatus?: number): void {
   const result = pickString(root, ["result"]);
   const msg = pickString(root, ["msg"]);
@@ -472,7 +494,13 @@ function throwIfAuthError(root: Record<string, unknown>, upstreamStatus?: number
   if (!combined) return;
 
   if (/인증|검증|권한|인가|서비스키|api\s*key|유효하지/i.test(combined)) {
-    throw buildUpstreamError(`법제처 API 인증 실패: ${combined}`, "LAW_API_AUTH_ERROR", false, upstreamStatus ?? 401);
+    throw buildUpstreamError(
+      `법제처 API 인증 실패: ${combined}
+${AUTH_HINT}`,
+      "LAW_API_AUTH_ERROR",
+      false,
+      upstreamStatus ?? 401,
+    );
   }
 
   if (/rate|limit|quota|too many|초과|제한|트래픽/i.test(combined)) {
@@ -480,7 +508,13 @@ function throwIfAuthError(root: Record<string, unknown>, upstreamStatus?: number
   }
 
   if (/일시|temporary|temporarily|점검|장애|busy|timeout|unavailable/i.test(combined)) {
-    throw buildUpstreamError(`법제처 API 일시 장애: ${combined}`, "LAW_API_TEMPORARY_ERROR", true, upstreamStatus ?? 503);
+    throw buildUpstreamError(
+      `법제처 API 일시 장애: ${combined}
+${PERSISTENT_HINT}`,
+      "LAW_API_TEMPORARY_ERROR",
+      true,
+      upstreamStatus ?? 503,
+    );
   }
 
   if (/실패|error/i.test(combined)) {
@@ -500,13 +534,25 @@ async function fetchLawApi(url: string, params: Record<string, string | number>)
     if (response.status >= 400) {
       const message = pickString(root, ["msg", "message", "error_description", "error"]) ?? `HTTP ${response.status}`;
       if (response.status === 401 || response.status === 403) {
-        throw buildUpstreamError(`법제처 API 인증 실패: ${message}`, "LAW_API_AUTH_ERROR", false, response.status);
+        throw buildUpstreamError(
+          `법제처 API 인증 실패: ${message}
+${AUTH_HINT}`,
+          "LAW_API_AUTH_ERROR",
+          false,
+          response.status,
+        );
       }
       if (response.status === 429) {
         throw buildUpstreamError(`법제처 API 호출 제한: ${message}`, "LAW_API_RATE_LIMIT", true, response.status);
       }
       if (response.status >= 500) {
-        throw buildUpstreamError(`법제처 API 일시 장애: ${message}`, "LAW_API_TEMPORARY_ERROR", true, response.status);
+        throw buildUpstreamError(
+          `법제처 API 일시 장애: ${message}
+${PERSISTENT_HINT}`,
+          "LAW_API_TEMPORARY_ERROR",
+          true,
+          response.status,
+        );
       }
       throw buildUpstreamError(`법제처 API 호출 실패: ${message}`, "LAW_API_ERROR", false, response.status);
     }
@@ -517,13 +563,25 @@ async function fetchLawApi(url: string, params: Record<string, string | number>)
     if (axios.isAxiosError(error)) {
       const upstreamStatus = error.response?.status;
       if (upstreamStatus === 401 || upstreamStatus === 403) {
-        throw buildUpstreamError("법제처 API 인증 실패", "LAW_API_AUTH_ERROR", false, upstreamStatus);
+        throw buildUpstreamError(
+          `법제처 API 인증 실패
+${AUTH_HINT}`,
+          "LAW_API_AUTH_ERROR",
+          false,
+          upstreamStatus,
+        );
       }
       if (upstreamStatus === 429) {
         throw buildUpstreamError("법제처 API 호출 제한", "LAW_API_RATE_LIMIT", true, upstreamStatus);
       }
       if ((upstreamStatus ?? 0) >= 500 || error.code === "ECONNABORTED") {
-        throw buildUpstreamError("법제처 API 일시 장애", "LAW_API_TEMPORARY_ERROR", true, upstreamStatus);
+        throw buildUpstreamError(
+          `법제처 API 일시 장애
+${PERSISTENT_HINT}`,
+          "LAW_API_TEMPORARY_ERROR",
+          true,
+          upstreamStatus,
+        );
       }
     }
 

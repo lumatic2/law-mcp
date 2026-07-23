@@ -31,6 +31,9 @@ AI 에이전트가 직접 조회하고, 인용한 조문을 검증하며, 과거
 1. [OPEN API 신청](https://open.law.go.kr/LSO/openApi/cuAskList.do) — 메일주소로 회원가입·로그인한 뒤 신청합니다
 2. [API인증키관리](https://open.law.go.kr/LSO/usr/usrOcInfoMod.do) — 발급된 인증값을 확인합니다
 3. 그 값을 `.env` 의 `LAW_API_OC` 에 넣습니다
+4. **호출 서버의 IP·도메인을 등록합니다.** 상류가 잘못된 인증값에 이렇게 답합니다 —
+   "OPEN API 호출 시 사용자 검증을 위하여 정확한 서버장비의 IP주소 및 도메인주소를 등록해 주세요."
+   (2026-07-23 실측). 인증값이 맞는데도 조회가 안 되면 여기를 먼저 보세요.
 
 (링크 접근 확인: 2026-07-23. 전체 안내는 [이용안내](https://open.law.go.kr/LSO/openApi/guideList.do)에
 있습니다. 상류 화면이 바뀔 수 있어 단계별 화면 설명은 여기 옮겨 적지 않습니다.)
@@ -70,7 +73,8 @@ claude mcp add law-mcp -- node /절대경로/law-mcp/dist/index.js
 | 증상 | 원인·조치 |
 |---|---|
 | 서버가 뜨자마자 죽고 `LAW_API_OC` 를 말한다 | 인증값이 없습니다. 위 발급 절차를 따르세요 |
-| 검색은 되는데 결과가 비어 있다 | 인증값이 상류에서 거절됐을 수 있습니다. [API인증키관리](https://open.law.go.kr/LSO/usr/usrOcInfoMod.do)에서 값을 다시 확인하세요 |
+| 검색은 되는데 결과가 비어 있다 | 인증값이 상류에서 거절됐을 수 있습니다. [API인증키관리](https://open.law.go.kr/LSO/usr/usrOcInfoMod.do)에서 값과 **IP·도메인 등록**을 확인하세요 |
+| "일시 장애"가 계속 나온다 | 진짜 장애가 아닐 수 있습니다. 상류는 잘못된 인증값에도 5xx 를 주는 경로가 있어 우리 쪽에서 구분이 안 됩니다 — 반복되면 인증값·IP 등록부터 확인하세요 |
 | 일상어로 물으면 엉뚱한 법이 나온다 | 정상 동작입니다. 응답 `warnings` 에 어휘 공백 경고가 뜨면 **질의를 좁히지 말고 법률 용어로 바꿔** 다시 검색하세요 |
 | 과거 연도 세금 질문에 현행 조문이 온다 | `as_of` 를 주세요(`"2023"` 또는 `"2023-01-01"`). 해석할 수 없는 시점이면 현행으로 대체하지 않고 실패합니다 |
 
@@ -103,8 +107,9 @@ terminology validation.
 **You must obtain your own API credential.** Apply at
 [open.law.go.kr](https://open.law.go.kr/LSO/openApi/cuAskList.do) (sign-up and login required),
 retrieve the issued value from
-[API key management](https://open.law.go.kr/LSO/usr/usrOcInfoMod.do), and put it in `.env` as
-`LAW_API_OC`. Without it, 9 of the 11 tools will not work.
+[API key management](https://open.law.go.kr/LSO/usr/usrOcInfoMod.do), put it in `.env` as
+`LAW_API_OC`, **and register your calling server's IP/domain** — the upstream rejects
+unregistered callers even with a valid credential. Without this, 9 of the 11 tools will not work.
 
 The repository contains server code only. It does not store or redistribute legal source text,
 and real API credentials must stay in a local `.env` file.
