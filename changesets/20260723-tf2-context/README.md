@@ -31,7 +31,23 @@
   topic 에 같은 맥락을 복제할 뿐이라 커버리지 숫자만 올리고 측정에는 중복을 넣는다.
   커버리지는 레코드가 아니라 **topic 기준**으로 센다.
 
+## step-2 — 재기준선·주제 무개입 증명·봉인 규약
+
+- Goal: 주제를 만들지 않았음을 기계로 증명하고, 봉인 규약을 문서로 고정하고, 새 맥락의 dev
+  기준선을 낸다.
+- Verification
+  - [x] `npx tsx bench/check-no-new-topics.ts` → PASS, 표시 없는 신규 주제 **0건**
+        (규약 적용 3건만 `label_rule` 표시로 예외 출력)
+  - [x] 실패 검증: 통합 전에 없던 조문 라벨을 주입하면 FAIL + exit 1
+  - [x] 봉인 규약 `docs/adr/0002-평가-문제-봉인-규약.md` — 미개봉 문제가 0개임을 명시,
+        다음에 문제를 늘릴 때 그 자리에서 떼어 두는 방식으로 확보
+  - [x] 블라인드 측정 하네스 준비 — `evidence/bench/2026-07-23-tf2-baseline/`
+        (BRIEF·tasks.json 43건) · `dist-bench` 빌드 + `tool-cli` 스모크 통과
+  - [ ] **dev 재기준선 3회 — 실 블라인드 세션 필요(비용 결정 대기)**
+- Result: 증명과 규약은 끝. 기준선은 실 에이전트 세션 3회가 필요해 사용자 판단 대기.
+
 ## Result
 
-- Status: in_progress (step 1/2)
-- Evidence: `bench/corpus.json` · `bench/contexts-tf2.json`
+- Status: in_progress (step 2/2 — 기준선 측정만 남음)
+- Evidence: `bench/corpus.json` · `bench/check-no-new-topics.ts` ·
+  `docs/adr/0002-평가-문제-봉인-규약.md`
