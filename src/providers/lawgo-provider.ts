@@ -14,7 +14,22 @@ import {
   type AiSearchFetcher,
   type AiSearchResult,
 } from "../ai-search.js";
-import { DelegationCache, lookupDelegations, type DelegationFetcher } from "../delegated.js";
+import { DelegationCache, lookupDelegations, type DelegatedArticle, type DelegationFetcher } from "../delegated.js";
+
+/**
+ * 결함 D (M3 step-4): 위임 지점 조문 응답에 싣는 소비 안내.
+ * 데이터(`delegated_to`)는 UD3 부터 실려 있었지만 소비층이 결론에 반영하지 않았다(d05·d09 —
+ * 본법·시행령 진동). 등급 경고(TV2)와 같은 원리로 **읽는 법을 응답에** 싣는다.
+ */
+export const DELEGATION_NOTICE =
+  "이 조문은 구체 내용을 하위 법령에 위임한다(delegated_to 참조). 대상·범위·요건·한도 같은 "
+  + "구체 기준을 묻는 질문이면 근거 조문은 본법이 아니라 delegated_to 의 시행령·시행규칙 조문일 "
+  + "수 있다 — 위임받은 조문을 확인하고, 답에는 본법 조문과 위임 조문 중 무엇이 근거인지 명시하라.";
+
+/** as_of(과거 시점) 조회에 현행 위임 정보를 붙일 때의 사실 고지 (상류에 시점 축이 없다). */
+export const DELEGATION_AS_OF_NOTICE =
+  "delegated_to 는 현행 법령 기준이다 — 위임 정보 상류(lsDelegated)에 시점 축이 없어 과거 시점의 "
+  + "위임처는 다를 수 있다. 과거 연도 답변에 위임 조문을 인용할 때는 그 조문도 as_of 로 확인하라.";
 import { missingParentNames, parentLawName } from "../parent-law.js";
 import { createMcpError } from "../mcp-error.js";
 import {
@@ -217,7 +232,7 @@ function getMatchRank(matchType: MatchType): number {
   }
 }
 
-function normalizeArticleInput(value: string): string {
+export function normalizeArticleInput(value: string): string {
   const compact = value.replace(/\s+/g, "");
   const explicitMatch = compact.match(/^제?(\d+)조(?:의(\d+))?$/);
   if (explicitMatch) {
@@ -226,7 +241,7 @@ function normalizeArticleInput(value: string): string {
   return compact.replace(/^제/, "").replace(/조/g, "").replace(/항$/, "");
 }
 
-function parseArticleReference(value: string, fallbackBranch?: string | null): ArticleReference | null {
+export function parseArticleReference(value: string, fallbackBranch?: string | null): ArticleReference | null {
   const normalized = normalizeArticleInput(value);
   if (!normalized) return null;
 
@@ -537,6 +552,76 @@ ${PERSISTENT_HINT}`,
   }
 }
 
+/**
+ * 결함 F (M3 step-2): 상류는 잘못된 인증값에도 경로에 따라 5xx 를 준다(2026-07-23 실측).
+ * 5xx 를 그대로 "일시 장애(재시도 가능)"로 분류하면 인증 문제인 사용자가 영원히 재시도한다.
+ * 그래서 5xx 를 만나면 **안정 엔드포인트(target=law)로 검증 재조회 1회**를 던져 갈라 낸다 —
+ * 그 경로는 잘못된 인증값에 200+오류본문을 주는 것이 실측돼 있어 인증 상태를 읽을 수 있다.
+ * 재조회 결과는 60초 캐시한다(진짜 장애 중 프로브 폭주 방지). 네트워크 단절(ECONNABORTED)은
+ * 프로브를 던지지 않는다 — 프로브도 같이 죽어 지연만 늘린다.
+ */
+type AuthProbeVerdict = "auth" | "ok" | "unknown";
+let lastAuthProbe: { at: number; verdict: AuthProbeVerdict } | null = null;
+
+async function probeAuthHealth(): Promise<AuthProbeVerdict> {
+  if (lastAuthProbe && Date.now() - lastAuthProbe.at < 60_000) return lastAuthProbe.verdict;
+  let verdict: AuthProbeVerdict = "unknown";
+  try {
+    const response = await axios.get<unknown>(LAW_SEARCH_BASE_URL, {
+      params: { OC: LAW_API_OC, target: "law", type: "JSON", query: "소득세법", display: 1 },
+      timeout: 8_000,
+      validateStatus: () => true,
+    });
+    const root = asObject(response.data);
+    const combined = `${pickString(root, ["result"]) ?? ""} ${pickString(root, ["msg"]) ?? ""}`.trim();
+    if (
+      response.status === 401
+      || response.status === 403
+      || /인증|검증|권한|인가|서비스키|api\s*key|유효하지/i.test(combined)
+    ) {
+      verdict = "auth";
+    } else if (response.status < 400) {
+      verdict = "ok";
+    }
+  } catch {
+    verdict = "unknown"; // 프로브 자체가 실패 — 단정하지 않는다 (무한 재조회 없음: 1회 + 60초 캐시)
+  }
+  lastAuthProbe = { at: Date.now(), verdict };
+  return verdict;
+}
+
+/** 검증 재조회 결과에 따라 5xx 를 인증 실패 / 일시 장애로 분류한다. 순수 함수 — 테스트 대상. */
+export function buildFiveHundredError(
+  verdict: AuthProbeVerdict,
+  message: string,
+  upstreamStatus?: number,
+): Error {
+  if (verdict === "auth") {
+    return buildUpstreamError(
+      `법제처 API 인증 실패 (상류가 5xx 로 응답했으나 검증 재조회가 인증 오류를 확인함 — 재시도 무익): ${message}
+${AUTH_HINT}`,
+      "LAW_API_AUTH_ERROR",
+      false,
+      upstreamStatus,
+    );
+  }
+  if (verdict === "ok") {
+    return buildUpstreamError(
+      `법제처 API 일시 장애 (인증은 정상 — 검증 재조회 성공. 이 요청 경로만의 일시 오류일 수 있으니 재시도 가치 있음): ${message}`,
+      "LAW_API_TEMPORARY_ERROR",
+      true,
+      upstreamStatus,
+    );
+  }
+  return buildUpstreamError(
+    `법제처 API 일시 장애: ${message}
+${PERSISTENT_HINT}`,
+    "LAW_API_TEMPORARY_ERROR",
+    true,
+    upstreamStatus,
+  );
+}
+
 async function fetchLawApi(url: string, params: Record<string, string | number>): Promise<Record<string, unknown>> {
   try {
     const response = await axios.get<unknown>(url, {
@@ -561,13 +646,8 @@ ${AUTH_HINT}`,
         throw buildUpstreamError(`법제처 API 호출 제한: ${message}`, "LAW_API_RATE_LIMIT", true, response.status);
       }
       if (response.status >= 500) {
-        throw buildUpstreamError(
-          `법제처 API 일시 장애: ${message}
-${PERSISTENT_HINT}`,
-          "LAW_API_TEMPORARY_ERROR",
-          true,
-          response.status,
-        );
+        // 결함 F: 인증 오류가 5xx 로 위장하는 경로 — 검증 재조회로 갈라 낸다.
+        throw buildFiveHundredError(await probeAuthHealth(), message, response.status);
       }
       throw buildUpstreamError(`법제처 API 호출 실패: ${message}`, "LAW_API_ERROR", false, response.status);
     }
@@ -589,7 +669,11 @@ ${AUTH_HINT}`,
       if (upstreamStatus === 429) {
         throw buildUpstreamError("법제처 API 호출 제한", "LAW_API_RATE_LIMIT", true, upstreamStatus);
       }
-      if ((upstreamStatus ?? 0) >= 500 || error.code === "ECONNABORTED") {
+      if ((upstreamStatus ?? 0) >= 500) {
+        // 결함 F: HTTP 5xx 만 검증 재조회 — 네트워크 단절은 아래 분기(프로브 무익).
+        throw buildFiveHundredError(await probeAuthHealth(), `HTTP ${upstreamStatus}`, upstreamStatus);
+      }
+      if (error.code === "ECONNABORTED") {
         throw buildUpstreamError(
           `법제처 API 일시 장애
 ${PERSISTENT_HINT}`,
@@ -745,7 +829,7 @@ function extractFullArticleContent(joObj: Record<string, unknown>): string {
   return parts.join("\n").trim();
 }
 
-function findArticleInRoot(
+export function findArticleInRoot(
   root: Record<string, unknown>,
   requestedArticle: ArticleReference | null,
   normalizedArticleNo: string,
@@ -774,8 +858,14 @@ function findArticleInRoot(
     if (!content) return null;
 
     return {
-      law_id: pickString(lawObj, ["법령ID", "법령일련번호", "ID", "id"]) ?? fallbackLawId,
-      law_name: pickString(lawObj, ["법령명한글", "법령명", "name"]),
+      law_id: pickString(lawObj, ["법령ID", "법령일련번호", "ID", "id"])
+        ?? pickString(asObject(lawObj.기본정보), ["법령ID", "법령일련번호"])
+        ?? fallbackLawId,
+      // 결함 J (M3 step-1): 법령 상세(law/eflaw MST 조회)의 법령명은 최상위가 아니라
+      // `기본정보.법령명_한글`(언더스코어 포함)에 실린다 — 최상위 키만 보면 null 이 되어
+      // 소비 에이전트가 "무슨 법의 제N조인지"를 응답만으로 못 읽는다(실측 재현: 001586 제59조).
+      law_name: pickString(lawObj, ["법령명한글", "법령명", "name"])
+        ?? pickString(asObject(lawObj.기본정보), ["법령명_한글", "법령명한글", "법령명"]),
       article_no: originalArticleNo,
       title: pickString(joObj, ["조문제목", "JO_TITLE", "title"]),
       content,
@@ -1564,6 +1654,9 @@ export class LawGoProvider implements LawProvider {
     const requestedArticle = parseArticleReference(articleNo);
     const normalizedArticleNo = normalizeArticleInput(articleNo);
 
+    // 결함 I: 위임 조회를 지금 시작한다 — 본문 조회와 병렬로 돈다 (startDelegationLookup 주석 참조).
+    const delegationsPromise = this.startDelegationLookup(resolvedLawId, requestedArticle);
+
     // 시점 지정 경로 (TV3). 못 맞추면 **현행으로 대체하지 않고 거절한다** —
     // 조용한 현행 반환이 이 milestone 이 없애려는 결함 그 자체다.
     // ⚠ **법령ID 를 이름 자리에 넘기면 안 된다.** 시행판 목록 조회는 법령*명*으로 질의하고
@@ -1583,9 +1676,14 @@ export class LawGoProvider implements LawProvider {
       );
       const found = findArticleInRoot(root, requestedArticle, normalizedArticleNo, lawId, articleNo);
       if (!found) return null;
-      const withDelegations = await this.attachDelegations(found, resolvedLawId, requestedArticle);
+      const withDelegations = await this.attachDelegations(found, delegationsPromise);
       return {
         ...withDelegations,
+        // 캐시·상류(lsDelegated)에 시점 축이 없다 — 과거 시점 조문에 현행 위임 정보를 조용히
+        // 붙이면 오답이 된다(plan Failure probe). 사실을 응답에 남긴다.
+        warnings: withDelegations.delegated_to
+          ? [...(withDelegations.warnings ?? []), DELEGATION_AS_OF_NOTICE]
+          : withDelegations.warnings,
         effective_date: resolved.version.시행일자,
         as_of_rule: resolved.rule,
       };
@@ -1596,7 +1694,7 @@ export class LawGoProvider implements LawProvider {
       const exactById = findArticleInRoot(root, requestedArticle, normalizedArticleNo, lawId, articleNo);
       if (exactById) {
         return this.withEffectiveDate(
-          await this.attachDelegations(exactById, resolvedLawId, requestedArticle),
+          await this.attachDelegations(exactById, delegationsPromise),
           root,
         );
       }
@@ -1608,7 +1706,7 @@ export class LawGoProvider implements LawProvider {
     const found = findArticleInRoot(fallbackRoot, requestedArticle, normalizedArticleNo, lawId, articleNo);
     if (!found) return null;
     return this.withEffectiveDate(
-      await this.attachDelegations(found, resolvedLawId, requestedArticle),
+      await this.attachDelegations(found, delegationsPromise),
       fallbackRoot,
     );
   }
@@ -1674,26 +1772,40 @@ export class LawGoProvider implements LawProvider {
    * 보조 정보이므로 **실패는 조용히 흡수**하고(`lookupDelegations` 가 빈 배열을 돌려준다),
    * 위임이 없으면 **필드를 아예 달지 않는다**(빈 배열 오염 금지).
    */
-  private async attachDelegations(
-    result: GetLawArticleResult,
+  /**
+   * 결함 I (M3 step-3): 위임 조회를 조문 본문 조회와 **동시에** 시작한다. 종전에는 본문을 받은
+   * 뒤에야 `lsDelegated` 를 불러 그 왕복(실측 3.3초, 전체 지연의 64%)이 그대로 더해졌다.
+   * 조문 번호는 입력에서 이미 알므로 본문 조회 전에 시작할 수 있다 — 총 지연이 합이 아니라
+   * max 가 된다. 캐시 적중(같은 법령 반복 조회)이면 추가 왕복 0회는 종전과 동일.
+   * `lookupDelegations` 는 모든 실패를 빈 배열로 흡수하므로 미리 시작해도 unhandled rejection 이 없다.
+   */
+  private startDelegationLookup(
     resolvedLawId: string,
     requestedArticle: ArticleReference | null,
-  ): Promise<GetLawArticleResult> {
+  ): Promise<DelegatedArticle[]> {
     const article = requestedArticle
       ? (requestedArticle.branch > 0
         ? `제${requestedArticle.main}조의${requestedArticle.branch}`
         : `제${requestedArticle.main}조`)
       : null;
-    const withWarning = this.attachLooseResolutionWarning(result);
-    if (!article) return withWarning;
+    if (!article) return Promise.resolve([]);
+    return lookupDelegations(resolvedLawId, article, this.delegationFetcher, this.delegationCache);
+  }
 
-    const delegated = await lookupDelegations(
-      resolvedLawId,
-      article,
-      this.delegationFetcher,
-      this.delegationCache,
-    );
-    return delegated.length > 0 ? { ...withWarning, delegated_to: delegated } : withWarning;
+  private async attachDelegations(
+    result: GetLawArticleResult,
+    delegationsPromise: Promise<DelegatedArticle[]>,
+  ): Promise<GetLawArticleResult> {
+    const withWarning = this.attachLooseResolutionWarning(result);
+    const delegated = await delegationsPromise;
+    if (delegated.length === 0) return withWarning;
+    // 결함 D (M3 step-4): `delegated_to` 는 실려 있어도 소비층이 결론에 반영하지 않는다
+    // (d05·d09 실측 — 본법·시행령을 회차마다 오간다). 데이터만 싣지 말고 **읽는 법**을 말한다.
+    return {
+      ...withWarning,
+      delegated_to: delegated,
+      warnings: [...(withWarning.warnings ?? []), DELEGATION_NOTICE],
+    };
   }
 
   /**
