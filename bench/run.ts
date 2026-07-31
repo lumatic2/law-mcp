@@ -215,6 +215,11 @@ async function main() {
   // 코퍼스에는 맥락(context)만 갖고 라벨 문자열이 없는 레코드가 섞여 있다 — 이 러너는 질의를
   // 던지는 쪽이라 `query` 없는 레코드는 돌릴 수 없다. 조용히 실패시키지 말고 여기서 거른다.
   items = items.filter((i) => typeof i.query === "string" && i.query.trim().length > 0);
+  // 기권 케이스(`expected_laws: null` — 현행법에 답이 없음)는 recall 분모에 넣을 수 없다.
+  // 기권 품질은 에이전트 하네스(agentic-score)가 정밀도/재현율로 따로 잰다.
+  const abstainCount = items.filter((i) => !Array.isArray(i.expected_laws) || i.expected_laws.length === 0).length;
+  items = items.filter((i) => Array.isArray(i.expected_laws) && i.expected_laws.length > 0);
+  if (abstainCount > 0) console.log(`기권 케이스 ${abstainCount}건 제외 (recall 분모 밖 — 에이전트 하네스 소관)`);
   if (args.provenance) items = items.filter((i) => i.provenance === args.provenance);
   if (args.limit) items = items.slice(0, args.limit);
 
