@@ -26,3 +26,14 @@
   기본통칙·세법집행기준은 법제처 경로가 없고(admrul "기본통칙" 0건 재확인) NTS 공식 API 도 없다.
   D1 처분 기준(공식 API 만·스크래핑 금지)에 따라 **공백+이유** 로 확정.
 - 실무 영향은 M4 리허설 시나리오 ⑤(기본통칙 의존 질문)가 잰다. 뒤집히는 조건은 ADR 0003 에 기록.
+
+## step-3 — 예규 본문 도달 보강 (2026-07-31)
+
+- 산출물: `getLegalSource` 에 CgmExpc 계열 특례 — `source_id` 로 `원문링크`(또는 ntstDcmId 18자리)를
+  받으면 NTS 문서 API(판례 폴백과 동일 `action.do`)로 전문을 반환. `extractNtstDcmIdFromSourceId`
+  (일련번호 오인 방지 — 12자리 미만 숫자 거부) + 거절 안내를 새 경로 안내로 갱신 +
+  `test/m2-expc-fulltext.test.ts` + 실 MCP 스모크 `src/m2-sources-smoke.ts`.
+- Verify: 실 MCP 체인 — ntsExpc 검색→원문링크→본문 11,271자 · moefExpc 11,296자(같은 taxlaw 링크
+  체계 실측) · 일련번호는 안내 거절 · `npm test` 328/328. evidence: `evidence/2026-07-31-m2-sources-e2e.md`.
+- Failure probe: 원문링크가 로그인 요구로 막히는 경우 — 실측상 무인증 도달 가능(action.do 200,
+  로그인 힌트 없음). NTS 문서 미존재 시 NOT_FOUND + 원문링크 확인 안내.

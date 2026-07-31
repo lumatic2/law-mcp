@@ -506,7 +506,9 @@ function cgmExpc(target: string, label: string): SourceDescriptor {
     },
     detailUnavailable:
       "이 자료원은 법제처 API 에 전문 조회가 없다(2026-07-21 실측 — HTML 반환). "
-      + "검색 결과의 `원문링크`(국세법령정보시스템)로 원문을 확인해야 한다.",
+      + "전문을 보려면 검색 결과의 `원문링크`(국세법령정보시스템 URL)를 **그대로 source_id 로** "
+      + "get_legal_source 에 넘겨라 — NTS 문서 API 로 전문을 가져온다(M2 step-3). "
+      + "법령해석일련번호로는 전문에 도달할 수 없다(일련번호→NTS 문서 ID 매핑이 upstream 에 없다).",
     detailLinkKeys: ["법령해석상세링크"],
   };
 }

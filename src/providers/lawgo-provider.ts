@@ -298,6 +298,21 @@ export function isNtsPlaceholderContent(value: string | null | undefined): boole
  * dcmHwpEditorDVOList 에서 서버가 HWP 첨부를 변환해 둔 HTML 전문(dcmFleTy === 'html' && dcmFleByte 有)을
  * dcmFleSn 순으로 이어붙여 텍스트로 반환한다. 해당 항목이 없으면 null.
  */
+/**
+ * 예규 `source_id` 에서 NTS 문서 ID(ntstDcmId)를 뽑는다 (M2 step-3).
+ * 받는 형태 둘: ① 검색 결과의 `원문링크` URL 전체 ② 그 안의 ntstDcmId 숫자.
+ * 법령해석일련번호(7자리 안팎)와는 자릿수로 구분한다 — ntstDcmId 는 18자리다(실측
+ * `200000000000012562`·`010000000000149597`). 짧은 숫자를 ntstDcmId 로 넘기면 무관한 문서가
+ * 올 수 있으므로 12자리 미만은 받지 않는다.
+ */
+export function extractNtstDcmIdFromSourceId(value: string): string | null {
+  const fromUrl = value.match(/ntstDcmId=(\d+)/);
+  if (fromUrl) return fromUrl[1];
+  const trimmed = value.trim();
+  if (/^\d{12,}$/.test(trimmed)) return trimmed;
+  return null;
+}
+
 function extractNtsFullTextFromHwpEditorList(actionData: Record<string, unknown>): string | null {
   const entries = toArray(actionData.dcmHwpEditorDVOList).map((row) => asObject(row));
   const htmlEntries = entries
@@ -2054,6 +2069,37 @@ export class LawGoProvider implements LawProvider {
         message: `Unknown legal source target: ${target}`,
         retryable: false,
       });
+    }
+
+    // M2 step-3 — 예규 본문 도달. 법제처에는 예규 전문 조회가 없지만(2026-07-21 실측),
+    // 검색 결과 `원문링크`가 가리키는 NTS 문서 API(판례 폴백과 동일한 action.do)는 전문을 준다
+    // (2026-07-31 실측 — dcmHwpEditorDVOList 변환 HTML 89KB). `source_id` 로 원문링크(또는 그 안의
+    // ntstDcmId)를 받으면 그 경로로 전문을 반환한다. 법령해석일련번호가 오면 아래
+    // detailUnavailable 거절이 원문링크를 넘기라고 안내한다 — 일련번호→ntstDcmId 매핑은 upstream 에 없다.
+    if (descriptor.container === "CgmExpc") {
+      const ntstDcmId = extractNtstDcmIdFromSourceId(sourceId);
+      if (ntstDcmId) {
+        const actionData = await fetchNtsActionData(ntstDcmId);
+        if (!actionData) {
+          throw createMcpError({
+            code: "NOT_FOUND",
+            message: `NTS 문서 API 에서 ntstDcmId=${ntstDcmId} 를 찾지 못했다. 검색 결과의 원문링크를 그대로 넘겼는지 확인하라.`,
+            retryable: true,
+          });
+        }
+        const dcmDVO = asObject(actionData.dcmDVO);
+        const fullText = extractNtsFullTextFromHwpEditorList(actionData);
+        const gist = stripHtml(pickString(dcmDVO, ["ntstDcmGistCntn"]));
+        const raw = stripHtml(pickString(dcmDVO, ["ntstDcmCntn"]));
+        return {
+          source_id: sourceId,
+          source: descriptor.label,
+          안건명: stripHtml(pickString(dcmDVO, ["ntstDcmTtl"])),
+          본문: fullText ?? (isNtsPlaceholderContent(raw) ? gist : raw),
+          원문링크: `https://taxlaw.nts.go.kr/qt/USEQTA002P.do?ntstDcmId=${ntstDcmId}`,
+          구속력: descriptor.authority.note,
+        };
+      }
     }
 
     // 전문 조회가 upstream 에 아예 없는 자료원(예: 국세청 예규)은 시도하지 않고 사유를 말한다.
