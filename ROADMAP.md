@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-31
-> 상태: **목표 "세법 완성" milestone 연쇄 진행 중** — M1 completed, M2 active, M3·M4 pending
+> 상태: **목표 "세법 완성" milestone 연쇄 진행 중** — M1·M2 completed, M3 active, M4 pending
 > (연쇄 승인 2026-07-31, `--chain` 등록). 닫는 기준 4축 = 자료원 완결 · 측정 재기준선 · 함정 소진 · 실전 리허설.
 > 기준선(before) = `pass^3` 86.0% · `SR@1` 80.6% · recall@3 84.2% (`evidence/bench/2026-07-31-m1-baseline/`).
 > ⚠ horizon 층은 폐지됐다(하네스 재조립 C4) — 이 연쇄는 북극성 바로 아래 milestone 연쇄다.
@@ -35,20 +35,22 @@
 
 - Completed at: 2026-07-31
 - Summary: 14행 처분표(연결8·대상4·공백2) + before 기준선 pass^3 86.0%·SR@1 80.6%·recall@3 84.2%
-<!-- harness:milestone id="M2" status="active" priority="P0" -->
+<!-- harness:milestone id="M2" status="completed" priority="P0" evidence="archive/reports/2026-07-31-m2-source-connect-close.md · evidence/2026-07-31-m2-sources-e2e.md" -->
 ### M2 — 자료원 연결 (M1 처분 "연결 대상" 판정분)
 - DoD: 처분표의 "연결 대상" 행 전부 연결 또는 "공백+이유" 재판정 — 판정 없는 행 잔존 = 미완료 ·
   연결 자료원 전부 실 MCP E2E 응답 원문 evidence · `npm test` 전건 · 배포 사본 build + dist 스모크 ·
   재시작 부채 명시.
-- Evidence: (완료 시 기입)
+- Evidence: archive/reports/2026-07-31-m2-source-connect-close.md · evidence/2026-07-31-m2-sources-e2e.md
 - Gap: 조세조약(국제거래 1차 근거)·별표 세율표(97건 실측)·신구법 비교 경로 없음. 기본통칙·집행기준은
   경로 존재부터 M1 판정 대기. 예규(`ntsExpc`)는 전문조회 없이 원문링크만이라 본문 도달 미검증.
 - Scale: changesets>=2; surfaces: `SOURCE_DESCRIPTORS` 확장(도구 개수 불변)·통합 테스트·실 E2E;
   capability: 세무 근거 사슬 전 고리에 도구 경로가 있다
 - Plan: `plans/2026-07-31-m2-자료원연결.md`
-- Status: [ ]
+- Status: [x]
 
-<!-- harness:milestone id="M3" status="pending" priority="P0" -->
+- Completed at: 2026-07-31
+- Summary: trty·oldAndNew·licbyl 연결(enum 19→22, 도구 11 불변) + 예규 본문 NTS 경로. 실 MCP 체인 전부 통과
+<!-- harness:milestone id="M3" status="active" priority="P0" -->
 ### M3 — 함정 소진 (J·F·I·D)
 - DoD: J(law_name null)·F(5xx 오분류)·I(위임 지연 3.3초)·D(본법/시행령 전달) 각각 회귀 테스트 고정 +
   실 MCP 재현 시나리오 통과, 수리 불가 판정은 "안 고침+이유"로 CANDIDATES 재적재 · `npm test` 전건 ·
