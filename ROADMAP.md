@@ -86,20 +86,22 @@
 
 - Completed at: 2026-07-31
 - Summary: after 재측정+리허설 5건+4축 판정 보고 — 닫는 판정은 사용자 소유
-<!-- harness:milestone id="M5" status="active" priority="P0" evidence="" -->
+<!-- harness:milestone id="M5" status="completed" priority="P0" evidence="archive/reports/2026-08-01-m5-topics-close.md" -->
 ### M5 — 주제 목록 확정 + 규약 개정 + 스키마 배선
 - DoD: 승인 규칙이 파일로 외부화되고 60 주제가 동일 규칙·동일 MST 에서 2회 diff 0 으로 재현 ·
   선정 로그로 감사 가능(취향 개입 0) · 가드 3방향(승인 목록 통과 / 목록 밖 차단 / digest 불일치
   차단) 테스트 통과 · `sealed` split 어휘 + `--cases` 고정 세트 재현 플래그 배선 ·
   `git diff --stat src/` 0줄 · `npm test` 전건.
-- Evidence: (M5 완료 시 기입)
+- Evidence: archive/reports/2026-08-01-m5-topics-close.md
 - Gap: ADR 0002 §2 가 새 주제를 기계로 차단하고 있어 개정 없이는 확장 불가. `sealed` 는 현행
   스키마 어휘에 없어 통합 시 전건 FAIL. 고정 43건은 두 provenance 에 걸쳐 있어 단일 플래그로
   재현 불가.
 - Scale: changesets>=1; surfaces: 추출기·ADR·가드·스키마/러너 배선; capability: 확장 주제가
   규약을 우회하지 않고 근거를 남기며 통과한다
 - Plan: `plans/2026-08-01-m5-주제목록과봉인규약.md`
-- Status: [ ]
+- Status: [x]
+- Completed at: 2026-08-01
+- Summary: 60 주제 확정 + ADR 0004 개정 + 스키마·러너 배선
 <!-- harness:milestone id="M6" status="pending" priority="P0" evidence="" -->
 ### M6 — 문제 작성 + 라벨 검증 + 코퍼스 통합
 - DoD: 신규 60건이 검사 3종(스키마·유출·주제출처) 전건 통과 · 라벨 60건이 조문 본문 조회로 검증된

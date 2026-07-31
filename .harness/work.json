@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "m5-topics",
+  "active_work_id": "m6-items",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -1447,7 +1447,7 @@
     "m5-topics": {
       "work_id": "m5-topics",
       "milestone_id": "M5",
-      "status": "active",
+      "status": "completed",
       "plan_path": "plans/2026-08-01-m5-주제목록과봉인규약.md",
       "changeset_path": "changesets/20260801-m5-topics",
       "next_step": "step-1",
@@ -1473,6 +1473,61 @@
         "plan_sha256": "f7898ec417cb5f3bda137647c46f1f199cbde7733223e8a4656ee3979752b74b",
         "chain": [
           "m6-items",
+          "m7-breadth"
+        ]
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "codex:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+        "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf"
+      ],
+      "owner_session_uuid": "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+      "updated_at": "2026-08-01",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "M5 완료 — 60 주제 확정(dev 40/sealed 20) · ADR 0004 주제 출처 개정 + 가드 digest 검증 · sealed 어휘·고정세트 재현 배선"
+    },
+    "m6-items": {
+      "work_id": "m6-items",
+      "milestone_id": "M6",
+      "status": "active",
+      "plan_path": "plans/2026-08-01-m6-문제작성과통합.md",
+      "changeset_path": "changesets/20260801-m6-items",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1 — 60건 맥락 산문 작성"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2 — 라벨 검증 (조문 본문 대조)"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3 — 코퍼스 통합 + 검사"
+        },
+        {
+          "id": "step-4",
+          "label": "step-4 — 봉인 강제 장치 + 개봉 이력"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-08-01",
+        "plan_sha256": "d1611c8920da183506fd756fc3fd751d23a23c8c529cb65a71d1fc89397ab876",
+        "chain": [
           "m7-breadth"
         ]
       },
