@@ -1,9 +1,9 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-31
-> 상태: **목표 "세법 완성" milestone 연쇄 진행 중** — M1 active, M2·M3·M4 pending (연쇄 승인
-> 2026-07-31, `--chain` 등록). 닫는 기준 4축 = 자료원 완결 · 측정 재기준선 · 함정 소진 · 실전 리허설.
-> ⚠ 유효한 에이전트 기준선은 여전히 AR2 dev 20건 `pass^3` 90% — M1 step-2 가 재기준선을 찍는다.
+> 상태: **목표 "세법 완성" milestone 연쇄 진행 중** — M1 completed, M2 active, M3·M4 pending
+> (연쇄 승인 2026-07-31, `--chain` 등록). 닫는 기준 4축 = 자료원 완결 · 측정 재기준선 · 함정 소진 · 실전 리허설.
+> 기준선(before) = `pass^3` 86.0% · `SR@1` 80.6% · recall@3 84.2% (`evidence/bench/2026-07-31-m1-baseline/`).
 > ⚠ horizon 층은 폐지됐다(하네스 재조립 C4) — 이 연쇄는 북극성 바로 아래 milestone 연쇄다.
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `CLAUDE.md` 「북극성」 절)
@@ -19,21 +19,23 @@
 
 ## Active Milestones
 
-<!-- harness:milestone id="M1" status="active" priority="P0" -->
+<!-- harness:milestone id="M1" status="completed" priority="P0" evidence="archive/reports/2026-07-31-m1-source-map-close.md · evidence/bench/2026-07-31-m1-baseline/ · docs/adr/0003-세법-자료원-처분표.md" -->
 ### M1 — 자료원 지도 확정 + before 기준선
 - DoD: 근거 유형 지도 14행 전부에 처분 판정(연결됨/연결 대상/공백+이유) ADR 존재 · 미확인 8건이
   실 API 증거와 함께 소진 · dev 기준선(범용 러너 + 블라인드 3회 에이전트, AR2 동일 프로토콜)이
   evidence 로 남아 M4 가 비교 가능 · `git diff --stat src/` 0줄 · `npm test` 전건.
-- Evidence: (완료 시 기입)
+- Evidence: archive/reports/2026-07-31-m1-source-map-close.md · evidence/bench/2026-07-31-m1-baseline/ · docs/adr/0003-세법-자료원-처분표.md
 - Gap: 핸드오프의 "심판례·예규 미연결"은 낡은 전제였다(TV2 로 연결 완료). 진짜 공백(기본통칙·
   집행기준·조세조약 등)은 상류 경로 존재 자체가 미확인이고, 어순 오판 선례(문서상 `specialDeccTt`
   → 실제 `ttSpecialDecc`)가 재발 위험으로 남아 있다. 기준선도 20건짜리뿐이다.
 - Scale: changesets>=1; surfaces: 상류 프로브·처분표 ADR·재기준선; capability: 연결 계획이 추측이
   아니라 실측 위에 선다
 - Plan: `plans/2026-07-31-m1-자료원지도.md`
-- Status: [ ]
+- Status: [x]
 
-<!-- harness:milestone id="M2" status="pending" priority="P0" -->
+- Completed at: 2026-07-31
+- Summary: 14행 처분표(연결8·대상4·공백2) + before 기준선 pass^3 86.0%·SR@1 80.6%·recall@3 84.2%
+<!-- harness:milestone id="M2" status="active" priority="P0" -->
 ### M2 — 자료원 연결 (M1 처분 "연결 대상" 판정분)
 - DoD: 처분표의 "연결 대상" 행 전부 연결 또는 "공백+이유" 재판정 — 판정 없는 행 잔존 = 미완료 ·
   연결 자료원 전부 실 MCP E2E 응답 원문 evidence · `npm test` 전건 · 배포 사본 build + dist 스모크 ·

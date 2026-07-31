@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "m1-source-map",
+  "active_work_id": "m2-source-connect",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -1243,7 +1243,7 @@
     "m1-source-map": {
       "work_id": "m1-source-map",
       "milestone_id": "M1",
-      "status": "active",
+      "status": "completed",
       "plan_path": "plans/2026-07-31-m1-자료원지도.md",
       "changeset_path": "changesets/20260731-m1-source-map",
       "next_step": "step-1",
@@ -1265,6 +1265,58 @@
         "plan_sha256": "092e716a41e3d4d411fe3f798902bf7e534af31b93ae2026e16b1b3dfdc3486b",
         "chain": [
           "M2",
+          "M3",
+          "M4"
+        ]
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "codex:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+        "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf"
+      ],
+      "owner_session_uuid": "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+      "updated_at": "2026-07-31",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "세법 자료원 14행 전수 판정(연결8·대상4·공백2) + before 기준선(pass^3 86%·recall@3 84.2%) 확보"
+    },
+    "m2-source-connect": {
+      "work_id": "m2-source-connect",
+      "milestone_id": "M2",
+      "status": "active",
+      "plan_path": "plans/2026-07-31-m2-자료원연결.md",
+      "changeset_path": "changesets/20260731-m2-source-connect",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1 — 법령계 자료원 연결 (조세조약·별표·신구법 등)"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2 — 해석계 자료원 연결 (기본통칙·집행기준 — M1 이 경로를 찾은 경우)"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3 — 예규 본문 도달 보강"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-31",
+        "plan_sha256": "5bf2d503afc10d6924172c757c7fb6947baa5a566da617bdc36b173b0d873c56",
+        "chain": [
           "M3",
           "M4"
         ]
