@@ -28,8 +28,10 @@
   `instructions` 채널에 재질의 프로토콜을 실으면 분야 무관하게 복제된다.
   - 근거: 2026-07-22 프로브 — 도구는 이미 재질의하라고 경고하는데 소비층이 안 듣는다
   - 주의: 평가가 서기 전에 넣으면 기준선이 오염된다
-- **C. 남은 upstream 자료원** — `oldAndNew` 신구법 비교 · `admbyl` 행정규칙 별표 ·
-  `lsStmd` 법령체계도 · `dlytrm` 재평가 · 빈 응답 target(`lsRlt`·`couseLs`·`drlaw`) 어순 재확인
+- **C. 남은 upstream 자료원** — ~~`oldAndNew` 신구법 비교~~(→ M2 step-1 로 소비) · `admbyl` 행정규칙 별표 ·
+  `lsStmd` 법령체계도 · `dlytrm` 재평가 · ~~빈 응답 target(`lsRlt`·`couseLs`·`drlaw`) 어순 재확인~~
+  (→ M1 프로브로 소진: `lsRlt` 정상 응답 확인·`couseLs` API 아님·`drlaw` XML 전용 저가치 —
+  `research/2026-07-31-m1-상류프로브.md` §3)
   - 근거: tax-vertical Next Candidates · 어순 오류 3건 확인 선례(`specialDeccTt`→`ttSpecialDecc`)
 - **D. 본법/시행령 진동을 도구가 못 알려 준다** (← trap-free) — 라벨 규약을 정해도 에이전트가
   회차마다 본법·시행령을 오간다(d05·d09 실측). `delegated_to` 는 이미 응답에 실려 있는데 소비층이
@@ -53,6 +55,10 @@
 - **I. 성능 — 위임조문 조회 지연** — `get_law_article` 지연의 64%(3.3초)가 위임조문 조회다.
   - 근거: 2026-07-22 handoff 기록
   - 성격: 사용자 체감 마찰이지만 도달률과 무관 — 단독 horizon 보다 다른 horizon 에 얹는 편이 맞다
+- **O. `lsRlt` 법령 관계 그래프 재개봉** (← M1 프로브 2026-07-31) — 과거 "빈 응답/오답" 판정이
+  뒤집혔다: 정상 JSON 으로 기본법·시행령·준용 관계가 구조화돼 온다(소득세법→국세기본법
+  =3유형(기본법) 실측). `lsStmd` 와 역할 중복이라 채택 시 하나만. 세법 완성 필수축은 아님.
+  근거: `research/2026-07-31-m1-상류프로브.md` §3
 - **J. 응답에 `law_name` 이 null 로 온다** (← trap-free 재시작 검증 2026-07-23) — 실측:
   `get_law_article(law_id="001586", article_no="59", as_of="2024")` 가 본문은 정상 반환하는데
   `law_name: null`. 소비하는 에이전트가 "무슨 법의 제59조인지"를 응답만으로 못 읽는다.
