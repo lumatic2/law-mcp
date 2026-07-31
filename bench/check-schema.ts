@@ -13,7 +13,10 @@ const REQUIRED = ["query", "domain", "expected_laws", "split", "source"] as cons
  * `provenance` 를 필수로 건다. 라벨 근거(`source`)는 agentic 출신에 없으므로 필수에서 뺀다.
  */
 const CORPUS_REQUIRED = ["case_id", "provenance", "topic_id", "domain", "split"] as const;
-const VALID_SPLITS = new Set(["dev", "holdout"]);
+// `sealed` 는 2026-08-01 확장(ADR 0004)이 도입한 어휘다. 기존 `holdout` 45건은 전량 개봉됐으므로
+// 재활용하지 않고, 미개봉 문항은 새 어휘로 관리한다 — 개봉 이력이 섞이면 무엇이 아직 봉인인지
+// 아무도 못 읽는다.
+const VALID_SPLITS = new Set(["dev", "holdout", "sealed"]);
 
 const path = resolve(process.argv[2] ?? "bench/corpus.json");
 const data = JSON.parse(readFileSync(path, "utf8")) as { items?: unknown };
@@ -37,7 +40,8 @@ if (!items) {
       if (emptyValue(item[key])) errors.push(`${label}: '${key}' 누락/빈 값`);
     }
     if (typeof item.split === "string" && !VALID_SPLITS.has(item.split)) {
-      errors.push(`${label}: split='${item.split}' 은 dev|holdout 이 아님`);
+      // 어휘 목록을 문자열로 박아 두면 어휘가 늘 때 메시지만 낡는다(2026-08-01 `sealed` 추가 시 적발).
+      errors.push(`${label}: split='${item.split}' 은 ${[...VALID_SPLITS].join("|")} 이 아님`);
     }
     if (isCorpus) {
       if (emptyValue(item.query) && emptyValue(item.context)) {

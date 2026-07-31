@@ -23,6 +23,8 @@ import {
 } from "./scoring.js";
 
 type Item = {
+  /** 코퍼스(TF1) 이후 전건 보유. `--cases` 로 표본을 고정할 때의 키다. */
+  case_id?: string;
   query: string;
   domain: string;
   /** 세법 세트(golden-tax)의 질의 유형. 구 세트에는 없다. */
@@ -50,6 +52,13 @@ function parseArgs(argv: string[]) {
      * `--provenance golden-v2.json` 처럼 출처를 좁히면 **과거 수치를 그대로 재현**할 수 있다.
      */
     provenance: get("--provenance"),
+    /**
+     * `--cases <file>` — `{cases:[{case_id}]}` 파일로 표본을 **고정**한다. 고정 비교 세트가
+     * 여러 `provenance` 에 걸쳐 있으면(실측: 43건이 golden-v2 21 + golden-tax 22) 단일값
+     * `--provenance` 로는 과거 표본을 재현할 수 없다. 목록의 case_id 가 빠지면 실패한다 —
+     * 분모가 몰래 줄어드는 것이 조용한 오답의 원천이다.
+     */
+    cases: get("--cases"),
     label: get("--label"),
     limit: get("--limit") ? Number(get("--limit")) : undefined,
     repeat: get("--repeat") ? Number(get("--repeat")) : 1,
@@ -195,12 +204,23 @@ async function scoreItem(provider: LawGoProvider, item: Item): Promise<ItemOutco
  * golden-v2 의 홀드아웃은 horizon close 시 1회만 연다 — 그 규약을 여기서 **코드로** 강제한다.
  */
 export function assertHoldoutSeal(split: string, sealBroken: boolean): void {
-  if (split !== "holdout" || sealBroken) return;
-  throw new Error(
-    "홀드아웃은 봉인돼 있다 — horizon close 시 1회만 연다.\n" +
-      "  정말 닫는 시점이면 --i-am-closing-the-horizon 을 붙여라.\n" +
-      "  튜닝·A/B 중이라면 --split dev 를 써라(홀드아웃을 열면 그 세트는 죽는다).",
-  );
+  if (sealBroken) return;
+  if (split === "holdout") {
+    throw new Error(
+      "홀드아웃은 봉인돼 있다 — horizon close 시 1회만 연다.\n" +
+        "  정말 닫는 시점이면 --i-am-closing-the-horizon 을 붙여라.\n" +
+        "  튜닝·A/B 중이라면 --split dev 를 써라(홀드아웃을 열면 그 세트는 죽는다).",
+    );
+  }
+  // `sealed` = 2026-08-01 확장이 처음부터 떼어 둔 미개봉 문항. `holdout` 과 같은 무게로 막는다 —
+  // 어휘가 새로 생겼는데 봉인 검사가 옛 어휘만 보면 새 봉인은 태어날 때부터 열려 있다.
+  if (split === "sealed") {
+    throw new Error(
+      "봉인 문항(sealed)은 열지 않는다 — 도구를 고친 뒤 과적합을 판정할 때 딱 한 번 쓴다.\n" +
+        "  개봉 시점은 사용자가 정한다. 정말 그 시점이면 --i-am-closing-the-horizon 을 붙이고,\n" +
+        "  개봉 사실을 bench/expansion/seal-ledger.json 에 기록해야 한다(ADR 0002 §3).",
+    );
+  }
 }
 
 async function main() {
@@ -221,6 +241,23 @@ async function main() {
   items = items.filter((i) => Array.isArray(i.expected_laws) && i.expected_laws.length > 0);
   if (abstainCount > 0) console.log(`기권 케이스 ${abstainCount}건 제외 (recall 분모 밖 — 에이전트 하네스 소관)`);
   if (args.provenance) items = items.filter((i) => i.provenance === args.provenance);
+  if (args.cases) {
+    const spec = JSON.parse(readFileSync(args.cases, "utf8")) as { cases: Array<{ case_id: string }> };
+    const wanted = new Set(spec.cases.map((c) => c.case_id));
+    items = items.filter((i) => i.case_id !== undefined && wanted.has(i.case_id));
+    const found = new Set(items.map((i) => i.case_id!));
+    const missing = [...wanted].filter((id) => !found.has(id));
+    if (missing.length > 0) {
+      // 조용히 건너뛰면 표본이 줄어든 채 "같은 세트"로 보고된다. 그게 가장 나쁜 실패다.
+      console.log(
+        `FAIL — --cases 목록의 ${missing.length}건이 현재 split/필터에 없다: ${missing.slice(0, 5).join(", ")}`
+          + (missing.length > 5 ? " …" : ""),
+      );
+      process.exitCode = 1;
+      return;
+    }
+    console.log(`--cases 고정 표본 ${items.length}건 (${args.cases})`);
+  }
   if (args.limit) items = items.slice(0, args.limit);
 
   if (args.dryRun) {

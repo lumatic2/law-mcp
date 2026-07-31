@@ -33,3 +33,21 @@ Failure probe: ① 규칙 파일의 `title_keywords` 를 1개로 줄이자 diges
 
 Failure probe: 실물 `topics-2026-08-01.json` 에 `관세법 제1조` 를 손으로 추가하니 가드가 exit 1 로
 차단했고, 원복 후 PASS 로 돌아왔다 — 예외 경로가 "무조건 통과"로 변질되지 않았다.
+
+## step-3 — 스키마·러너 배선 (데이터 착륙 전)
+
+신규 데이터가 들어오기 **전에** 받을 자리를 만든다. 순서를 바꾸면 M6 통합이 전건 FAIL 한다.
+
+- `bench/check-schema.ts` — `VALID_SPLITS` 에 `sealed` 추가. 오류 메시지가 어휘 목록을 문자열로
+  박아 두어 낡던 것을 동적 생성으로 고쳤다(`dev|holdout` 이라고 말하면서 sealed 를 받는 상태였다).
+- `bench/run.ts` `assertHoldoutSeal` — `sealed` 를 `holdout` 과 **같은 무게로** 거절. 어휘가 새로
+  생겼는데 봉인 검사가 옛 어휘만 보면 새 봉인은 태어날 때부터 열려 있다.
+- `bench/run.ts` `--cases <file>` · `loadAgenticSet(..., {caseIds})` — 고정 비교 세트 재현 수단.
+  기존 43건이 `golden-v2.json` 21 + `golden-tax.json` 22 로 **두 provenance 에 걸쳐** 있어
+  단일값 `--provenance` 로는 과거 표본을 재현할 수 없었다. 목록의 case_id 가 빠지면 실패한다.
+
+검증: `--cases tasks.json` 이 정확히 43건 선택 · `--cases` 없이는 기존 동작 그대로(dev 57건 =
+M4 범용축 분모) · 테스트 6건 · `npm test` 348건 · 코퍼스 검사 3종 PASS · `git diff --stat src/` 0줄.
+
+Failure probe: ① `--cases` 에 없는 case_id 를 섞으면 exit 1(분모가 몰래 줄어드는 것을 막는다)
+② `split: sealed` 레코드는 스키마 통과하고, `split: bogus` 는 여전히 거절.

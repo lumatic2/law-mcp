@@ -10,9 +10,12 @@
 import { readFileSync } from "node:fs";
 import { assertHoldoutSeal } from "./run.js";
 
+/** `sealed` = 2026-08-01 확장이 처음부터 떼어 둔 미개봉 문항(ADR 0002 §1·ADR 0004). */
+export type Split = "dev" | "holdout" | "sealed";
+
 export type AgenticCase = {
   case_id: string;
-  split: "dev" | "holdout";
+  split: Split;
   type: string;
   context: string;
   expected_laws: string[] | null;
@@ -36,21 +39,38 @@ export const AGENTIC_SET_PATH = new URL("./corpus.json", import.meta.url);
  * `provenance` 를 주면 특정 옛 세트로 좁혀 **과거 측정을 그대로 재현**할 수 있다.
  */
 export function loadAgenticSet(
-  split: "dev" | "holdout",
+  split: Split,
   sealBroken = false,
-  opts: { provenance?: string } = {},
+  opts: { provenance?: string; caseIds?: Iterable<string> } = {},
 ): AgenticCase[] {
   assertHoldoutSeal(split, sealBroken);
   const data = JSON.parse(readFileSync(AGENTIC_SET_PATH, "utf8")) as {
     items: (AgenticCase & { context: string | null; provenance?: string })[];
   };
-  return data.items.filter(
+  // `caseIds` 를 주면 그 목록으로 고정한다 — 고정 비교 세트(과거 측정과 같은 표본)를 재현하는
+  // 유일한 수단이다. `provenance` 단일값으로는 여러 출처에 걸친 세트를 재현할 수 없다.
+  const wanted = opts.caseIds ? new Set(opts.caseIds) : null;
+  const picked = data.items.filter(
     (item) =>
       item.split === split
       && typeof item.context === "string"
       && item.context.trim().length > 0
-      && (!opts.provenance || item.provenance === opts.provenance),
+      && (!opts.provenance || item.provenance === opts.provenance)
+      && (!wanted || wanted.has(item.case_id)),
   );
+  if (wanted) {
+    // 요청한 case_id 가 하나라도 빠지면 분모가 몰래 줄어든다 — 조용히 넘기지 않는다.
+    const found = new Set(picked.map((i) => i.case_id));
+    const missing = [...wanted].filter((id) => !found.has(id));
+    if (missing.length > 0) {
+      throw new Error(
+        `요청한 case_id ${missing.length}건이 split=${split} 에 없다: ${missing.slice(0, 5).join(", ")}`
+          + (missing.length > 5 ? " …" : "")
+          + "\n  분모가 조용히 줄어드는 것을 막기 위해 실패시킨다.",
+      );
+    }
+  }
+  return picked;
 }
 
 /** 채점기가 쓰는 모양으로 바꾼다 — 기권 케이스는 `expected` 가 `null` 이다. */
