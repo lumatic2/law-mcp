@@ -25,22 +25,6 @@
 
 ## Active Milestones
 
-<!-- harness:milestone id="M1" status="completed" priority="P0" evidence="archive/reports/2026-07-31-m1-source-map-close.md · evidence/bench/2026-07-31-m1-baseline/ · docs/adr/0003-세법-자료원-처분표.md" -->
-### M1 — 자료원 지도 확정 + before 기준선
-- DoD: 근거 유형 지도 14행 전부에 처분 판정(연결됨/연결 대상/공백+이유) ADR 존재 · 미확인 8건이
-  실 API 증거와 함께 소진 · dev 기준선(범용 러너 + 블라인드 3회 에이전트, AR2 동일 프로토콜)이
-  evidence 로 남아 M4 가 비교 가능 · `git diff --stat src/` 0줄 · `npm test` 전건.
-- Evidence: archive/reports/2026-07-31-m1-source-map-close.md · evidence/bench/2026-07-31-m1-baseline/ · docs/adr/0003-세법-자료원-처분표.md
-- Gap: 핸드오프의 "심판례·예규 미연결"은 낡은 전제였다(TV2 로 연결 완료). 진짜 공백(기본통칙·
-  집행기준·조세조약 등)은 상류 경로 존재 자체가 미확인이고, 어순 오판 선례(문서상 `specialDeccTt`
-  → 실제 `ttSpecialDecc`)가 재발 위험으로 남아 있다. 기준선도 20건짜리뿐이다.
-- Scale: changesets>=1; surfaces: 상류 프로브·처분표 ADR·재기준선; capability: 연결 계획이 추측이
-  아니라 실측 위에 선다
-- Plan: `plans/2026-07-31-m1-자료원지도.md`
-- Status: [x]
-
-- Completed at: 2026-07-31
-- Summary: 14행 처분표(연결8·대상4·공백2) + before 기준선 pass^3 86.0%·SR@1 80.6%·recall@3 84.2%
 <!-- harness:milestone id="M2" status="completed" priority="P0" evidence="archive/reports/2026-07-31-m2-source-connect-close.md · evidence/2026-07-31-m2-sources-e2e.md" -->
 ### M2 — 자료원 연결 (M1 처분 "연결 대상" 판정분)
 - DoD: 처분표의 "연결 대상" 행 전부 연결 또는 "공백+이유" 재판정 — 판정 없는 행 잔존 = 미완료 ·
@@ -102,19 +86,21 @@
 - Status: [x]
 - Completed at: 2026-08-01
 - Summary: 60 주제 확정 + ADR 0004 개정 + 스키마·러너 배선
-<!-- harness:milestone id="M6" status="pending" priority="P0" evidence="" -->
+<!-- harness:milestone id="M6" status="completed" priority="P0" evidence="archive/reports/2026-08-01-m6-items-close.md" -->
 ### M6 — 문제 작성 + 라벨 검증 + 코퍼스 통합
 - DoD: 신규 60건이 검사 3종(스키마·유출·주제출처) 전건 통과 · 라벨 60건이 조문 본문 조회로 검증된
   기록 보유(기억 기반 0건, sealed 기록은 별 파일) · 기존 124 레코드 **레코드 단위 해시** 불변 ·
   봉인 강제 장치가 플래그 없는 `sealed` 접근을 실제 거절하고 20건 ledger 등재 · `npm test` 전건.
-- Evidence: (M6 완료 시 기입)
+- Evidence: archive/reports/2026-08-01-m6-items-close.md
 - Gap: 맥락 산문이 정답 조문의 법률 용어를 노출하면 어휘 공백 축이 측정에서 사라진다. ADR 0001 로
   시행령으로 옮겨가는 라벨이 수 건 예상되며 그 조문은 승인 목록에 없어 가드 예외가 필요하다.
 - Scale: changesets>=1; surfaces: 문항 작성·라벨 검증·코퍼스 통합·봉인 장치; capability: 세법
   전반 문제가 오염 없이 코퍼스에 들어간다
 - Plan: `plans/2026-08-01-m6-문제작성과통합.md`
-- Status: [ ]
-<!-- harness:milestone id="M7" status="pending" priority="P0" evidence="" -->
+- Status: [x]
+- Completed at: 2026-08-01
+- Summary: 60문항 통합(124→184) + 라벨 검증 + 봉인 20건·강제 장치
+<!-- harness:milestone id="M7" status="active" priority="P0" evidence="" -->
 ### M7 — 확장 코퍼스 기준선 측정 + 넓이 판정
 - DoD: 고정 43건 레코드 해시 불변 + 범용 recall@3 = M4 값(84.2%) · 확장 dev 40건 블라인드 ×3
   기준선이 법별 분포와 함께 존재 · 봉인 20건 미개봉이 ledger 로 확인 · 넓이 판정 보고서(git 추적) ·

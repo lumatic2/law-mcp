@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "m6-items",
+  "active_work_id": "m7-breadth",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -1499,7 +1499,7 @@
     "m6-items": {
       "work_id": "m6-items",
       "milestone_id": "M6",
-      "status": "active",
+      "status": "completed",
       "plan_path": "plans/2026-08-01-m6-문제작성과통합.md",
       "changeset_path": "changesets/20260801-m6-items",
       "next_step": "step-1",
@@ -1530,6 +1530,54 @@
         "chain": [
           "m7-breadth"
         ]
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "codex:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+        "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf"
+      ],
+      "owner_session_uuid": "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+      "updated_at": "2026-08-01",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "M6 완료 — 세법 12종 60문항 통합(184 레코드) · 라벨 60건 본문 검증 · 미개봉 봉인 20건 최초 확보 + 강제 장치"
+    },
+    "m7-breadth": {
+      "work_id": "m7-breadth",
+      "milestone_id": "M7",
+      "status": "active",
+      "plan_path": "plans/2026-08-01-m7-확장기준선측정.md",
+      "changeset_path": "changesets/20260801-m7-breadth",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1 — 고정 비교 세트 불변성 + 범용축 재측정"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2 — 확장 dev 40건 신규 기준선"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3 — 넓이 판정 보고서"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-08-01",
+        "plan_sha256": "a176b358bc473a8fccb4f7128bf02b0eb45076d854f747d2d48e5a1089aba793"
       },
       "allowed_stop_reasons": [
         "completed",
