@@ -11,11 +11,17 @@
 
 ## Current Goal
 
-<!-- harness:goal id="tax-complete" -->
-목표: **세법 완성** — 세무 질문의 근거 사슬(법령→해석→선례) 어느 고리를 물어도 도구 경로가 있고,
-그 경로가 측정으로 검증됐고, 알려진 함정 목록이 비어 있다. 진행 순서 규약(`CLAUDE.md` §진행 순서)의
-① 단계. 리서치 → `research/2026-07-31-세법완성-자료원지도.md`.
-연쇄: M1 → M2·M3(병렬 가능) → M4. "완성" 닫는 판정은 M4 보고서를 본 사용자가 내린다.
+<!-- harness:goal id="tax-corpus-breadth" -->
+목표: **코퍼스를 세법 전반으로** — 측정이 주요 6법(소득·법인·부가·국기·조특·상증) 위에서만 서는
+편중을 해소한다. 12법 × 5 = 60 주제를 승인된 결정적 규칙으로 확정해 dev 40 / sealed 20 으로 넣고,
+세법 전반 기준선을 처음 세운다. 사용자 결정 ⓓ(2026-07-31). 리서치 →
+`research/2026-08-01-코퍼스확장-주제추출-프로브.md`. 연쇄: M5 → M6 → M7.
+"세법 전반을 덮었다"는 선언은 M7 보고서를 본 사용자가 한다.
+
+> 이전 목표 **세법 완성**(`tax-complete`, M1~M4)은 2026-07-31 완료 — 4축 판정 보고서
+> `archive/reports/2026-07-31-m4-tax-complete-verdict.md` + 넓이 추가 기록
+> `archive/reports/2026-07-31-m4-verdict-addendum-breadth.md`. 닫는 판정(ⓐ 완성 선언 ·
+> ⓑ 기본통칙 공백 재판정 · ⓒ 다음 분야)은 사용자 미결 상태로 남아 있다.
 
 ## Active Milestones
 
@@ -80,6 +86,45 @@
 
 - Completed at: 2026-07-31
 - Summary: after 재측정+리허설 5건+4축 판정 보고 — 닫는 판정은 사용자 소유
+<!-- harness:milestone id="M5" status="active" priority="P0" evidence="" -->
+### M5 — 주제 목록 확정 + 규약 개정 + 스키마 배선
+- DoD: 승인 규칙이 파일로 외부화되고 60 주제가 동일 규칙·동일 MST 에서 2회 diff 0 으로 재현 ·
+  선정 로그로 감사 가능(취향 개입 0) · 가드 3방향(승인 목록 통과 / 목록 밖 차단 / digest 불일치
+  차단) 테스트 통과 · `sealed` split 어휘 + `--cases` 고정 세트 재현 플래그 배선 ·
+  `git diff --stat src/` 0줄 · `npm test` 전건.
+- Evidence: (M5 완료 시 기입)
+- Gap: ADR 0002 §2 가 새 주제를 기계로 차단하고 있어 개정 없이는 확장 불가. `sealed` 는 현행
+  스키마 어휘에 없어 통합 시 전건 FAIL. 고정 43건은 두 provenance 에 걸쳐 있어 단일 플래그로
+  재현 불가.
+- Scale: changesets>=1; surfaces: 추출기·ADR·가드·스키마/러너 배선; capability: 확장 주제가
+  규약을 우회하지 않고 근거를 남기며 통과한다
+- Plan: `plans/2026-08-01-m5-주제목록과봉인규약.md`
+- Status: [ ]
+<!-- harness:milestone id="M6" status="pending" priority="P0" evidence="" -->
+### M6 — 문제 작성 + 라벨 검증 + 코퍼스 통합
+- DoD: 신규 60건이 검사 3종(스키마·유출·주제출처) 전건 통과 · 라벨 60건이 조문 본문 조회로 검증된
+  기록 보유(기억 기반 0건, sealed 기록은 별 파일) · 기존 124 레코드 **레코드 단위 해시** 불변 ·
+  봉인 강제 장치가 플래그 없는 `sealed` 접근을 실제 거절하고 20건 ledger 등재 · `npm test` 전건.
+- Evidence: (M6 완료 시 기입)
+- Gap: 맥락 산문이 정답 조문의 법률 용어를 노출하면 어휘 공백 축이 측정에서 사라진다. ADR 0001 로
+  시행령으로 옮겨가는 라벨이 수 건 예상되며 그 조문은 승인 목록에 없어 가드 예외가 필요하다.
+- Scale: changesets>=1; surfaces: 문항 작성·라벨 검증·코퍼스 통합·봉인 장치; capability: 세법
+  전반 문제가 오염 없이 코퍼스에 들어간다
+- Plan: `plans/2026-08-01-m6-문제작성과통합.md`
+- Status: [ ]
+<!-- harness:milestone id="M7" status="pending" priority="P0" evidence="" -->
+### M7 — 확장 코퍼스 기준선 측정 + 넓이 판정
+- DoD: 고정 43건 레코드 해시 불변 + 범용 recall@3 = M4 값(84.2%) · 확장 dev 40건 블라인드 ×3
+  기준선이 법별 분포와 함께 존재 · 봉인 20건 미개봉이 ledger 로 확인 · 넓이 판정 보고서(git 추적) ·
+  `git diff --stat src/` 0줄. **"세법 전반을 덮었다" 선언은 사용자 결정.**
+- Evidence: (M7 완료 시 기입)
+- Gap: 측정 전 `dist-bench` 재빌드와 배포 사본 일치 확인이 선행돼야 한다(M4 에서 2회 걸린 함정).
+  고정 세트 `pass^3` 는 1회로 정의되지 않아 재측정하지 않는다 — 회귀 검사는 결정적 축으로만.
+- Scale: changesets>=1; surfaces: 두 세트 측정·판정 보고서; capability: "세법 전반"이 주장이 아니라
+  측정이다
+- Plan: `plans/2026-08-01-m7-확장기준선측정.md`
+- Status: [ ]
+
 ## Next Candidates
 
 후보 백로그 정본 → `plans/horizons/CANDIDATES.md` (순서는 사용자 소유).
