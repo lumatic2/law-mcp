@@ -1,28 +1,33 @@
 # HANDOFF — 세션 핸드오프 (git-tracked, session-end 소유)
 
-> 2026-07-31 이관: 구 `CLAUDE.local.md`(tracked) 핸드오프를 플릿 규약(HO1)대로 `HANDOFF.md` 로 이동. `CLAUDE.local.md` 는 이제 gitignored 기기-로컬 전용.
-
 ## 이어서 할 일
-> 2026-07-23 세션 종료 시 기록
+> 2026-08-01 세션 종료 시 기록
 
-- **다음 horizon = "세법 완성" 설계.** `/harness` §B0.5 로 `plans/horizons/<slug>.md` 작성.
-  담을 후보는 `plans/horizons/CANDIDATES.md` 의 `[horizon]` D·C·B + `[finding]` F·I·J·G.
-- **먼저 정할 것: ①(세법 완성)의 닫는 기준.** 지금 기준이 없어 ②(다음 분야)로 넘어갈 시점을
-  판단할 수 없다. 세션 마지막 미결이며 사용자 승인 필요.
-- **미푸시 3건**(`3c65c59`·`1a5e9cc`·`d5cea31`) — `git push` 필요.
-  `~/projects/custom-skills` 도 ahead 1(`5efd1c0` harness §B0.5 규칙) — 별도 push 필요.
-- 배포·npm 은 꺼내지 말 것 — `CLAUDE.md` §진행 순서로 잠갔다. 회계도 범위 밖(§범위).
+- **M9 step-4 부터 이어간다** (승인 영수증 유효, plan hash 불변). 세법 12종 조문 1,804조 수집 —
+  `bench/expansion/topics-2026-08-01.json` 의 `mst` 사용, 법당 전문 조회 1회.
+  **폴백 금지** — 법령명 불일치 시 중단(`rules.approved.json` `on_name_mismatch: abort`).
+- step-5 임베딩 파일럿: 로컬 torch 2.12+cpu · sentence-transformers 5.4(설치 확인, API 키 불요).
+  `BAAI/bge-m3` 는 HF 캐시에 있고 한국어 특화 계열만 신규 다운로드가 필요하다.
+  덤프 본문은 scratchpad, 레포에는 manifest 만.
+- **손실축 기준은 step-3 산출 하나뿐이다** — 단발 조문 top-3 **7/40 = 17.5%**
+  (`evidence/bench/2026-08-01-m9-taxonomy/current-article-baseline.json`). M8 에이전틱 90% 로
+  대체하면 단위가 달라 손실이 과소 산출된다.
+- **이득 상한이 이미 좁혀졌다**: A 5건 중 정규화(치환)가 exp-06 을 2위로 올려, 임베딩 고유 여지는
+  **exp-42 한 건**이다. step-6 판정에서 "상한 ≠ 도달률"과 함께 이 사실을 앞에 둔다.
+- `.harness/work.json` 의 `next_step` 이 `step-1` 로 남아 있다(승인 재등록 부작용) —
+  **plan 체크박스(step-1~3 `[x]`)가 정본**이다.
+- 배포·npm 은 꺼내지 말 것(`CLAUDE.md` §진행 순서). 회계도 범위 밖(§범위).
 
 ### 계획 위치 (cascade)
-- Objective: 한국 사람들이 '법' 작업을 AI 에이전트로 할 때 설치하는 MCP의 대표 중 하나가 된다
-- Horizon: **없음** — `trap-free` 2026-07-23 closed (`archive/reports/2026-07-23-trap-free-close.md`)
-- Milestone(active): **없음** — TF1~TF4 전부 completed
-- Step: 해당 없음
-- 다음 차례: `/harness` §B0.5 새 horizon 필요 — CANDIDATES.md `[horizon]` 5건에서 선정
+- 북극성: 한국 사람들이 '법' 작업을 AI 에이전트로 할 때 설치하는 MCP 의 대표 중 하나가 된다
+- 목표: `query-to-article-mapping` — 일상어→조문 매핑 병목 해소 판단 (M8→M9)
+- Milestone(active): **M9 · 매핑 병목 유형화 + 의미검색 상한 프로브 + 판정**
+- Step: 완료 3/6 · 다음 leaf **step-4**(세법 12종 조문 전량 수집)
+- 다음 차례: `/harness-run` 으로 step-4 → step-5 → step-6(판정 보고서)
 
 ### 현재 상태 / 주의점
-- MCP 서버 재시작 완료. TF4 수리 실 세션 검증됨(`as_of` + `law_id` 정상, effective_date 20240401).
-- ROADMAP read-only preflight: 110줄(budget 150 이내), marker 4개 전부 `completed`,
-  active=0. session-end는 ROADMAP을 수정하지 않았다.
-- 신뢰 가능한 기준선 = dev 20건 `pass^3` 90% · `SR@1` 80%. 홀드아웃은 소진(비가역).
-- 후보 파일 형태 규약이 harness §B0.5로 승격됨 — 후보는 단일 목록·발견 즉시 적재·크기 태그.
+- master, push 완료(`1d017b8`). `npm test` 356/356 · `git diff --stat src/` 0줄 · package.json 무변경.
+- 봉인 20건 미개봉(`opened_at = None`) — 개봉 시점은 사용자 결정.
+- ROADMAP read-only: 138줄(≤150), active=1(M9), completed 4. session-end 는 수정하지 않았다.
+- 미결 사용자 결정 누적: ⓐ 세법 완성 선언 · ⓑ 기본통칙 공백 재판정 · ⓔ 후보 S 해소 인정 ·
+  ⓖ 다음 진행 · **신규 ⓘ 경계 문항 2건(exp-42·48, 후보 X) 처분** · 후보 W 약칭 유출 수리 여부.
