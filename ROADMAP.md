@@ -1,9 +1,10 @@
 # ROADMAP
 
-> 마지막 업데이트: 2026-07-31
-> 상태: **목표 "세법 완성" milestone 연쇄 진행 중** — M1·M2·M3 completed, M4 active
-> (연쇄 승인 2026-07-31, `--chain` 등록). 닫는 기준 4축 = 자료원 완결 · 측정 재기준선 · 함정 소진 · 실전 리허설.
-> 기준선(before) = `pass^3` 86.0% · `SR@1` 80.6% · recall@3 84.2% (`evidence/bench/2026-07-31-m1-baseline/`).
+> 마지막 업데이트: 2026-08-01
+> 상태: **목표 "일상어→조문 매핑" 연쇄 진행 중** — M8 active, M9 pending (연쇄 승인 2026-08-01,
+> `--chain` 등록). M1~M7 은 completed.
+> 기준선 = 고정 43건 `pass^3` 86.0%·`SR@1` 81.4% · 확장 40건 `pass^3` 75.0%·`SR@1` 61.7%
+> (`evidence/bench/2026-08-01-m7-expanded/`) · 범용축 recall@3 84.2%.
 > ⚠ horizon 층은 폐지됐다(하네스 재조립 C4) — 이 연쇄는 북극성 바로 아래 milestone 연쇄다.
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `CLAUDE.md` 「북극성」 절)
@@ -11,7 +12,49 @@
 
 ## Current Goal
 
-<!-- harness:goal id="tax-corpus-breadth" -->
+<!-- harness:goal id="query-to-article-mapping" -->
+목표: **일상어→조문 매핑 병목을 해소할지 판단한다.** 조회(조문 지정 호출)는 정확하지만 사람 말에서
+법·조문을 집는 단계에서 깨진다(확장 `SR@1` 61.7%). ① 문항 결함으로 오염된 분모를 청소해 도구 실력
+추정치를 얻고 ② 두 대안(질의 정규화 / 조문 임베딩)의 이득축·손실축을 같은 자로 실측해 처방을 사용자
+결정에 올린다. 사용자 제안(2026-08-01 "법조항 전체를 임베딩")에서 출발. 연쇄: M8 → M9.
+**구현·채택 선언은 사용자가 한다 — 이 연쇄는 판정 재료까지.**
+
+> 이전 목표 **코퍼스 세법 전반**(`tax-corpus-breadth`, M5~M7)은 2026-08-01 완료 — 판정 보고서
+> `archive/reports/2026-08-01-m7-breadth-verdict.md`. 미결 결정 ⓔ·ⓕ·ⓖ 중 ⓕ(문항 수리)는
+> 2026-08-01 승인되어 M8 로 소비된다.
+
+<!-- harness:milestone id="M8" status="active" priority="P0" evidence="archive/reports/2026-08-01-m8-repair-close.md" -->
+### M8 — 문항 결함 수리 + 도구 실력 재측정
+- DoD: 수리가 정답을 바꾸지 않았음을 `context`·`query` 제외 전 필드 diff 0 으로 증명 · 수리 대상 외
+  144 레코드 해시 불변 · corpus↔items 질문 텍스트 일치 · 유출 검사 2종 + 금지어 목록 통과 ·
+  수리 전/후 `pass^3`·`SR@1` 비교표(수리 건수 명시) + 남은 미달 원인 재분류 · 봉인 20건 미개봉 ·
+  `npm test` 전건 · `git diff --stat src/` 0줄.
+- Evidence: archive/reports/2026-08-01-m8-repair-close.md
+- Gap: `check-no-new-topics` 는 승인 목록 **안**의 라벨 교체를 막지 못한다 — 라벨 보호는 전 필드
+  diff 대조가 유일하다. 점수를 본 뒤 문항을 고치는 것이므로 무오염 주장은 불가하고, 최종 판정
+  수단은 미개봉 봉인 20건이다.
+- Scale: changesets>=1; surfaces: 평가 데이터 수리·블라인드 재측정; capability: 도구 실력값이
+  문항 결함과 섞이지 않는다
+- Plan: `plans/2026-08-01-m8-문항수리와재측정.md`
+- Status: [ ]
+<!-- harness:milestone id="M9" status="pending" priority="P0" evidence="archive/reports/2026-08-01-m9-mapping-verdict.md" -->
+### M9 — 매핑 병목 유형화 + 의미검색 상한 프로브 + 판정
+- DoD: 실패 전건이 원인 유형으로 분류(유형①은 토큰 겹침 수치 근거) + 측정 대상(A)/참고(B) 분리 ·
+  정규화·임베딩의 이득축·손실축이 동일 단위(조문·k=3/10·`query`·현행 최종 응답)로 산출 · 임베딩
+  인덱스가 세법 12종 전체이고 정답 조문 존재가 선확인 · 3안 비교 판정 보고서(git 추적, "상한 ≠
+  도달률"·버전 스냅샷 위험 명시) · `src/`·`package.json` 무변경 · 조문 덤프 본문 미커밋.
+- Evidence: archive/reports/2026-08-01-m9-mapping-verdict.md
+- Gap: 의미 검색 층은 이미 `aiSearch` 로 돌고 있다(UD2) — 자체 임베딩은 새 아이디어가 아니라 엔진
+  교체 결정이다. 인덱스는 스냅샷이라 세법 개정에 노후하므로 "후보 찾기 한정·본문 API 재조회"
+  전제가 깨지면 `as_of` 함정이 되살아난다. 채택 결정은 사용자 소유.
+- Scale: changesets>=1; surfaces: 유형화·정규화 상한·현행 조문 기준선·조문 수집·임베딩 파일럿·판정;
+  capability: 처방 선택이 취향이 아니라 측정이다
+- Plan: `plans/2026-08-01-m9-매핑병목프로브.md`
+- Status: [ ]
+
+## 이전 목표 (완료)
+
+<!-- harness:goal id="tax-corpus-breadth" status="completed" -->
 목표: **코퍼스를 세법 전반으로** — 측정이 주요 6법(소득·법인·부가·국기·조특·상증) 위에서만 서는
 편중을 해소한다. 12법 × 5 = 60 주제를 승인된 결정적 규칙으로 확정해 dev 40 / sealed 20 으로 넣고,
 세법 전반 기준선을 처음 세운다. 사용자 결정 ⓓ(2026-07-31). 리서치 →
@@ -25,36 +68,6 @@
 
 ## Active Milestones
 
-<!-- harness:milestone id="M2" status="completed" priority="P0" evidence="archive/reports/2026-07-31-m2-source-connect-close.md · evidence/2026-07-31-m2-sources-e2e.md" -->
-### M2 — 자료원 연결 (M1 처분 "연결 대상" 판정분)
-- DoD: 처분표의 "연결 대상" 행 전부 연결 또는 "공백+이유" 재판정 — 판정 없는 행 잔존 = 미완료 ·
-  연결 자료원 전부 실 MCP E2E 응답 원문 evidence · `npm test` 전건 · 배포 사본 build + dist 스모크 ·
-  재시작 부채 명시.
-- Evidence: archive/reports/2026-07-31-m2-source-connect-close.md · evidence/2026-07-31-m2-sources-e2e.md
-- Gap: 조세조약(국제거래 1차 근거)·별표 세율표(97건 실측)·신구법 비교 경로 없음. 기본통칙·집행기준은
-  경로 존재부터 M1 판정 대기. 예규(`ntsExpc`)는 전문조회 없이 원문링크만이라 본문 도달 미검증.
-- Scale: changesets>=2; surfaces: `SOURCE_DESCRIPTORS` 확장(도구 개수 불변)·통합 테스트·실 E2E;
-  capability: 세무 근거 사슬 전 고리에 도구 경로가 있다
-- Plan: `plans/2026-07-31-m2-자료원연결.md`
-- Status: [x]
-
-- Completed at: 2026-07-31
-- Summary: trty·oldAndNew·licbyl 연결(enum 19→22, 도구 11 불변) + 예규 본문 NTS 경로. 실 MCP 체인 전부 통과
-<!-- harness:milestone id="M3" status="completed" priority="P0" evidence="archive/reports/2026-07-31-m3-trap-fix-close.md · evidence/2026-07-31-m3-traps-e2e.md" -->
-### M3 — 함정 소진 (J·F·I·D)
-- DoD: J(law_name null)·F(5xx 오분류)·I(위임 지연 3.3초)·D(본법/시행령 전달) 각각 회귀 테스트 고정 +
-  실 MCP 재현 시나리오 통과, 수리 불가 판정은 "안 고침+이유"로 CANDIDATES 재적재 · `npm test` 전건 ·
-  배포 사본 스모크 · 재시작 부채 명시.
-- Evidence: archive/reports/2026-07-31-m3-trap-fix-close.md · evidence/2026-07-31-m3-traps-e2e.md
-- Gap: 넷 다 "아는 사람만 피하는 함정" — J 는 응답만으로 무슨 법인지 모르고, F 는 인증 문제를 영원한
-  재시도로 위장하고, I 는 조문 지연의 64%, D 는 에이전트가 본법·시행령을 회차마다 오간다(d05·d09).
-- Scale: changesets>=2; surfaces: `lawgo-provider.ts` 결함별 수리·회귀 테스트·실 MCP 재현;
-  capability: 우회 지식 없이 도구를 그대로 믿을 수 있다
-- Plan: `plans/2026-07-31-m3-함정소진.md`
-- Status: [x]
-
-- Completed at: 2026-07-31
-- Summary: J·F·I·D 수리, 회귀 9건 고정, 실 MCP 재현 통과. D 효과는 M4 측정
 <!-- harness:milestone id="M4" status="completed" priority="P0" evidence="archive/reports/2026-07-31-m4-tax-complete-verdict.md" -->
 ### M4 — after 측정 + 실전 리허설 + 완성 판정
 - DoD: M1 과 동일 세트·지표 재측정 + before/after 비교표(회귀 판정선 pass^3 −5%p 이내) · 블라인드

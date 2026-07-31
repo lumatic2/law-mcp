@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "m7-breadth",
+  "active_work_id": "m8-item-repair",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -1598,6 +1598,111 @@
       "updated_at": "2026-08-01",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
       "completion_summary": "M7 완료 — 세법 전반 기준선 최초 수립(확장 40건 pass^3 75.0%) · 고정 세트 불변 확인 · 후보 S 해소 판정. 선언은 사용자 결정"
+    },
+    "m8-item-repair": {
+      "work_id": "m8-item-repair",
+      "milestone_id": "M8",
+      "status": "active",
+      "plan_path": "plans/2026-08-01-m8-문항수리와재측정.md",
+      "changeset_path": "changesets/20260801-m8-item-repair",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1 — 문항 결함 수리 (질문 텍스트 한정) + 전수 스캔"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2 — 수리 후 블라인드 재측정 ×3 + 전/후 비교"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-08-01",
+        "plan_sha256": "c4aa6eeb193823be3d2adabf08ffa279269deee58d1642a55fcca784d2c41a61",
+        "chain": [
+          "m9-mapping-probe"
+        ]
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "codex:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+        "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf"
+      ],
+      "owner_session_uuid": "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+      "updated_at": "2026-08-01",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+    },
+    "m9-mapping-probe": {
+      "work_id": "m9-mapping-probe",
+      "milestone_id": "M9",
+      "status": "active",
+      "plan_path": "plans/2026-08-01-m9-매핑병목프로브.md",
+      "changeset_path": "changesets/20260801-m9-mapping-probe",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1 — 실패 세트 구성 + 유형화 (측정 대상 / 참고 2층)"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2 — 정규화 상한 프로브 (도구 미변경)"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3 — 현행 경로의 조문 단위 기준선 (손실축 재료)"
+        },
+        {
+          "id": "step-4",
+          "label": "step-4 — 세법 12종 조문 전량 수집"
+        },
+        {
+          "id": "step-5",
+          "label": "step-5 — 임베딩 상한 파일럿 (이득축 + 손실축)"
+        },
+        {
+          "id": "step-6",
+          "label": "step-6 — 판정 보고서 (사용자 결정 재료)"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-08-01",
+        "plan_sha256": "1563e2cbaa337cd12ec5c36dd33f49e7ef283944d34c469f1211a1e1e6e6f9cd"
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "codex:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+        "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf"
+      ],
+      "owner_session_uuid": "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+      "updated_at": "2026-08-01",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
     }
   },
   "stop_reason": null,
