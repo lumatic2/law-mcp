@@ -1,0 +1,115 @@
+{
+  "version": "v2",
+  "approved_at": "2026-08-01",
+  "approved_by": "사용자 (대화 승인 — 규칙 본문을 제시하고 ㄱㄱ 수신)",
+  "approval_note": "ADR 0002 §2 는 '주제는 사람이 정한다'를 요구한다. ADR 0004 개정으로 '사람이 승인한 결정적 규칙'이 동급 출처가 되며, 이 파일이 그 승인된 규칙의 정본이다. 추출기(bench/expand-topics.ts)는 이 파일만 읽고 파라미터를 코드에 하드코딩하지 않는다.",
+  "source_of_rule": "research/2026-08-01-코퍼스확장-주제추출-프로브.md §추출 규칙 v2",
+  "laws": [
+    {
+      "k": 1,
+      "name": "소득세법"
+    },
+    {
+      "k": 2,
+      "name": "법인세법"
+    },
+    {
+      "k": 3,
+      "name": "부가가치세법"
+    },
+    {
+      "k": 4,
+      "name": "상속세 및 증여세법"
+    },
+    {
+      "k": 5,
+      "name": "종합부동산세법"
+    },
+    {
+      "k": 6,
+      "name": "조세특례제한법"
+    },
+    {
+      "k": 7,
+      "name": "국세기본법"
+    },
+    {
+      "k": 8,
+      "name": "국세징수법"
+    },
+    {
+      "k": 9,
+      "name": "조세범 처벌법"
+    },
+    {
+      "k": 10,
+      "name": "국제조세조정에 관한 법률"
+    },
+    {
+      "k": 11,
+      "name": "지방세법"
+    },
+    {
+      "k": 12,
+      "name": "지방세기본법"
+    }
+  ],
+  "quota_per_law": 5,
+  "title_keywords": [
+    "세율",
+    "과세표준",
+    "공제",
+    "면세",
+    "비과세",
+    "신고",
+    "납부",
+    "가산세",
+    "환급",
+    "경정",
+    "부과",
+    "징수",
+    "의무",
+    "기간",
+    "처벌",
+    "포탈"
+  ],
+  "name_match": "exact_only",
+  "on_name_mismatch": "abort",
+  "article_filter": {
+    "require_jomun": true,
+    "require_title": true,
+    "identifier": "조문번호[-가지번호]"
+  },
+  "selection": {
+    "method": "even_interval",
+    "sort": "article_number_asc",
+    "note": "매칭 목록을 조문번호순으로 정렬한 뒤 균등 간격으로 quota 개를 뽑는다. 오름차순 상위 N 은 총칙 편향을 만들어 쓰지 않는다."
+  },
+  "underfill_fallback": {
+    "method": "even_interval_over_all_titled_articles",
+    "note": "1차 필터가 quota 미달이면 표제를 가진 실체 조문 전체에서 같은 간격 샘플링으로 채운다. v1 의 '장(章) 제목 기반 보완'은 폐기됐다 — 조세범 처벌법은 편·장 구조가 없어 조문여부=='전문' 행이 0건이다(2026-08-01 프로브 실측)."
+  },
+  "duplicate_policy": {
+    "against": "bench/corpus.json topic_id",
+    "action": "next_interval_candidate"
+  },
+  "sealed_assignment": {
+    "method": "rotating_modulo",
+    "primary": "i ≡ k (mod 5)",
+    "extra_for_largest": "i ≡ k+2 (mod 5)",
+    "largest_count": 8,
+    "largest_by": "total_article_count",
+    "expected_total": 20,
+    "note": "법 인덱스 k(1..12)와 각 법 샘플 순서 i(1..5). 12법에서 1건 + 조문 총수 상위 8법에서 1건 추가 = 20. 봉인 위치가 법마다 회전하므로 봉인이 법 후반부(벌칙·보칙)에 몰려 과적합과 난이도를 분리 못 하게 되는 편향이 없다."
+  },
+  "audit": {
+    "record_in_list": [
+      "rules_digest",
+      "list_digest",
+      "mst",
+      "fetched_at"
+    ],
+    "determinism_scope": "동일 규칙 파일 + 동일 MST 에서 재현. 상류 개정 시 재현이 깨질 수 있음을 숨기지 않는다."
+  },
+  "provenance_for_new_items": "expansion-2026-08-01"
+}

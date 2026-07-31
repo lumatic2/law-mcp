@@ -1,0 +1,759 @@
+{
+  "version": "v2",
+  "generated": "2026-07-31",
+  "rules_digest": "a7e73773702925bd",
+  "list_digest": "d89136f54e860291",
+  "laws": [
+    {
+      "law": "소득세법",
+      "k": 1,
+      "mst": "280405",
+      "total": 259,
+      "matched": 153
+    },
+    {
+      "law": "법인세법",
+      "k": 2,
+      "mst": "280349",
+      "total": 181,
+      "matched": 79
+    },
+    {
+      "law": "부가가치세법",
+      "k": 3,
+      "mst": "276117",
+      "total": 84,
+      "matched": 44
+    },
+    {
+      "law": "상속세 및 증여세법",
+      "k": 4,
+      "mst": "276123",
+      "total": 108,
+      "matched": 42
+    },
+    {
+      "law": "종합부동산세법",
+      "k": 5,
+      "mst": "280417",
+      "total": 27,
+      "matched": 15
+    },
+    {
+      "law": "조세특례제한법",
+      "k": 6,
+      "mst": "280409",
+      "total": 362,
+      "matched": 94
+    },
+    {
+      "law": "국세기본법",
+      "k": 7,
+      "mst": "280373",
+      "total": 131,
+      "matched": 44
+    },
+    {
+      "law": "국세징수법",
+      "k": 8,
+      "mst": "286427",
+      "total": 121,
+      "matched": 26
+    },
+    {
+      "law": "조세범 처벌법",
+      "k": 9,
+      "mst": "224875",
+      "total": 21,
+      "matched": 10
+    },
+    {
+      "law": "국제조세조정에 관한 법률",
+      "k": 10,
+      "mst": "280389",
+      "total": 100,
+      "matched": 32
+    },
+    {
+      "law": "지방세법",
+      "k": 11,
+      "mst": "282559",
+      "total": 245,
+      "matched": 155
+    },
+    {
+      "law": "지방세기본법",
+      "k": 12,
+      "mst": "283257",
+      "total": 165,
+      "matched": 53
+    }
+  ],
+  "counts": {
+    "total": 60,
+    "dev": 40,
+    "sealed": 20
+  },
+  "topics": [
+    {
+      "topic_id": "소득세법 제10조",
+      "law": "소득세법",
+      "law_index": 1,
+      "sample_index": 1,
+      "article_id": "10",
+      "article_title": "납세지의 변경신고",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "소득세법 제51조의4",
+      "law": "소득세법",
+      "law_index": 1,
+      "sample_index": 2,
+      "article_id": "51-4",
+      "article_title": "주택담보노후연금 이자비용공제",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "소득세법 제58조",
+      "law": "소득세법",
+      "law_index": 1,
+      "sample_index": 3,
+      "article_id": "58",
+      "article_title": "재해손실세액공제",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "소득세법 제70조의2",
+      "law": "소득세법",
+      "law_index": 1,
+      "sample_index": 4,
+      "article_id": "70-2",
+      "article_title": "성실신고확인서 제출",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "소득세법 제81조의3",
+      "law": "소득세법",
+      "law_index": 1,
+      "sample_index": 5,
+      "article_id": "81-3",
+      "article_title": "사업장 현황신고 불성실 가산세",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "법인세법 제32조",
+      "law": "법인세법",
+      "law_index": 2,
+      "sample_index": 1,
+      "article_id": "32",
+      "article_title": "해약환급금준비금의 손금산입",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "법인세법 제51조의2",
+      "law": "법인세법",
+      "law_index": 2,
+      "sample_index": 2,
+      "article_id": "51-2",
+      "article_title": "유동화전문회사 등에 대한 소득공제",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "법인세법 제58조",
+      "law": "법인세법",
+      "law_index": 2,
+      "sample_index": 3,
+      "article_id": "58",
+      "article_title": "재해손실에 대한 세액공제",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "법인세법 제62조",
+      "law": "법인세법",
+      "law_index": 2,
+      "sample_index": 4,
+      "article_id": "62",
+      "article_title": "비영리내국법인의 이자소득에 대한 신고 특례",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "법인세법 제68조",
+      "law": "법인세법",
+      "law_index": 2,
+      "sample_index": 5,
+      "article_id": "68",
+      "article_title": "추계에 의한 과세표준 및 세액계산의 특례",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "부가가치세법 제3조의2",
+      "law": "부가가치세법",
+      "law_index": 3,
+      "sample_index": 1,
+      "article_id": "3-2",
+      "article_title": "신탁 관련 제2차 납세의무 및 물적납세의무",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "부가가치세법 제29조",
+      "law": "부가가치세법",
+      "law_index": 3,
+      "sample_index": 2,
+      "article_id": "29",
+      "article_title": "과세표준",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "부가가치세법 제33조",
+      "law": "부가가치세법",
+      "law_index": 3,
+      "sample_index": 3,
+      "article_id": "33",
+      "article_title": "세금계산서 발급의무의 면제 등",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "부가가치세법 제37조",
+      "law": "부가가치세법",
+      "law_index": 3,
+      "sample_index": 4,
+      "article_id": "37",
+      "article_title": "납부세액 등의 계산",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "부가가치세법 제42조",
+      "law": "부가가치세법",
+      "law_index": 3,
+      "sample_index": 5,
+      "article_id": "42",
+      "article_title": "면세농산물등 의제매입세액 공제특례",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "상속세 및 증여세법 제18조",
+      "law": "상속세 및 증여세법",
+      "law_index": 4,
+      "sample_index": 1,
+      "article_id": "18",
+      "article_title": "기초공제",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "상속세 및 증여세법 제18조의4",
+      "law": "상속세 및 증여세법",
+      "law_index": 4,
+      "sample_index": 2,
+      "article_id": "18-4",
+      "article_title": "가업상속공제와 영농상속공제의 동시 적용 배제",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "상속세 및 증여세법 제20조",
+      "law": "상속세 및 증여세법",
+      "law_index": 4,
+      "sample_index": 3,
+      "article_id": "20",
+      "article_title": "그 밖의 인적공제",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "상속세 및 증여세법 제23조",
+      "law": "상속세 및 증여세법",
+      "law_index": 4,
+      "sample_index": 4,
+      "article_id": "23",
+      "article_title": "재해손실 공제",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "상속세 및 증여세법 제25조",
+      "law": "상속세 및 증여세법",
+      "law_index": 4,
+      "sample_index": 5,
+      "article_id": "25",
+      "article_title": "상속세의 과세표준 및 과세최저한",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "종합부동산세법 제6조",
+      "law": "종합부동산세법",
+      "law_index": 5,
+      "sample_index": 1,
+      "article_id": "6",
+      "article_title": "비과세 등",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "종합부동산세법 제7조",
+      "law": "종합부동산세법",
+      "law_index": 5,
+      "sample_index": 2,
+      "article_id": "7",
+      "article_title": "납세의무자",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "종합부동산세법 제7조의2",
+      "law": "종합부동산세법",
+      "law_index": 5,
+      "sample_index": 3,
+      "article_id": "7-2",
+      "article_title": "신탁주택 관련 수탁자의 물적납세의무",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "종합부동산세법 제8조",
+      "law": "종합부동산세법",
+      "law_index": 5,
+      "sample_index": 4,
+      "article_id": "8",
+      "article_title": "과세표준",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "종합부동산세법 제9조",
+      "law": "종합부동산세법",
+      "law_index": 5,
+      "sample_index": 5,
+      "article_id": "9",
+      "article_title": "세율 및 세액",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "조세특례제한법 제8조의4",
+      "law": "조세특례제한법",
+      "law_index": 6,
+      "sample_index": 1,
+      "article_id": "8-4",
+      "article_title": "중소기업의 결손금 소급공제에 따른 환급 특례",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "조세특례제한법 제15조",
+      "law": "조세특례제한법",
+      "law_index": 6,
+      "sample_index": 2,
+      "article_id": "15",
+      "article_title": "벤처기업 출자자의 제2차 납세의무 면제",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "조세특례제한법 제29조의3",
+      "law": "조세특례제한법",
+      "law_index": 6,
+      "sample_index": 3,
+      "article_id": "29-3",
+      "article_title": "경력단절 여성 고용 기업 등에 대한 세액공제",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "조세특례제한법 제58조",
+      "law": "조세특례제한법",
+      "law_index": 6,
+      "sample_index": 4,
+      "article_id": "58",
+      "article_title": "고향사랑 기부금에 대한 세액공제 등",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "조세특례제한법 제90조의2",
+      "law": "조세특례제한법",
+      "law_index": 6,
+      "sample_index": 5,
+      "article_id": "90-2",
+      "article_title": "세금우대자료 미제출 가산세",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국세기본법 제5조의2",
+      "law": "국세기본법",
+      "law_index": 7,
+      "sample_index": 1,
+      "article_id": "5-2",
+      "article_title": "우편신고 및 전자신고",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국세기본법 제22조",
+      "law": "국세기본법",
+      "law_index": 7,
+      "sample_index": 2,
+      "article_id": "22",
+      "article_title": "납세의무의 확정",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국세기본법 제23조",
+      "law": "국세기본법",
+      "law_index": 7,
+      "sample_index": 3,
+      "article_id": "23",
+      "article_title": "법인의 합병으로 인한 납세의무의 승계",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국세기본법 제25조의2",
+      "law": "국세기본법",
+      "law_index": 7,
+      "sample_index": 4,
+      "article_id": "25-2",
+      "article_title": "연대납세의무에 관한 「민법」의 준용",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국세기본법 제40조",
+      "law": "국세기본법",
+      "law_index": 7,
+      "sample_index": 5,
+      "article_id": "40",
+      "article_title": "법인의 제2차 납세의무",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국세징수법 제3조",
+      "law": "국세징수법",
+      "law_index": 8,
+      "sample_index": 1,
+      "article_id": "3",
+      "article_title": "징수의 순위",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국세징수법 제6조",
+      "law": "국세징수법",
+      "law_index": 8,
+      "sample_index": 2,
+      "article_id": "6",
+      "article_title": "납세자에 대한 납부고지 등",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국세징수법 제8조",
+      "law": "국세징수법",
+      "law_index": 8,
+      "sample_index": 3,
+      "article_id": "8",
+      "article_title": "납부고지서의 발급 시기",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국세징수법 제11조",
+      "law": "국세징수법",
+      "law_index": 8,
+      "sample_index": 4,
+      "article_id": "11",
+      "article_title": "체납액 징수 관련 사실행위의 위탁",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국세징수법 제12조",
+      "law": "국세징수법",
+      "law_index": 8,
+      "sample_index": 5,
+      "article_id": "12",
+      "article_title": "납부의 방법",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "조세범 처벌법 제3조",
+      "law": "조세범 처벌법",
+      "law_index": 9,
+      "sample_index": 1,
+      "article_id": "3",
+      "article_title": "조세 포탈 등",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "조세범 처벌법 제4조",
+      "law": "조세범 처벌법",
+      "law_index": 9,
+      "sample_index": 2,
+      "article_id": "4",
+      "article_title": "면세유의 부정 유통",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "조세범 처벌법 제4조의2",
+      "law": "조세범 처벌법",
+      "law_index": 9,
+      "sample_index": 3,
+      "article_id": "4-2",
+      "article_title": "면세유류 구입카드등의 부정 발급",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "조세범 처벌법 제9조",
+      "law": "조세범 처벌법",
+      "law_index": 9,
+      "sample_index": 4,
+      "article_id": "9",
+      "article_title": "성실신고 방해 행위",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "조세범 처벌법 제10조",
+      "law": "조세범 처벌법",
+      "law_index": 9,
+      "sample_index": 5,
+      "article_id": "10",
+      "article_title": "세금계산서의 발급의무 위반 등",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국제조세조정에 관한 법률 제7조",
+      "law": "국제조세조정에 관한 법률",
+      "law_index": 10,
+      "sample_index": 1,
+      "article_id": "7",
+      "article_title": "정상가격에 의한 결정 및 경정",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국제조세조정에 관한 법률 제16조",
+      "law": "국제조세조정에 관한 법률",
+      "law_index": 10,
+      "sample_index": 2,
+      "article_id": "16",
+      "article_title": "국제거래에 대한 자료 제출의무",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국제조세조정에 관한 법률 제19조",
+      "law": "국제조세조정에 관한 법률",
+      "law_index": 10,
+      "sample_index": 3,
+      "article_id": "19",
+      "article_title": "관세의 경정처분에 따른 국세의 경정청구",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국제조세조정에 관한 법률 제38조",
+      "law": "국제조세조정에 관한 법률",
+      "law_index": 10,
+      "sample_index": 4,
+      "article_id": "38",
+      "article_title": "비밀유지의무 등",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "국제조세조정에 관한 법률 제44조",
+      "law": "국제조세조정에 관한 법률",
+      "law_index": 10,
+      "sample_index": 5,
+      "article_id": "44",
+      "article_title": "신청인의 협조의무",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "지방세법 제10조의3",
+      "law": "지방세법",
+      "law_index": 11,
+      "sample_index": 1,
+      "article_id": "10-3",
+      "article_title": "유상승계취득의 경우 과세표준",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "지방세법 제18조",
+      "law": "지방세법",
+      "law_index": 11,
+      "sample_index": 2,
+      "article_id": "18",
+      "article_title": "징수방법",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "지방세법 제34조",
+      "law": "지방세법",
+      "law_index": 11,
+      "sample_index": 3,
+      "article_id": "34",
+      "article_title": "세율",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "지방세법 제52조",
+      "law": "지방세법",
+      "law_index": 11,
+      "sample_index": 4,
+      "article_id": "52",
+      "article_title": "세율",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "지방세법 제68조",
+      "law": "지방세법",
+      "law_index": 11,
+      "sample_index": 5,
+      "article_id": "68",
+      "article_title": "특별징수의무자",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "지방세기본법 제23조",
+      "law": "지방세기본법",
+      "law_index": 12,
+      "sample_index": 1,
+      "article_id": "23",
+      "article_title": "기간의 계산",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "지방세기본법 제31조",
+      "law": "지방세기본법",
+      "law_index": 12,
+      "sample_index": 2,
+      "article_id": "31",
+      "article_title": "송달지연으로 인한 납부기한의 연장",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "지방세기본법 제35조의2",
+      "law": "지방세기본법",
+      "law_index": 12,
+      "sample_index": 3,
+      "article_id": "35-2",
+      "article_title": "수정신고의 효력",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "지방세기본법 제39조",
+      "law": "지방세기본법",
+      "law_index": 12,
+      "sample_index": 4,
+      "article_id": "39",
+      "article_title": "지방세징수권의 소멸시효",
+      "split": "sealed",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    },
+    {
+      "topic_id": "지방세기본법 제44조",
+      "law": "지방세기본법",
+      "law_index": 12,
+      "sample_index": 5,
+      "article_id": "44",
+      "article_title": "연대납세의무",
+      "split": "dev",
+      "selected_via": "keyword",
+      "provenance": "expansion-2026-08-01"
+    }
+  ]
+}

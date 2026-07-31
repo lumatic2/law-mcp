@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "m4-verdict",
+  "active_work_id": "m5-topics",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -1443,6 +1443,57 @@
       "updated_at": "2026-07-31",
       "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
       "completion_summary": "M4 완료 — after 재측정(pass^3 86.0 유지·pass@3 +7.0%p)·블라인드 리허설 5건(실패 0·추측 0)·4축 판정 보고서. 완성 선언은 사용자 결정."
+    },
+    "m5-topics": {
+      "work_id": "m5-topics",
+      "milestone_id": "M5",
+      "status": "active",
+      "plan_path": "plans/2026-08-01-m5-주제목록과봉인규약.md",
+      "changeset_path": "changesets/20260801-m5-topics",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1 — 승인 규칙 외부화 + 추출기 + 60 주제 확정"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2 — ADR 0004 + 가드 예외 경로(digest 검증)"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3 — 스키마·러너 배선 (데이터 착륙 전)"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-08-01",
+        "plan_sha256": "f7898ec417cb5f3bda137647c46f1f199cbde7733223e8a4656ee3979752b74b",
+        "chain": [
+          "m6-items",
+          "m7-breadth"
+        ]
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "codex:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+        "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf"
+      ],
+      "owner_session_uuid": "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+      "updated_at": "2026-08-01",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
     }
   },
   "stop_reason": null,
