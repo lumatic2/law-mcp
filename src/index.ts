@@ -455,6 +455,8 @@ const LEGAL_SOURCES = [
   "nlrc", "ppc", "nhrck", "sfc", "kcc", "ecc", "oclt", "ftc", "baiPvcs",
   "ttDecc", "acrDecc", "adapDecc",
   "ntsExpc", "moefExpc",
+  // M2 step-1 (세법 완성): 법령계 3종 — 처분표 ADR 0003 "연결 대상" 행.
+  "trty", "oldAndNew", "licbyl",
 ] as const;
 
 server.registerTool(
@@ -487,7 +489,13 @@ server.registerTool(
       + "relaxed query — and a warning says so. Treat fallback results with suspicion: upstream "
       + "full-text results are ordered by 가나다 (alphabet), NOT by relevance. "
       + "Note lstrm indexes terms *defined in statutes*, so common doctrinal words like 정당방위 "
-      + "return 0 results.",
+      + "return 0 results. "
+      + "Statute-family sources (M2): trty=조약 (treaties incl. tax treaties — same force as domestic "
+      + "law per Constitution art.6(1); for cross-border/nonresident tax questions a tax treaty can "
+      + "override domestic tax law, full text available via get_legal_source), oldAndNew=신구법 비교 "
+      + "(old-vs-new article comparison for amended statutes — key for year-attribution tax questions; "
+      + "full text via get_legal_source with the 신구법일련번호), licbyl=법령 별표·서식 (statutory "
+      + "annexes/forms incl. tax rate tables — metadata + file links only, body is HWP/PDF).",
     inputSchema: {
       source: z.enum(LEGAL_SOURCES).describe("검색할 법원(法源)"),
       query: z.string().min(1),

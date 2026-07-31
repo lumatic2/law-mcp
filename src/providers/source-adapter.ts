@@ -94,6 +94,12 @@ export type SourceDetailSpec = {
   fields: SourceFieldSpec[];
   /** 조문 배열을 가진 법원(자치법규)만 지정 */
   articlesPath?: { container: string; rowKey: string };
+  /**
+   * `{no, content}` 류 행 목록을 문자열 배열로 펴서 싣는 섹션 (M2 step-1 — 신구법 비교).
+   * `OldAndNewService` 는 평평한 필드가 없고 `신조문목록.조문[]`·`구조문목록.조문[]` 만 있다 —
+   * 기존 fields/articlesPath 로는 전부 null 이 되어 상세가 통째로 NOT_FOUND 로 새는 구조다.
+   */
+  listSections?: Array<{ as: string; container: string; rowKey: string }>;
 };
 
 export const SOURCE_DESCRIPTORS: Record<string, SourceDescriptor> = {
@@ -513,6 +519,121 @@ export const CGM_EXPC_DESCRIPTORS: Record<string, SourceDescriptor> = {
 
 Object.assign(SOURCE_DESCRIPTORS, CGM_EXPC_DESCRIPTORS);
 
+/**
+ * 법령계 자료원 3종 (M2 step-1 — 세법 완성 연쇄). 처분표 ADR 0003 의 "연결 대상" 행.
+ * 실측: `research/2026-07-31-m1-상류프로브.md` §2·§8 + M2 사전 프로브(scratchpad probe5·6).
+ *
+ * ⚠ **`trty` 검색 행 키는 소문자 target 과 다르게 대문자 `Trty` 다** (`TrtySearch.Trty` 실측).
+ * ⚠ **`trty` 전문 컨테이너는 양자조약 기준 `BothTrtyService`** — 전문이 `조약내용.조약내용` 로
+ *   한 단계 중첩이라 extractDetail 의 nested lookup 이 흡수한다. 다자조약 표본은 세무 질의에서
+ *   확보하지 못했다(이중과세 계열 20행 전원 양자) — 다자 전문 컨테이너가 다르면 NOT_FOUND 로
+ *   떨어지며, 표본 확보 시 확장한다.
+ * ⚠ **`oldAndNew` 전문은 `MST` 로 부른다** — 검색 행의 `신구법일련번호`가 그 값이다.
+ * ⚠ **`licbyl` 전문은 upstream 에 JSON 이 없다**(HTML 뷰어 셸 3,153B 실측) — 메타+파일 링크까지만
+ *   싣는다(M2 plan 결정 로그 D2: HWP/PDF 본문 파싱은 이 연쇄 범위 밖).
+ */
+export const STATUTE_ANNEX_DESCRIPTORS: Record<string, SourceDescriptor> = {
+  trty: {
+    target: "trty",
+    label: "조약(조세조약 포함)",
+    container: "TrtySearch",
+    rowKey: "Trty",
+    idKeys: ["조약일련번호"],
+    titleKeys: ["조약명"],
+    authority: {
+      grade: "statute",
+      note:
+        "조약은 헌법 제6조 제1항에 따라 국내법과 같은 효력을 가진다. 국제거래·비거주자 과세는 "
+        + "조세조약이 국내 세법에 우선 적용될 수 있으므로 국내법 조문만으로 결론짓지 말 것.",
+    },
+    fields: [
+      { as: "조약구분명", from: ["조약구분명"] },
+      { as: "조약번호", from: ["조약번호"] },
+      { as: "서명일자", from: ["서명일자"] },
+      { as: "발효일자", from: ["발효일자"] },
+      { as: "관보게제일자", from: ["관보게제일자"] },
+    ],
+    // 본문(search=2) 지원 미확인 — 켰다가 조용히 0건이 되는 쪽이 더 나쁘다. 이름 매칭 사다리만 탄다.
+    supportsBodySearch: false,
+    detail: {
+      container: "BothTrtyService",
+      idParam: "ID",
+      fields: [
+        { as: "조약명", from: ["조약명"] },
+        { as: "조약내용", from: ["조약내용"] },
+        { as: "발효일자", from: ["발효일자"] },
+      ],
+    },
+  },
+  oldAndNew: {
+    target: "oldAndNew",
+    label: "신구법 비교",
+    container: "OldAndNewLawSearch",
+    rowKey: "oldAndNew",
+    idKeys: ["신구법일련번호"],
+    titleKeys: ["신구법명"],
+    authority: {
+      grade: "reference_only",
+      note:
+        "신구법 비교는 개정 전후 대조 자료다. 조문을 인용할 때는 반드시 get_law_article 로 "
+        + "현행 또는 귀속연도 시점(as_of)의 본문을 확정하라 — 세법은 연말 개정이 매년 있다.",
+    },
+    fields: [
+      { as: "현행연혁코드", from: ["현행연혁코드"] },
+      { as: "법령구분명", from: ["법령구분명"] },
+      { as: "시행일자", from: ["시행일자"] },
+      { as: "공포일자", from: ["공포일자"] },
+      { as: "제개정구분명", from: ["제개정구분명"] },
+      { as: "소관부처명", from: ["소관부처명"] },
+    ],
+    supportsBodySearch: false,
+    detail: {
+      container: "OldAndNewService",
+      idParam: "MST",
+      fields: [],
+      listSections: [
+        { as: "신조문목록", container: "신조문목록", rowKey: "조문" },
+        { as: "구조문목록", container: "구조문목록", rowKey: "조문" },
+      ],
+    },
+  },
+  licbyl: {
+    target: "licbyl",
+    label: "법령 별표·서식",
+    container: "licBylSearch",
+    rowKey: "licbyl",
+    idKeys: ["별표일련번호"],
+    titleKeys: ["별표명"],
+    authority: {
+      grade: "statute",
+      note:
+        "별표·서식은 법령의 일부다(세율표·기준표가 여기 실린다). 본문은 파일로만 제공되므로 "
+        + "구체 수치를 인용하려면 파일 원문을 확인해야 한다.",
+    },
+    fields: [
+      { as: "관련법령명", from: ["관련법령명"] },
+      { as: "관련법령ID", from: ["관련법령ID"] },
+      { as: "별표종류", from: ["별표종류"] },
+      { as: "별표번호", from: ["별표번호"] },
+      { as: "공포일자", from: ["공포일자"] },
+      { as: "별표서식PDF파일링크", from: ["별표서식PDF파일링크"] },
+      { as: "별표서식파일링크", from: ["별표서식파일링크"] },
+    ],
+    supportsBodySearch: false,
+    detail: {
+      container: "licBylService",
+      idParam: "ID",
+      fields: [{ as: "별표명", from: ["별표명"] }],
+    },
+    detailUnavailable:
+      "별표·서식 본문은 HWP/PDF 파일로만 제공된다(2026-07-31 실측 — lawService 는 HTML 뷰어 셸). "
+      + "검색 결과의 `별표서식PDF파일링크`(www.law.go.kr 붙여서 사용)로 원문링크를 열어야 한다.",
+    detailLinkKeys: ["별표서식PDF파일링크", "별표서식파일링크"],
+  },
+};
+
+Object.assign(SOURCE_DESCRIPTORS, STATUTE_ANNEX_DESCRIPTORS);
+
 export type SourceItem = {
   source_id: string;
   title: string | null;
@@ -678,6 +799,16 @@ export function extractDetail(
     const value = lookup(field.from);
     if (value !== null) hasAnyField = true;
     detail[field.as] = value === null ? null : decode(value);
+  }
+  for (const section of descriptor.detail.listSections ?? []) {
+    const sectionContainer = asObject(container[section.container]);
+    const rows = toRowArray(sectionContainer[section.rowKey]);
+    const lines = rows
+      .map((row) => pickString(row, ["content", "조내용", "내용"]))
+      .filter((line): line is string => line !== null)
+      .map((line) => decode(line));
+    if (lines.length > 0) hasAnyField = true;
+    detail[section.as] = lines;
   }
   if (!hasAnyField) return null;
 

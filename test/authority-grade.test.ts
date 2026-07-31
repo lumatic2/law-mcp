@@ -56,7 +56,10 @@ test("구속력이 강한 등급은 근거가 확인된 자료원에만 붙는�
     .filter(([, d]) => d.authority.grade === "constitutional" || d.authority.grade === "statute")
     .map(([k]) => k)
     .sort();
-  assert.deepEqual(strong, ["detc", "ordin"], `강한 등급이 늘었다: ${strong.join(", ")}`);
+  // M2 step-1 (2026-07-31) 의도적 확장 2건 — 근거:
+  //   trty   = 조약은 헌법 §6① 에 따라 국내법과 같은 효력 (조세조약은 국내 세법에 우선 적용 가능)
+  //   licbyl = 별표·서식은 법령의 일부 (세율표가 여기 실린다)
+  assert.deepEqual(strong, ["detc", "licbyl", "ordin", "trty"], `강한 등급이 늘었다: ${strong.join(", ")}`);
 });
 
 // 예규는 전문도 없고 구속력도 없다 — 두 사실이 함께 붙어야 오용을 막는다.
