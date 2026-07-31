@@ -1,0 +1,176 @@
+{
+ "note": "M7 범용축 고정 비교 세트 — 확장 전 dev(query 보유·기권 제외). M4 general-dev.json 과 같은 표본.",
+ "cases": [
+  {
+   "case_id": "v2-01"
+  },
+  {
+   "case_id": "v2-02"
+  },
+  {
+   "case_id": "v2-03"
+  },
+  {
+   "case_id": "v2-04"
+  },
+  {
+   "case_id": "v2-05"
+  },
+  {
+   "case_id": "v2-09"
+  },
+  {
+   "case_id": "v2-10"
+  },
+  {
+   "case_id": "v2-11"
+  },
+  {
+   "case_id": "v2-12"
+  },
+  {
+   "case_id": "v2-13"
+  },
+  {
+   "case_id": "v2-17"
+  },
+  {
+   "case_id": "v2-18"
+  },
+  {
+   "case_id": "v2-19"
+  },
+  {
+   "case_id": "v2-20"
+  },
+  {
+   "case_id": "v2-21"
+  },
+  {
+   "case_id": "v2-25"
+  },
+  {
+   "case_id": "v2-26"
+  },
+  {
+   "case_id": "v2-27"
+  },
+  {
+   "case_id": "v2-28"
+  },
+  {
+   "case_id": "v2-29"
+  },
+  {
+   "case_id": "v2-33"
+  },
+  {
+   "case_id": "v2-34"
+  },
+  {
+   "case_id": "v2-35"
+  },
+  {
+   "case_id": "v2-36"
+  },
+  {
+   "case_id": "v2-37"
+  },
+  {
+   "case_id": "tax-01"
+  },
+  {
+   "case_id": "tax-02"
+  },
+  {
+   "case_id": "tax-03"
+  },
+  {
+   "case_id": "tax-04"
+  },
+  {
+   "case_id": "tax-05"
+  },
+  {
+   "case_id": "tax-09"
+  },
+  {
+   "case_id": "tax-10"
+  },
+  {
+   "case_id": "tax-11"
+  },
+  {
+   "case_id": "tax-12"
+  },
+  {
+   "case_id": "tax-13"
+  },
+  {
+   "case_id": "tax-18"
+  },
+  {
+   "case_id": "tax-19"
+  },
+  {
+   "case_id": "tax-20"
+  },
+  {
+   "case_id": "tax-21"
+  },
+  {
+   "case_id": "tax-25"
+  },
+  {
+   "case_id": "tax-26"
+  },
+  {
+   "case_id": "tax-27"
+  },
+  {
+   "case_id": "tax-28"
+  },
+  {
+   "case_id": "tax-31"
+  },
+  {
+   "case_id": "tax-32"
+  },
+  {
+   "case_id": "tax-33"
+  },
+  {
+   "case_id": "tax-34"
+  },
+  {
+   "case_id": "tax-35"
+  },
+  {
+   "case_id": "tax-36"
+  },
+  {
+   "case_id": "tax-37"
+  },
+  {
+   "case_id": "tax-42"
+  },
+  {
+   "case_id": "tax-43"
+  },
+  {
+   "case_id": "tax-44"
+  },
+  {
+   "case_id": "tax-45"
+  },
+  {
+   "case_id": "tax-46"
+  },
+  {
+   "case_id": "ag-d05"
+  },
+  {
+   "case_id": "ag-d09"
+  }
+ ]
+}
