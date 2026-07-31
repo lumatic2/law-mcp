@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-07-31
-> 상태: **목표 "세법 완성" milestone 연쇄 진행 중** — M1·M2 completed, M3 active, M4 pending
+> 상태: **목표 "세법 완성" milestone 연쇄 진행 중** — M1·M2·M3 completed, M4 active
 > (연쇄 승인 2026-07-31, `--chain` 등록). 닫는 기준 4축 = 자료원 완결 · 측정 재기준선 · 함정 소진 · 실전 리허설.
 > 기준선(before) = `pass^3` 86.0% · `SR@1` 80.6% · recall@3 84.2% (`evidence/bench/2026-07-31-m1-baseline/`).
 > ⚠ horizon 층은 폐지됐다(하네스 재조립 C4) — 이 연쇄는 북극성 바로 아래 milestone 연쇄다.
@@ -50,20 +50,22 @@
 
 - Completed at: 2026-07-31
 - Summary: trty·oldAndNew·licbyl 연결(enum 19→22, 도구 11 불변) + 예규 본문 NTS 경로. 실 MCP 체인 전부 통과
-<!-- harness:milestone id="M3" status="active" priority="P0" -->
+<!-- harness:milestone id="M3" status="completed" priority="P0" evidence="archive/reports/2026-07-31-m3-trap-fix-close.md · evidence/2026-07-31-m3-traps-e2e.md" -->
 ### M3 — 함정 소진 (J·F·I·D)
 - DoD: J(law_name null)·F(5xx 오분류)·I(위임 지연 3.3초)·D(본법/시행령 전달) 각각 회귀 테스트 고정 +
   실 MCP 재현 시나리오 통과, 수리 불가 판정은 "안 고침+이유"로 CANDIDATES 재적재 · `npm test` 전건 ·
   배포 사본 스모크 · 재시작 부채 명시.
-- Evidence: (완료 시 기입)
+- Evidence: archive/reports/2026-07-31-m3-trap-fix-close.md · evidence/2026-07-31-m3-traps-e2e.md
 - Gap: 넷 다 "아는 사람만 피하는 함정" — J 는 응답만으로 무슨 법인지 모르고, F 는 인증 문제를 영원한
   재시도로 위장하고, I 는 조문 지연의 64%, D 는 에이전트가 본법·시행령을 회차마다 오간다(d05·d09).
 - Scale: changesets>=2; surfaces: `lawgo-provider.ts` 결함별 수리·회귀 테스트·실 MCP 재현;
   capability: 우회 지식 없이 도구를 그대로 믿을 수 있다
 - Plan: `plans/2026-07-31-m3-함정소진.md`
-- Status: [ ]
+- Status: [x]
 
-<!-- harness:milestone id="M4" status="pending" priority="P0" -->
+- Completed at: 2026-07-31
+- Summary: J·F·I·D 수리, 회귀 9건 고정, 실 MCP 재현 통과. D 효과는 M4 측정
+<!-- harness:milestone id="M4" status="active" priority="P0" -->
 ### M4 — after 측정 + 실전 리허설 + 완성 판정
 - DoD: M1 과 동일 세트·지표 재측정 + before/after 비교표(회귀 판정선 pass^3 −5%p 이내) · 블라인드
   실전 리허설 5건 실 세션 기록 · 닫는 기준 4축 대조 판정 보고서(git 추적 경로) · 잔여는 CANDIDATES

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "active_work_id": "m3-trap-fix",
+  "active_work_id": "m4-verdict",
   "works": {
     "lb1-answer-reach-harness": {
       "work_id": "lb1-answer-reach-harness",
@@ -1344,7 +1344,7 @@
     "m3-trap-fix": {
       "work_id": "m3-trap-fix",
       "milestone_id": "M3",
-      "status": "active",
+      "status": "completed",
       "plan_path": "plans/2026-07-31-m3-함정소진.md",
       "changeset_path": "changesets/20260731-m3-trap-fix",
       "next_step": "step-1",
@@ -1375,6 +1375,54 @@
         "chain": [
           "M4"
         ]
+      },
+      "allowed_stop_reasons": [
+        "completed",
+        "blocked",
+        "decision_required",
+        "risk_gate",
+        "secret_required",
+        "external_authority_required",
+        "user_stopped"
+      ],
+      "stop_reason": null,
+      "stop_detail": {},
+      "session_ids": [
+        "codex:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+        "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf"
+      ],
+      "owner_session_uuid": "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
+      "updated_at": "2026-07-31",
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "함정 4건(J·F·I·D) 전부 수리 — law_name 복구·5xx 인증 분류·위임 병렬화·위임 소비 안내"
+    },
+    "m4-verdict": {
+      "work_id": "m4-verdict",
+      "milestone_id": "M4",
+      "status": "active",
+      "plan_path": "plans/2026-07-31-m4-측정과판정.md",
+      "changeset_path": "changesets/20260731-m4-verdict",
+      "next_step": "step-1",
+      "current_step": "step-1",
+      "steps": [
+        {
+          "id": "step-1",
+          "label": "step-1 — after 재측정"
+        },
+        {
+          "id": "step-2",
+          "label": "step-2 — 실전 리허설 5건"
+        },
+        {
+          "id": "step-3",
+          "label": "step-3 — 세법 완성 판정 보고서"
+        }
+      ],
+      "execution_mode": "continuous",
+      "approval": {
+        "approved_by": "user",
+        "approved_at": "2026-07-31",
+        "plan_sha256": "37f442ee14a870bd89a5ca17abb8ae53360c12c42d5b3a188f5c9e0c79c86300"
       },
       "allowed_stop_reasons": [
         "completed",
