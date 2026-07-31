@@ -1,0 +1,558 @@
+{
+ "summary": {
+  "n": 40,
+  "top3": 7,
+  "top10": 9,
+  "top3_rate": 17.5,
+  "top10_rate": 22.5,
+  "unit": "조문 단위 · 질의=query · 현행 searchLaw 최종 응답(aiSearch 병합 후)"
+ },
+ "rows": [
+  {
+   "case_id": "exp-02",
+   "query": "주택연금 이자 공제",
+   "expected": "소득세법 제51조의4",
+   "rank": 1,
+   "in_top3": true,
+   "in_top10": true,
+   "candidates": 8,
+   "top3": [
+    "소득세법 제51조의4",
+    "소득세법 제47조의2",
+    "소득세법 제52조"
+   ]
+  },
+  {
+   "case_id": "exp-04",
+   "query": "개인사업자 세무대리인 확인 서류",
+   "expected": "소득세법 제70조의2",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 1,
+   "top3": [
+    "부가가치세법 시행규칙 제9조"
+   ]
+  },
+  {
+   "case_id": "exp-05",
+   "query": "면세 학원 2월 신고 누락 불이익",
+   "expected": "소득세법 제81조의3",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 18,
+   "top3": [
+    "외국인관광객 등에 대한 부가가치세 및 개별소비세 특례규정 제11조",
+    "외국인관광객 등에 대한 부가가치세 및 개별소비세 특례규정 제7조",
+    "외국인관광객 등에 대한 부가가치세 및 개별소비세 특례규정 제6조"
+   ]
+  },
+  {
+   "case_id": "exp-06",
+   "query": "보험사 해지 대비 적립액 비용 인정",
+   "expected": "법인세법 제32조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 1,
+   "top3": [
+    "선주상호보험조합법 시행규칙 제8조"
+   ]
+  },
+  {
+   "case_id": "exp-08",
+   "query": "법인 태풍 피해 세액 감면",
+   "expected": "법인세법 제58조",
+   "rank": 1,
+   "in_top3": true,
+   "in_top10": true,
+   "candidates": 6,
+   "top3": [
+    "법인세법 제58조",
+    "법인세법 제59조",
+    "법인세법 제63조의2"
+   ]
+  },
+  {
+   "case_id": "exp-10",
+   "query": "법인 장부 없어 추정 과세 때 결손금·외국납부세액",
+   "expected": "법인세법 제68조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 2,
+   "top3": [
+    "법인세법 시행규칙 제48조",
+    "법인세법 시행규칙 제47조"
+   ]
+  },
+  {
+   "case_id": "exp-11",
+   "query": "맡긴 재산 부가세 밀렸을 때 책임",
+   "expected": "부가가치세법 제3조의2",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 10,
+   "top3": [
+    "국세기본법 제8조",
+    "국세기본법 제24조",
+    "국세기본법 제26조의2"
+   ]
+  },
+  {
+   "case_id": "exp-12",
+   "query": "부가세 매기는 기준 금액",
+   "expected": "부가가치세법 제29조",
+   "rank": 1,
+   "in_top3": true,
+   "in_top10": true,
+   "candidates": 12,
+   "top3": [
+    "부가가치세법 제29조",
+    "부가가치세법 제30조",
+    "부가가치세법 제7조"
+   ]
+  },
+  {
+   "case_id": "exp-14",
+   "query": "부가세 낼 금액 계산 구조",
+   "expected": "부가가치세법 제37조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 12,
+   "top3": [
+    "부가가치세법 제29조",
+    "부가가치세법 제1조",
+    "부가가치세법 제7조"
+   ]
+  },
+  {
+   "case_id": "exp-15",
+   "query": "음식점 농산물 재료비 세액 인정",
+   "expected": "부가가치세법 제42조",
+   "rank": 1,
+   "in_top3": true,
+   "in_top10": true,
+   "candidates": 5,
+   "top3": [
+    "부가가치세법 제42조",
+    "부가가치세법 제38조",
+    "부가가치세법 제22조"
+   ]
+  },
+  {
+   "case_id": "exp-17",
+   "query": "회사와 농지 함께 물려받을 때 중복",
+   "expected": "상속세 및 증여세법 제18조의4",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 5,
+   "top3": [
+    "농지법 제62조",
+    "농지법 제54조",
+    "농지법 제6조"
+   ]
+  },
+  {
+   "case_id": "exp-18",
+   "query": "상속인 미성년 장애 추가 차감",
+   "expected": "상속세 및 증여세법 제20조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 2,
+   "top3": [
+    "민법 제1019조",
+    "민법 제1008조"
+   ]
+  },
+  {
+   "case_id": "exp-20",
+   "query": "세금 매길 금액 너무 적을 때",
+   "expected": "상속세 및 증여세법 제25조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 4,
+   "top3": [
+    "국세기본법 제85조",
+    "국세기본법 제19조",
+    "국세기본법 제47조의4"
+   ]
+  },
+  {
+   "case_id": "exp-21",
+   "query": "재산세 안 붙는 부동산과 국세 보유세",
+   "expected": "종합부동산세법 제6조",
+   "rank": 1,
+   "in_top3": true,
+   "in_top10": true,
+   "candidates": 4,
+   "top3": [
+    "종합부동산세법 제6조",
+    "종합부동산세법 제21조",
+    "조세특례제한법 제121조의2"
+   ]
+  },
+  {
+   "case_id": "exp-22",
+   "query": "6월 1일 기준 국세 보유세 내는 사람",
+   "expected": "종합부동산세법 제7조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 6,
+   "top3": [
+    "조세특례제한법 시행령 제104조의15",
+    "조세특례제한법 시행령 제11조의4",
+    "조세특례제한법 시행령 제137조"
+   ]
+  },
+  {
+   "case_id": "exp-23",
+   "query": "신탁 맡긴 집 국세 보유세 체납",
+   "expected": "종합부동산세법 제7조의2",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 6,
+   "top3": [
+    "국세징수법 시행령 제8조",
+    "국세징수법 시행령 제5조",
+    "국세징수법 시행령 제85조"
+   ]
+  },
+  {
+   "case_id": "exp-24",
+   "query": "여러 채 공시가격 합산 기준 금액",
+   "expected": "종합부동산세법 제8조",
+   "rank": 14,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 19,
+   "top3": [
+    "부동산 가격공시에 관한 법률 시행령 제3조",
+    "부동산 가격공시에 관한 법률 시행령 제27조",
+    "부동산 가격공시에 관한 법률 시행령 제17조"
+   ]
+  },
+  {
+   "case_id": "exp-27",
+   "query": "창업 회사 지분 보유자 대신 납부 면제 특례",
+   "expected": "조세특례제한법 제15조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 15,
+   "top3": [
+    "조세특례제한법 제14조",
+    "조세특례제한법 제6조",
+    "조세특례제한법 제99조의8"
+   ]
+  },
+  {
+   "case_id": "exp-29",
+   "query": "고향 지자체 기부 연말정산",
+   "expected": "조세특례제한법 제58조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 13,
+   "top3": [
+    "소득세법 제34조",
+    "소득세법 시행령 제181조",
+    "소득세법 시행령 제117조"
+   ]
+  },
+  {
+   "case_id": "exp-30",
+   "query": "세금 혜택 저축 자료 기한 놓침",
+   "expected": "조세특례제한법 제90조의2",
+   "rank": 4,
+   "in_top3": false,
+   "in_top10": true,
+   "candidates": 10,
+   "top3": [
+    "조세특례제한법 제89조의2",
+    "조세특례제한법 제89조",
+    "조세특례제한법 제88조의2"
+   ]
+  },
+  {
+   "case_id": "exp-31",
+   "query": "마감일 우체국 발송 신고일",
+   "expected": "국세기본법 제5조의2",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 3,
+   "top3": [
+    "우정사업본부 직제 시행규칙 제9조",
+    "우정사업본부 직제 시행규칙 제8조",
+    "우정사업본부 직제 시행규칙 제22조"
+   ]
+  },
+  {
+   "case_id": "exp-33",
+   "query": "흡수한 회사의 미납 세금",
+   "expected": "국세기본법 제23조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 3,
+   "top3": [
+    "국세징수법 제2조",
+    "국세징수법 제109조",
+    "국세징수법 제85조"
+   ]
+  },
+  {
+   "case_id": "exp-35",
+   "query": "주주 세금을 회사 재산에서",
+   "expected": "국세기본법 제40조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 5,
+   "top3": [
+    "주세법 시행령 제8조",
+    "주세법 시행령 제1조",
+    "주세법 시행령 제25조"
+   ]
+  },
+  {
+   "case_id": "exp-36",
+   "query": "나눠 낸 돈이 어디부터 없어지나",
+   "expected": "국세징수법 제3조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 7,
+   "top3": [
+    "사회복지공동모금회법 제25조",
+    "사회복지공동모금회법 제35조",
+    "사회복지공동모금회법 제15조"
+   ]
+  },
+  {
+   "case_id": "exp-37",
+   "query": "세금 내라는 문서에 적혀야 할 것",
+   "expected": "국세징수법 제6조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 3,
+   "top3": [
+    "국세징수법 제5조",
+    "국세징수법 제108조",
+    "국세징수법 제107조"
+   ]
+  },
+  {
+   "case_id": "exp-39",
+   "query": "공공기관 직원이 체납 연락",
+   "expected": "국세징수법 제11조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 1,
+   "top3": [
+    "공기업ㆍ준정부기관 계약사무규칙 제8조"
+   ]
+  },
+  {
+   "case_id": "exp-41",
+   "query": "이중장부로 매출 숨긴 처벌",
+   "expected": "조세범 처벌법 제3조",
+   "rank": 1,
+   "in_top3": true,
+   "in_top10": true,
+   "candidates": 2,
+   "top3": [
+    "조세범 처벌법 제3조",
+    "지방세기본법 제38조"
+   ]
+  },
+  {
+   "case_id": "exp-42",
+   "query": "농업용 기름 트럭에 넣어 판 경우",
+   "expected": "조세범 처벌법 제4조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 7,
+   "top3": [
+    "농어촌정비법 제18조",
+    "농어촌정비법 제130조",
+    "농어촌정비법 제18조의2"
+   ]
+  },
+  {
+   "case_id": "exp-43",
+   "query": "농업용 기름 카드 부정 발급",
+   "expected": "조세범 처벌법 제4조의2",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 2,
+   "top3": [
+    "농업과학기술정보서비스의 제공 및 이용 활성화에 관한 법률 제15조",
+    "농업과학기술정보서비스의 제공 및 이용 활성화에 관한 법률 제5조"
+   ]
+  },
+  {
+   "case_id": "exp-45",
+   "query": "거래 없이 서류만 주고받은 경우",
+   "expected": "조세범 처벌법 제10조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 2,
+   "top3": [
+    "국세기본법 제10조",
+    "민사소송규칙 제111조"
+   ]
+  },
+  {
+   "case_id": "exp-46",
+   "query": "해외 모회사에 싸게 넘긴 거래",
+   "expected": "국제조세조정에 관한 법률 제7조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 3,
+   "top3": [
+    "국제우편규정 제30조",
+    "국제우편규정 제26조",
+    "국제우편규정 제23조"
+   ]
+  },
+  {
+   "case_id": "exp-47",
+   "query": "해외 계열사 거래 제출 서류",
+   "expected": "국제조세조정에 관한 법률 제16조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 4,
+   "top3": [
+    "방위사업법 시행규칙 제56조",
+    "기업 활력 제고를 위한 특별법 제10조",
+    "기업 활력 제고를 위한 특별법 제13조"
+   ]
+  },
+  {
+   "case_id": "exp-48",
+   "query": "세관이 관세 올려 잡은 뒤 법인세",
+   "expected": "국제조세조정에 관한 법률 제19조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 1,
+   "top3": [
+    "지방세법 시행령 제100조의37"
+   ]
+  },
+  {
+   "case_id": "exp-49",
+   "query": "외국과 정보 교환 방해·지연 금지",
+   "expected": "국제조세조정에 관한 법률 제38조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 2,
+   "top3": [
+    "통신비밀보호법 제5조",
+    "통신비밀보호법 제7조"
+   ]
+  },
+  {
+   "case_id": "exp-52",
+   "query": "취득세 걷는 방식 — 고지서냐 신고냐",
+   "expected": "지방세법 제18조",
+   "rank": 6,
+   "in_top3": false,
+   "in_top10": true,
+   "candidates": 10,
+   "top3": [
+    "지방세법 시행규칙 제10조",
+    "지방세법 시행규칙 제8조",
+    "지방세법 시행규칙 제9조"
+   ]
+  },
+  {
+   "case_id": "exp-54",
+   "query": "담배 한 개당 붙는 지방세",
+   "expected": "지방세법 제52조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 5,
+   "top3": [
+    "지방세기본법 제7조",
+    "지방세기본법 제8조",
+    "지방세기본법 제71조"
+   ]
+  },
+  {
+   "case_id": "exp-55",
+   "query": "부가가치세 일부 지자체 몫 대신 걷을 의무자 지정",
+   "expected": "지방세법 제68조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 6,
+   "top3": [
+    "부가가치세법 시행규칙 제1조",
+    "부가가치세법 시행규칙 제66조",
+    "부가가치세법 시행규칙 제4조"
+   ]
+  },
+  {
+   "case_id": "exp-56",
+   "query": "지방세 기한 셀 때 첫날",
+   "expected": "지방세기본법 제23조",
+   "rank": 2,
+   "in_top3": true,
+   "in_top10": true,
+   "candidates": 5,
+   "top3": [
+    "지방세기본법 제24조",
+    "지방세기본법 제23조",
+    "지방세기본법 제50조"
+   ]
+  },
+  {
+   "case_id": "exp-58",
+   "query": "적게 신고했다가 스스로 고침",
+   "expected": "지방세기본법 제35조의2",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 6,
+   "top3": [
+    "형사소송법 제234조",
+    "형사소송법 제231조",
+    "형사소송법 제224조"
+   ]
+  },
+  {
+   "case_id": "exp-60",
+   "query": "공동 소유 건물 각자 책임 범위",
+   "expected": "지방세기본법 제44조",
+   "rank": null,
+   "in_top3": false,
+   "in_top10": false,
+   "candidates": 5,
+   "top3": [
+    "민법 제215조",
+    "집합건물의 소유 및 관리에 관한 법률 제1조",
+    "집합건물의 소유 및 관리에 관한 법률 제9조"
+   ]
+  }
+ ]
+}

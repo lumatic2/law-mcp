@@ -1,0 +1,496 @@
+{
+ "summary": {
+  "mode": "expand",
+  "n": 15,
+  "dictionary_entries": 4,
+  "solved": 0,
+  "lost": 0,
+  "improved": 0,
+  "worsened": 0,
+  "untouched": 10
+ },
+ "dictionary": [
+  "cand-P — 조약명은 '미합중국', 사용자는 '미국'",
+  "exp-42·43 — 조문 용어는 '면세유류'",
+  "exp-39 — 조문 용어는 '징수 위탁'",
+  "exp-06 — 조문 용어"
+ ],
+ "rows": [
+  {
+   "before": {
+    "case_id": "exp-06",
+    "query": "보험사 해지 대비 적립액 비용 인정",
+    "expected": "법인세법 제32조",
+    "rank": null,
+    "in_top3": false,
+    "in_top10": false,
+    "candidates": 1,
+    "top3": [
+     "선주상호보험조합법 시행규칙 제8조"
+    ]
+   },
+   "after": {
+    "case_id": "exp-06",
+    "query": "보험사 해지 대비 적립액 비용 인정 해약환급금준비금",
+    "expected": "법인세법 제32조",
+    "rank": 4,
+    "in_top3": false,
+    "in_top10": true,
+    "candidates": 5,
+    "top3": [
+     "예금자보호법 시행령 제16조",
+     "예금자보호법 시행령 제18조",
+     "예금자보호법 시행령 제16조의4"
+    ]
+   },
+   "applied": [
+    "exp-06 — 조문 용어"
+   ],
+   "verdict": "변화 없음"
+  },
+  {
+   "before": {
+    "case_id": "exp-48",
+    "query": "세관이 관세 올려 잡은 뒤 법인세",
+    "expected": "국제조세조정에 관한 법률 제19조",
+    "rank": null,
+    "in_top3": false,
+    "in_top10": false,
+    "candidates": 1,
+    "top3": [
+     "지방세법 시행령 제100조의37"
+    ]
+   },
+   "after": {
+    "case_id": "exp-48",
+    "query": "세관이 관세 올려 잡은 뒤 법인세",
+    "expected": "국제조세조정에 관한 법률 제19조",
+    "rank": null,
+    "in_top3": false,
+    "in_top10": false,
+    "candidates": 1,
+    "top3": [
+     "지방세법 시행령 제100조의37"
+    ]
+   },
+   "applied": [],
+   "verdict": "변형 대상 아님"
+  },
+  {
+   "before": {
+    "case_id": "exp-42",
+    "query": "농업용 기름 트럭에 넣어 판 경우",
+    "expected": "조세범 처벌법 제4조",
+    "rank": null,
+    "in_top3": false,
+    "in_top10": false,
+    "candidates": 7,
+    "top3": [
+     "농어촌정비법 제18조",
+     "농어촌정비법 제130조",
+     "농어촌정비법 제18조의2"
+    ]
+   },
+   "after": {
+    "case_id": "exp-42",
+    "query": "농업용 기름 트럭에 넣어 판 경우 면세유류",
+    "expected": "조세범 처벌법 제4조",
+    "rank": null,
+    "in_top3": false,
+    "in_top10": false,
+    "candidates": 10,
+    "top3": [
+     "농ㆍ축산ㆍ임ㆍ어업용 기자재 및 석유류에 대한 부가가치세 영세율 및 면세 적용 등에 관한 특례규정 제15조",
+     "농ㆍ축산ㆍ임ㆍ어업용 기자재 및 석유류에 대한 부가가치세 영세율 및 면세 적용 등에 관한 특례규정 제22조의2",
+     "농ㆍ축산ㆍ임ㆍ어업용 기자재 및 석유류에 대한 부가가치세 영세율 및 면세 적용 등에 관한 특례규정 제24조"
+    ]
+   },
+   "applied": [
+    "exp-42·43 — 조문 용어는 '면세유류'"
+   ],
+   "verdict": "변화 없음"
+  },
+  {
+   "before": {
+    "case_id": "exp-43",
+    "query": "농업용 기름 카드 부정 발급",
+    "expected": "조세범 처벌법 제4조의2",
+    "rank": null,
+    "in_top3": false,
+    "in_top10": false,
+    "candidates": 2,
+    "top3": [
+     "농업과학기술정보서비스의 제공 및 이용 활성화에 관한 법률 제15조",
+     "농업과학기술정보서비스의 제공 및 이용 활성화에 관한 법률 제5조"
+    ]
+   },
+   "after": {
+    "case_id": "exp-43",
+    "query": "농업용 기름 카드 부정 발급 면세유류",
+    "expected": "조세범 처벌법 제4조의2",
+    "rank": null,
+    "in_top3": false,
+    "in_top10": false,
+    "candidates": 12,
+    "top3": [
+     "농ㆍ축산ㆍ임ㆍ어업용 기자재 및 석유류에 대한 부가가치세 영세율 및 면세 적용 등에 관한 특례규정 제20조",
+     "농ㆍ축산ㆍ임ㆍ어업용 기자재 및 석유류에 대한 부가가치세 영세율 및 면세 적용 등에 관한 특례규정 제16조",
+     "농ㆍ축산ㆍ임ㆍ어업용 기자재 및 석유류에 대한 부가가치세 영세율 및 면세 적용 등에 관한 특례규정 제22조의2"
+    ]
+   },
+   "applied": [
+    "exp-42·43 — 조문 용어는 '면세유류'"
+   ],
+   "verdict": "변화 없음"
+  },
+  {
+   "before": {
+    "case_id": "exp-39",
+    "query": "공공기관 직원이 체납 연락",
+    "expected": "국세징수법 제11조",
+    "rank": null,
+    "in_top3": false,
+    "in_top10": false,
+    "candidates": 1,
+    "top3": [
+     "공기업ㆍ준정부기관 계약사무규칙 제8조"
+    ]
+   },
+   "after": {
+    "case_id": "exp-39",
+    "query": "공공기관 직원이 체납 연락 위탁",
+    "expected": "국세징수법 제11조",
+    "rank": null,
+    "in_top3": false,
+    "in_top10": false,
+    "candidates": 2,
+    "top3": [
+     "기획재정부와 그 소속기관 직제 시행규칙 제16조",
+     "재정경제부 직제 시행규칙 제22조"
+    ]
+   },
+   "applied": [
+    "exp-39 — 조문 용어는 '징수 위탁'"
+   ],
+   "verdict": "변화 없음"
+  },
+  {
+   "before": {
+    "case_id": "exp-02",
+    "query": "주택연금 이자 공제",
+    "expected": "소득세법 제51조의4",
+    "rank": 1,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 8,
+    "top3": [
+     "소득세법 제51조의4",
+     "소득세법 제47조의2",
+     "소득세법 제52조"
+    ]
+   },
+   "after": {
+    "case_id": "exp-02",
+    "query": "주택연금 이자 공제",
+    "expected": "소득세법 제51조의4",
+    "rank": 1,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 8,
+    "top3": [
+     "소득세법 제51조의4",
+     "소득세법 제47조의2",
+     "소득세법 제52조"
+    ]
+   },
+   "applied": [],
+   "verdict": "변형 대상 아님"
+  },
+  {
+   "before": {
+    "case_id": "exp-08",
+    "query": "법인 태풍 피해 세액 감면",
+    "expected": "법인세법 제58조",
+    "rank": 1,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 6,
+    "top3": [
+     "법인세법 제58조",
+     "법인세법 제59조",
+     "법인세법 제63조의2"
+    ]
+   },
+   "after": {
+    "case_id": "exp-08",
+    "query": "법인 태풍 피해 세액 감면",
+    "expected": "법인세법 제58조",
+    "rank": 1,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 6,
+    "top3": [
+     "법인세법 제58조",
+     "법인세법 제59조",
+     "법인세법 제63조의2"
+    ]
+   },
+   "applied": [],
+   "verdict": "변형 대상 아님"
+  },
+  {
+   "before": {
+    "case_id": "exp-12",
+    "query": "부가세 매기는 기준 금액",
+    "expected": "부가가치세법 제29조",
+    "rank": 1,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 12,
+    "top3": [
+     "부가가치세법 제29조",
+     "부가가치세법 제30조",
+     "부가가치세법 제7조"
+    ]
+   },
+   "after": {
+    "case_id": "exp-12",
+    "query": "부가세 매기는 기준 금액",
+    "expected": "부가가치세법 제29조",
+    "rank": 1,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 12,
+    "top3": [
+     "부가가치세법 제29조",
+     "부가가치세법 제30조",
+     "부가가치세법 제7조"
+    ]
+   },
+   "applied": [],
+   "verdict": "변형 대상 아님"
+  },
+  {
+   "before": {
+    "case_id": "exp-15",
+    "query": "음식점 농산물 재료비 세액 인정",
+    "expected": "부가가치세법 제42조",
+    "rank": 1,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 5,
+    "top3": [
+     "부가가치세법 제42조",
+     "부가가치세법 제38조",
+     "부가가치세법 제22조"
+    ]
+   },
+   "after": {
+    "case_id": "exp-15",
+    "query": "음식점 농산물 재료비 세액 인정",
+    "expected": "부가가치세법 제42조",
+    "rank": 1,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 5,
+    "top3": [
+     "부가가치세법 제42조",
+     "부가가치세법 제38조",
+     "부가가치세법 제22조"
+    ]
+   },
+   "applied": [],
+   "verdict": "변형 대상 아님"
+  },
+  {
+   "before": {
+    "case_id": "exp-21",
+    "query": "재산세 안 붙는 부동산과 국세 보유세",
+    "expected": "종합부동산세법 제6조",
+    "rank": 1,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 4,
+    "top3": [
+     "종합부동산세법 제6조",
+     "종합부동산세법 제21조",
+     "조세특례제한법 제121조의2"
+    ]
+   },
+   "after": {
+    "case_id": "exp-21",
+    "query": "재산세 안 붙는 부동산과 국세 보유세",
+    "expected": "종합부동산세법 제6조",
+    "rank": 1,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 4,
+    "top3": [
+     "종합부동산세법 제6조",
+     "종합부동산세법 제21조",
+     "조세특례제한법 제121조의2"
+    ]
+   },
+   "applied": [],
+   "verdict": "변형 대상 아님"
+  },
+  {
+   "before": {
+    "case_id": "exp-41",
+    "query": "이중장부로 매출 숨긴 처벌",
+    "expected": "조세범 처벌법 제3조",
+    "rank": 1,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 2,
+    "top3": [
+     "조세범 처벌법 제3조",
+     "지방세기본법 제38조"
+    ]
+   },
+   "after": {
+    "case_id": "exp-41",
+    "query": "이중장부로 매출 숨긴 처벌",
+    "expected": "조세범 처벌법 제3조",
+    "rank": 1,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 2,
+    "top3": [
+     "조세범 처벌법 제3조",
+     "지방세기본법 제38조"
+    ]
+   },
+   "applied": [],
+   "verdict": "변형 대상 아님"
+  },
+  {
+   "before": {
+    "case_id": "exp-56",
+    "query": "지방세 기한 셀 때 첫날",
+    "expected": "지방세기본법 제23조",
+    "rank": 2,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 5,
+    "top3": [
+     "지방세기본법 제24조",
+     "지방세기본법 제23조",
+     "지방세기본법 제50조"
+    ]
+   },
+   "after": {
+    "case_id": "exp-56",
+    "query": "지방세 기한 셀 때 첫날",
+    "expected": "지방세기본법 제23조",
+    "rank": 2,
+    "in_top3": true,
+    "in_top10": true,
+    "candidates": 5,
+    "top3": [
+     "지방세기본법 제24조",
+     "지방세기본법 제23조",
+     "지방세기본법 제50조"
+    ]
+   },
+   "applied": [],
+   "verdict": "변형 대상 아님"
+  },
+  {
+   "before": {
+    "case_id": "exp-24",
+    "query": "여러 채 공시가격 합산 기준 금액",
+    "expected": "종합부동산세법 제8조",
+    "rank": 14,
+    "in_top3": false,
+    "in_top10": false,
+    "candidates": 19,
+    "top3": [
+     "부동산 가격공시에 관한 법률 시행령 제3조",
+     "부동산 가격공시에 관한 법률 시행령 제27조",
+     "부동산 가격공시에 관한 법률 시행령 제17조"
+    ]
+   },
+   "after": {
+    "case_id": "exp-24",
+    "query": "여러 채 공시가격 합산 기준 금액",
+    "expected": "종합부동산세법 제8조",
+    "rank": 14,
+    "in_top3": false,
+    "in_top10": false,
+    "candidates": 19,
+    "top3": [
+     "부동산 가격공시에 관한 법률 시행령 제3조",
+     "부동산 가격공시에 관한 법률 시행령 제27조",
+     "부동산 가격공시에 관한 법률 시행령 제17조"
+    ]
+   },
+   "applied": [],
+   "verdict": "변형 대상 아님"
+  },
+  {
+   "before": {
+    "case_id": "exp-30",
+    "query": "세금 혜택 저축 자료 기한 놓침",
+    "expected": "조세특례제한법 제90조의2",
+    "rank": 4,
+    "in_top3": false,
+    "in_top10": true,
+    "candidates": 10,
+    "top3": [
+     "조세특례제한법 제89조의2",
+     "조세특례제한법 제89조",
+     "조세특례제한법 제88조의2"
+    ]
+   },
+   "after": {
+    "case_id": "exp-30",
+    "query": "세금 혜택 저축 자료 기한 놓침",
+    "expected": "조세특례제한법 제90조의2",
+    "rank": 4,
+    "in_top3": false,
+    "in_top10": true,
+    "candidates": 10,
+    "top3": [
+     "조세특례제한법 제89조의2",
+     "조세특례제한법 제89조",
+     "조세특례제한법 제88조의2"
+    ]
+   },
+   "applied": [],
+   "verdict": "변형 대상 아님"
+  },
+  {
+   "before": {
+    "case_id": "exp-52",
+    "query": "취득세 걷는 방식 — 고지서냐 신고냐",
+    "expected": "지방세법 제18조",
+    "rank": 6,
+    "in_top3": false,
+    "in_top10": true,
+    "candidates": 10,
+    "top3": [
+     "지방세법 시행규칙 제10조",
+     "지방세법 시행규칙 제8조",
+     "지방세법 시행규칙 제9조"
+    ]
+   },
+   "after": {
+    "case_id": "exp-52",
+    "query": "취득세 걷는 방식 고지서냐 신고냐",
+    "expected": "지방세법 제18조",
+    "rank": 6,
+    "in_top3": false,
+    "in_top10": true,
+    "candidates": 10,
+    "top3": [
+     "지방세법 시행규칙 제8조",
+     "지방세법 시행규칙 제10조",
+     "지방세법 시행규칙 제9조"
+    ]
+   },
+   "applied": [],
+   "verdict": "변화 없음"
+  }
+ ]
+}
