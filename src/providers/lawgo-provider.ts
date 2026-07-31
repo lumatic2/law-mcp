@@ -22,9 +22,10 @@ import { DelegationCache, lookupDelegations, type DelegatedArticle, type Delegat
  * 본법·시행령 진동). 등급 경고(TV2)와 같은 원리로 **읽는 법을 응답에** 싣는다.
  */
 export const DELEGATION_NOTICE =
-  "이 조문은 구체 내용을 하위 법령에 위임한다(delegated_to 참조). 대상·범위·요건·한도 같은 "
-  + "구체 기준을 묻는 질문이면 근거 조문은 본법이 아니라 delegated_to 의 시행령·시행규칙 조문일 "
-  + "수 있다 — 위임받은 조문을 확인하고, 답에는 본법 조문과 위임 조문 중 무엇이 근거인지 명시하라.";
+  "이 조문은 일부 내용을 하위 법령에 위임한다(delegated_to 참조). 판단 기준: 이 조문 본문이 "
+  + "질문에 이미 답을 주면(수치·요건·범위가 본문에 있으면) **이 조문이 근거다** — 위임 조문으로 "
+  + "갈아타지 마라. 본문에 \"대통령령으로 정하는 X\" 만 있고 X 의 실체가 본문에 없을 때만 "
+  + "delegated_to 의 조문을 확인해 그쪽을 근거로 삼아라. 답에는 어느 조문이 근거인지 명시하라.";
 
 /** as_of(과거 시점) 조회에 현행 위임 정보를 붙일 때의 사실 고지 (상류에 시점 축이 없다). */
 export const DELEGATION_AS_OF_NOTICE =

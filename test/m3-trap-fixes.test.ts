@@ -129,8 +129,13 @@ test("I — 같은 법령 반복 조회에서 위임 상류 호출은 1회다 (�
   void provider;
 });
 
-test("D — 소비 안내 문구가 '어느 쪽이 근거인지 명시하라'를 요구한다", () => {
-  assert.match(DELEGATION_NOTICE, /본법이 아니라/);
+test("D — 소비 안내가 ADR 0001 판별 기준(본문이 답을 주면 본법)을 싣는다", () => {
+  // 1차 문구("근거는 본법이 아니라 위임 조문일 수 있다")는 층위 구분 없이 시행령 쪽으로만 밀어
+  // 본법 라벨 케이스(tax-46 실측)를 뒤집었다 — M4 after 측정 pass^3 −6.9%p 회귀의 원인.
+  // ADR 0001 의 가르는 질문("본문을 읽었을 때 답이 되는가")을 그대로 싣는다.
+  assert.match(DELEGATION_NOTICE, /이 조문이 근거다/);
+  assert.match(DELEGATION_NOTICE, /갈아타지 마라/);
+  assert.match(DELEGATION_NOTICE, /실체가 본문에 없을 때만/);
   assert.match(DELEGATION_NOTICE, /명시하라/);
 });
 
