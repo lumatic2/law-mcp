@@ -1602,7 +1602,7 @@
     "m8-item-repair": {
       "work_id": "m8-item-repair",
       "milestone_id": "M8",
-      "status": "active",
+      "status": "completed",
       "plan_path": "plans/2026-08-01-m8-문항수리와재측정.md",
       "changeset_path": "changesets/20260801-m8-item-repair",
       "next_step": "step-1",
@@ -1643,7 +1643,8 @@
       ],
       "owner_session_uuid": "claude:b45dc7a5-93a9-4b60-9889-a65d5301e1cf",
       "updated_at": "2026-08-01",
-      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "확장 문항 결함 8건 수리 후 재측정 — pass^3 75.0%→90.0%, pass@3 100%. 라벨 불변 기계 증명."
     },
     "m9-mapping-probe": {
       "work_id": "m9-mapping-probe",

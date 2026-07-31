@@ -1,10 +1,12 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-08-01
-> 상태: **목표 "일상어→조문 매핑" 연쇄 진행 중** — M8 active, M9 pending (연쇄 승인 2026-08-01,
-> `--chain` 등록). M1~M7 은 completed.
-> 기준선 = 고정 43건 `pass^3` 86.0%·`SR@1` 81.4% · 확장 40건 `pass^3` 75.0%·`SR@1` 61.7%
-> (`evidence/bench/2026-08-01-m7-expanded/`) · 범용축 recall@3 84.2%.
+> 상태: **목표 "일상어→조문 매핑" 연쇄 진행 중** — M8 completed, M9 다음 (연쇄 승인 2026-08-01,
+> `--chain` 등록). M1~M8 은 completed.
+> 기준선 = 확장 40건 **수리 후** `pass^3` 90.0%·pass@3 100%·`SR@1` 67.5%
+> (`evidence/bench/2026-08-01-m8-repaired/`, 수리 전 75.0%/61.7% 는 기록 동결) ·
+> 고정 43건 `pass^3` 86.0%·`SR@1` 81.4% · 범용축 recall@3 84.2%.
+> ⚠ 회차 변동: 문항 고정 상태에서 12.5% 가 흔들린다 — `pass^3` 노이즈 ±5~7%p.
 > ⚠ horizon 층은 폐지됐다(하네스 재조립 C4) — 이 연쇄는 북극성 바로 아래 milestone 연쇄다.
 > 북극성: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중 하나가
 > 된다 (전문 → `CLAUDE.md` 「북극성」 절)
@@ -23,20 +25,6 @@
 > `archive/reports/2026-08-01-m7-breadth-verdict.md`. 미결 결정 ⓔ·ⓕ·ⓖ 중 ⓕ(문항 수리)는
 > 2026-08-01 승인되어 M8 로 소비된다.
 
-<!-- harness:milestone id="M8" status="active" priority="P0" evidence="archive/reports/2026-08-01-m8-repair-close.md" -->
-### M8 — 문항 결함 수리 + 도구 실력 재측정
-- DoD: 수리가 정답을 바꾸지 않았음을 `context`·`query` 제외 전 필드 diff 0 으로 증명 · 수리 대상 외
-  144 레코드 해시 불변 · corpus↔items 질문 텍스트 일치 · 유출 검사 2종 + 금지어 목록 통과 ·
-  수리 전/후 `pass^3`·`SR@1` 비교표(수리 건수 명시) + 남은 미달 원인 재분류 · 봉인 20건 미개봉 ·
-  `npm test` 전건 · `git diff --stat src/` 0줄.
-- Evidence: archive/reports/2026-08-01-m8-repair-close.md
-- Gap: `check-no-new-topics` 는 승인 목록 **안**의 라벨 교체를 막지 못한다 — 라벨 보호는 전 필드
-  diff 대조가 유일하다. 점수를 본 뒤 문항을 고치는 것이므로 무오염 주장은 불가하고, 최종 판정
-  수단은 미개봉 봉인 20건이다.
-- Scale: changesets>=1; surfaces: 평가 데이터 수리·블라인드 재측정; capability: 도구 실력값이
-  문항 결함과 섞이지 않는다
-- Plan: `plans/2026-08-01-m8-문항수리와재측정.md`
-- Status: [ ]
 <!-- harness:milestone id="M9" status="pending" priority="P0" evidence="archive/reports/2026-08-01-m9-mapping-verdict.md" -->
 ### M9 — 매핑 병목 유형화 + 의미검색 상한 프로브 + 판정
 - DoD: 실패 전건이 원인 유형으로 분류(유형①은 토큰 겹침 수치 근거) + 측정 대상(A)/참고(B) 분리 ·

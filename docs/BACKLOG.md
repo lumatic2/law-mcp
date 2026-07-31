@@ -172,3 +172,9 @@
   - Completed: 2026-08-01
   - Result: J·F·I·D 수리, 회귀 9건 고정, 실 MCP 재현 통과. D 효과는 M4 측정
   - Evidence: archive/reports/2026-07-31-m3-trap-fix-close.md · evidence/2026-07-31-m3-traps-e2e.md
+
+### 2026-08
+- M8 - M8 — 문항 결함 수리 + 도구 실력 재측정
+  - Completed: 2026-08-01
+  - Result: 문항 8건 수리 후 재측정 — pass^3 75.0%→90.0%, pass@3 100%
+  - Evidence: archive/reports/2026-08-01-m8-repair-close.md
