@@ -1,7 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-08-01
-> 상태: **목표 "일상어→조문 매핑" 연쇄 진행 중** — M8 completed, M9 다음 (연쇄 승인 2026-08-01,
+> 상태: **목표 "일상어→조문 매핑" 연쇄 진행 중** — M8 completed, M9 active (연쇄 승인 2026-08-01,
 > `--chain` 등록). M1~M8 은 completed.
 > 기준선 = 확장 40건 **수리 후** `pass^3` 90.0%·pass@3 100%·`SR@1` 67.5%
 > (`evidence/bench/2026-08-01-m8-repaired/`, 수리 전 75.0%/61.7% 는 기록 동결) ·
@@ -25,7 +25,7 @@
 > `archive/reports/2026-08-01-m7-breadth-verdict.md`. 미결 결정 ⓔ·ⓕ·ⓖ 중 ⓕ(문항 수리)는
 > 2026-08-01 승인되어 M8 로 소비된다.
 
-<!-- harness:milestone id="M9" status="pending" priority="P0" evidence="archive/reports/2026-08-01-m9-mapping-verdict.md" -->
+<!-- harness:milestone id="M9" status="active" priority="P0" evidence="archive/reports/2026-08-01-m9-mapping-verdict.md" -->
 ### M9 — 매핑 병목 유형화 + 의미검색 상한 프로브 + 판정
 - DoD: 실패 전건이 원인 유형으로 분류(유형①은 토큰 겹침 수치 근거) + 측정 대상(A)/참고(B) 분리 ·
   정규화·임베딩의 이득축·손실축이 동일 단위(조문·k=3/10·`query`·현행 최종 응답)로 산출 · 임베딩

@@ -1,0 +1,117 @@
+{
+ "note": "M9 step-1 실패 세트. scope=A 는 프로브 측정 대상(세법 12종 본법 라벨), scope=B 는 유형화만 하고 이득·손실 계산 분모에서 제외한다(계획 D3).",
+ "generated": "2026-08-01",
+ "counts": {
+  "A": 5,
+  "B": 3
+ },
+ "cases": [
+  {
+   "case_id": "exp-06",
+   "scope": "A",
+   "type": "①어휘 무공유",
+   "note": "에이전트가 일반 용어 `책임준비금`으로 검색해 인접 §42의3 에 착지. 정확 용어 넣은 1회만 성공 (후보 V)",
+   "query": "보험사 해지 대비 적립액 비용 인정",
+   "expected_article": "법인세법 제32조",
+   "expected_law": "법인세법",
+   "law_id": "001563",
+   "article_no": "제32조",
+   "origin": "M8 재측정",
+   "overlap_query": 0.17,
+   "overlap_context": 0.1
+  },
+  {
+   "case_id": "exp-48",
+   "scope": "A",
+   "type": "④변별(어휘 아님)",
+   "note": "§19 vs §20 vs 국기법 §45의2 로 갈렸다 (후보 X)",
+   "query": "세관이 관세 올려 잡은 뒤 법인세",
+   "expected_article": "국제조세조정에 관한 법률 제19조",
+   "expected_law": "국제조세조정에 관한 법률",
+   "law_id": "000603",
+   "article_no": "제19조",
+   "origin": "M8 재측정",
+   "overlap_query": 1.0,
+   "overlap_context": 0.47
+  },
+  {
+   "case_id": "exp-42",
+   "scope": "A",
+   "type": "①어휘 무공유 + ④변별",
+   "note": "2회가 조세특례제한법 §106의2 가산세를 지목 — \"처벌\"이 형사/제재로 갈린다 (후보 X)",
+   "query": "농업용 기름 트럭에 넣어 판 경우",
+   "expected_article": "조세범 처벌법 제4조",
+   "expected_law": "조세범 처벌법",
+   "law_id": "001583",
+   "article_no": "제4조",
+   "origin": "M8 재측정",
+   "overlap_query": 0.0,
+   "overlap_context": 0.0
+  },
+  {
+   "case_id": "exp-43",
+   "scope": "A",
+   "type": "①/④ 경계 + 아티팩트",
+   "note": "run2 가 검색 없이 직전 케이스 답을 재사용 (후보 Y). 프로브에는 넣되 아티팩트임을 표시",
+   "query": "농업용 기름 카드 부정 발급",
+   "expected_article": "조세범 처벌법 제4조의2",
+   "expected_law": "조세범 처벌법",
+   "law_id": "001583",
+   "article_no": "제4조의2",
+   "origin": "M8 재측정",
+   "overlap_query": 0.6,
+   "overlap_context": 0.09
+  },
+  {
+   "case_id": "exp-39",
+   "scope": "A",
+   "type": "①어휘 무공유(현행 해소)",
+   "note": "M8 에서 3/3 해소 — 정규화 상한의 대조군으로 남긴다",
+   "query": "공공기관 직원이 체납 연락",
+   "expected_article": "국세징수법 제11조",
+   "expected_law": "국세징수법",
+   "law_id": "001585",
+   "article_no": "제11조",
+   "origin": "M8 재측정",
+   "overlap_query": 0.25,
+   "overlap_context": 0.06
+  },
+  {
+   "case_id": "cand-P",
+   "scope": "B",
+   "type": "②동의어 + ③공백·표기",
+   "note": "한·미 조세조약: \"미합중국 이중과세\" 2건 히트 / \"미국\" 0건 / 붙여 쓴 조약명 0건. 대상이 조약(trty)이라 세법 12종 조문 인덱스 밖 — 분모 제외",
+   "query": "미국 이중과세 조약",
+   "expected_article": "대한민국과 미합중국 간의 조세조약",
+   "expected_law": "(조약 trty)",
+   "law_id": "",
+   "article_no": "",
+   "origin": "M4 리허설 r4"
+  },
+  {
+   "case_id": "cand-Q",
+   "scope": "B",
+   "type": "④관련도·정렬",
+   "note": "예규(ntsExpc) 주제 질의가 전문검색 폴백 시 가나다순으로만 반환 — 검색 표면 문제. 자료원이 예규라 인덱스 밖 + 결정 ⓑ 대기 — 분모 제외",
+   "query": "가산세 정당한 사유",
+   "expected_article": "(국세청 예규)",
+   "expected_law": "(예규 ntsExpc)",
+   "law_id": "",
+   "article_no": "",
+   "origin": "M4 리허설 r2"
+  },
+  {
+   "case_id": "v2-10",
+   "scope": "B",
+   "type": "①어휘 무공유(비세법)",
+   "note": "형법 §355 — 형사 도메인이라 세법 12종 인덱스 밖. 후보 H 의 최우선 표본이나 분모 제외",
+   "query": "횡령죄 처벌",
+   "expected_article": "형법 제355조",
+   "expected_law": "형법",
+   "law_id": "",
+   "article_no": "제355조",
+   "origin": "후보"
+  }
+ ],
+ "overlap_probe": "bench/pilot-m9/overlap.ts · 결과 해석 evidence/bench/2026-08-01-m9-taxonomy/overlap.md"
+}
