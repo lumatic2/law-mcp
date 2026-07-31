@@ -74,6 +74,19 @@
 
 ## Completed
 
+### horizon `trap-free` (2026-07-23, closed)
+함정 없음 축 양면 — 사용자 함정(설치 관문)과 우리 함정(골드 4파일 파편화). 닫는 기준 7종 중 6종 충족.
+상세 → `archive/reports/2026-07-23-trap-free-close.md`, plan doc 은 `plans/`(M 연쇄 개설 시점 미이동).
+
+- **TF1 단일 코퍼스** (2026-07-23) — 골드 4파일 → `bench/corpus.json` 124레코드/92topic, 8개 지표
+  전부 재현 일치, 라벨 규약 ADR 0001. Evidence: `archive/reports/2026-07-23-tf1-corpus-close.md`.
+- **TF2 맥락 전건 부착** (2026-07-23) — topic 커버리지 100%(94/94), 유출 0, 신규 주제 0건 기계 증명,
+  봉인 규약 ADR 0002. Evidence: `archive/reports/2026-07-23-tf2-context-close.md`.
+- **TF3 설치 관문** (2026-07-23) — README 도구 4→11, OC 발급 안내, 무자격 진단 메시지, 실 MCP 무자격
+  관측. Evidence: `archive/reports/2026-07-23-tf3-install-close.md`.
+- **TF4 `as_of` 가 법령ID 를 받게** (2026-07-23) — `resolveLawName` 추가로 검색→시점조회 체인 복구,
+  실 MCP 관측 + 연도별 본문 차이 확인. Evidence: `archive/reports/2026-07-23-tf4-asof-close.md`.
+
 ### horizon `upstream-delivery` (2026-07-21, closed)
 축 전환: "우리가 랭킹을 만든다" → "법제처가 가진 것을 손실 없이 전달한다". **닫는 기준 5/5 달성.**
 법령 recall@3 76% → **93.3%(홀드아웃 blind 최초 개봉, dev 88.0%)** — 과적합 기각.
