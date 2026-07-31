@@ -65,19 +65,21 @@
 
 - Completed at: 2026-07-31
 - Summary: J·F·I·D 수리, 회귀 9건 고정, 실 MCP 재현 통과. D 효과는 M4 측정
-<!-- harness:milestone id="M4" status="active" priority="P0" -->
+<!-- harness:milestone id="M4" status="completed" priority="P0" evidence="archive/reports/2026-07-31-m4-tax-complete-verdict.md" -->
 ### M4 — after 측정 + 실전 리허설 + 완성 판정
 - DoD: M1 과 동일 세트·지표 재측정 + before/after 비교표(회귀 판정선 pass^3 −5%p 이내) · 블라인드
   실전 리허설 5건 실 세션 기록 · 닫는 기준 4축 대조 판정 보고서(git 추적 경로) · 잔여는 CANDIDATES
   적재 · `git diff --stat src/` 0줄. **"완성" 선언과 다음 분야 진행은 사용자 결정.**
-- Evidence: (완료 시 기입)
+- Evidence: archive/reports/2026-07-31-m4-tax-complete-verdict.md
 - Gap: 측정 전 M2·M3 의 배포 사본 반영+서버 재시작(사용자)이 선행돼야 한다 — 소스만 바뀐 상태의
   측정은 무효(배포 사본 분리 함정).
 - Scale: changesets>=1; surfaces: 재측정·리허설·판정 보고서; capability: "완성됐다"가 주장이 아니라
   증거다
 - Plan: `plans/2026-07-31-m4-측정과판정.md`
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-07-31
+- Summary: after 재측정+리허설 5건+4축 판정 보고 — 닫는 판정은 사용자 소유
 ## Next Candidates
 
 후보 백로그 정본 → `plans/horizons/CANDIDATES.md` (순서는 사용자 소유).
