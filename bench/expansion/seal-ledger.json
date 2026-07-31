@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "note": "봉인 문항 개봉 이력 (ADR 0002 §3 · ADR 0004). 개봉은 되돌릴 수 없다 — 한 번 열면 그 문항은 과적합 판정 근거로 다시 쓸 수 없다. 여기에 기록되지 않은 개봉은 규약 위반이다.",
+  "created": "2026-08-01",
+  "entries": [
+    {
+      "batch": "expansion-2026-08-01",
+      "sealed_count": 20,
+      "case_ids": [
+        "exp-01",
+        "exp-03",
+        "exp-07",
+        "exp-09",
+        "exp-13",
+        "exp-16",
+        "exp-19",
+        "exp-25",
+        "exp-26",
+        "exp-28",
+        "exp-32",
+        "exp-34",
+        "exp-38",
+        "exp-40",
+        "exp-44",
+        "exp-50",
+        "exp-51",
+        "exp-53",
+        "exp-57",
+        "exp-59"
+      ],
+      "case_id_digest": "a5185a5a99bc31b1",
+      "status": "sealed",
+      "opened_at": null,
+      "opened_by": null,
+      "opened_reason": null,
+      "verification_record": "bench/expansion/label-verification-sealed.md",
+      "note": "M6 step-4 에서 등재. 개봉 시점은 사용자가 정한다(도구를 고친 뒤 과적합 판정 1회)."
+    }
+  ]
+}

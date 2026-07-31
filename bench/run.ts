@@ -12,6 +12,7 @@ import { ArticleIndexCache, extractArticles } from "../src/article-index.js";
 import { scoreArticles } from "../src/article-match.js";
 import { LAW_API_OC, LAW_SERVICE_BASE_URL } from "../src/config.js";
 import { LawGoProvider } from "../src/providers/lawgo-provider.js";
+import { assertSealOpening } from "./seal-ledger.js";
 import {
   isHitAtK,
   isSameArticle,
@@ -214,6 +215,7 @@ export function assertHoldoutSeal(split: string, sealBroken: boolean): void {
   }
   // `sealed` = 2026-08-01 확장이 처음부터 떼어 둔 미개봉 문항. `holdout` 과 같은 무게로 막는다 —
   // 어휘가 새로 생겼는데 봉인 검사가 옛 어휘만 보면 새 봉인은 태어날 때부터 열려 있다.
+  // (개봉 플래그가 있을 때의 이력 요구는 `assertSealOpening` 이 별도로 본다.)
   if (split === "sealed") {
     throw new Error(
       "봉인 문항(sealed)은 열지 않는다 — 도구를 고친 뒤 과적합을 판정할 때 딱 한 번 쓴다.\n" +
@@ -226,6 +228,8 @@ export function assertHoldoutSeal(split: string, sealBroken: boolean): void {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   assertHoldoutSeal(args.split, args.holdoutSealBroken);
+  // 개봉 플래그가 있어도 이력이 준비돼 있지 않으면 여기서 멈춘다(흔적 없는 개봉 금지).
+  assertSealOpening(args.split, args.holdoutSealBroken);
 
   const golden = JSON.parse(
     readFileSync(new URL(`./${args.set}.json`, import.meta.url), "utf8"),

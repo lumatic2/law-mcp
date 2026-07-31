@@ -9,6 +9,7 @@
  */
 import { readFileSync } from "node:fs";
 import { assertHoldoutSeal } from "./run.js";
+import { assertSealOpening } from "./seal-ledger.js";
 
 /** `sealed` = 2026-08-01 확장이 처음부터 떼어 둔 미개봉 문항(ADR 0002 §1·ADR 0004). */
 export type Split = "dev" | "holdout" | "sealed";
@@ -44,6 +45,7 @@ export function loadAgenticSet(
   opts: { provenance?: string; caseIds?: Iterable<string> } = {},
 ): AgenticCase[] {
   assertHoldoutSeal(split, sealBroken);
+  assertSealOpening(split, sealBroken);
   const data = JSON.parse(readFileSync(AGENTIC_SET_PATH, "utf8")) as {
     items: (AgenticCase & { context: string | null; provenance?: string })[];
   };
