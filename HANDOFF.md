@@ -4,11 +4,9 @@
 > 2026-08-01 세션 종료 시 기록
 
 - **M9 step-4 부터 이어간다** (승인 영수증 유효, plan hash 불변). 세법 12종 조문 1,804조 수집 —
-  `bench/expansion/topics-2026-08-01.json` 의 `mst` 사용, 법당 전문 조회 1회.
-  **폴백 금지** — 법령명 불일치 시 중단(`rules.approved.json` `on_name_mismatch: abort`).
+  `topics-2026-08-01.json` 의 `mst` 로 법당 전문 조회 1회. **폴백 금지**(법령명 불일치 시 중단).
 - step-5 임베딩 파일럿: 로컬 torch 2.12+cpu · sentence-transformers 5.4(설치 확인, API 키 불요).
-  `BAAI/bge-m3` 는 HF 캐시에 있고 한국어 특화 계열만 신규 다운로드가 필요하다.
-  덤프 본문은 scratchpad, 레포에는 manifest 만.
+  `BAAI/bge-m3` 는 HF 캐시에 있다. 덤프 본문은 scratchpad, 레포에는 manifest 만.
 - **손실축 기준은 step-3 산출 하나뿐이다** — 단발 조문 top-3 **7/40 = 17.5%**
   (`evidence/bench/2026-08-01-m9-taxonomy/current-article-baseline.json`). M8 에이전틱 90% 로
   대체하면 단위가 달라 손실이 과소 산출된다.
