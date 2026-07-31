@@ -100,19 +100,21 @@
 - Status: [x]
 - Completed at: 2026-08-01
 - Summary: 60문항 통합(124→184) + 라벨 검증 + 봉인 20건·강제 장치
-<!-- harness:milestone id="M7" status="active" priority="P0" evidence="" -->
+<!-- harness:milestone id="M7" status="completed" priority="P0" evidence="archive/reports/2026-08-01-m7-breadth-verdict.md" -->
 ### M7 — 확장 코퍼스 기준선 측정 + 넓이 판정
 - DoD: 고정 43건 레코드 해시 불변 + 범용 recall@3 = M4 값(84.2%) · 확장 dev 40건 블라인드 ×3
   기준선이 법별 분포와 함께 존재 · 봉인 20건 미개봉이 ledger 로 확인 · 넓이 판정 보고서(git 추적) ·
   `git diff --stat src/` 0줄. **"세법 전반을 덮었다" 선언은 사용자 결정.**
-- Evidence: (M7 완료 시 기입)
+- Evidence: archive/reports/2026-08-01-m7-breadth-verdict.md
 - Gap: 측정 전 `dist-bench` 재빌드와 배포 사본 일치 확인이 선행돼야 한다(M4 에서 2회 걸린 함정).
   고정 세트 `pass^3` 는 1회로 정의되지 않아 재측정하지 않는다 — 회귀 검사는 결정적 축으로만.
 - Scale: changesets>=1; surfaces: 두 세트 측정·판정 보고서; capability: "세법 전반"이 주장이 아니라
   측정이다
 - Plan: `plans/2026-08-01-m7-확장기준선측정.md`
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-08-01
+- Summary: 확장 40건 기준선(pass^3 75.0%) + 고정 세트 불변 + 후보 S 해소 판정
 ## Next Candidates
 
 후보 백로그 정본 → `plans/horizons/CANDIDATES.md` (순서는 사용자 소유).
