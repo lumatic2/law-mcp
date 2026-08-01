@@ -1,0 +1,18 @@
+{
+  "measured_at": "2026-08-01T12:20:14+0900",
+  "dump_path": "C:\\Users\\yusun\\AppData\\Local\\Temp\\law-mcp-m9-mapping-probe\\articles.json",
+  "dump_sha256": "b39608bc018e9e0c684ae9f33a42dc6194f42e0f7f67afbce5ffe0469f9c2a1e",
+  "laws": 12,
+  "articles": 1804,
+  "dev": 40,
+  "failure_A": 5,
+  "models_requested": [
+    "BAAI/bge-m3",
+    "jhgan/ko-sroberta-multitask"
+  ],
+  "models_completed": [
+    "BAAI/bge-m3",
+    "jhgan/ko-sroberta-multitask"
+  ],
+  "errors": []
+}
