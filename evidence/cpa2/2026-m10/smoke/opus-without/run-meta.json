@@ -1,0 +1,22 @@
+{
+  "arm": "opus-without",
+  "mode": "smoke",
+  "availability": "without",
+  "requested_model": "opus",
+  "prompt_sha256": "8703b31baffbcf72c5cd31c7f420a368205f7e120ce1e43096149eaefbb928dd",
+  "deployed_entry": null,
+  "deployed_sha256": null,
+  "scratch_dir": "C:\\Users\\yusun\\AppData\\Local\\Temp\\law-mcp-m10-opus-without-eaa678d9ea524fa9ac204f2d50f74eb2",
+  "started_at": "2026-08-01T05:16:32.8315824Z",
+  "ended_at": "2026-08-01T05:16:36.3711695Z",
+  "exit_code": 0,
+  "inherited_law_api_oc": true,
+  "forbidden_surfaces": [
+    "web",
+    "chrome",
+    "shell",
+    "file",
+    "skills",
+    "agents"
+  ]
+}

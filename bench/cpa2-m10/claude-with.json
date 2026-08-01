@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "law_mcp": {
+      "command": "node",
+      "args": ["C:/Users/yusun/projects/custom-mcps/law-mcp/dist/index.js"]
+    }
+  }
+}

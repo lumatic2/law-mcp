@@ -1,0 +1,16 @@
+{
+  "mode": "solve",
+  "common_sha256": "87c8edb28fabe249689baa072ae7a76980fb5da08fba553f6238e62213db03c6",
+  "prompts": {
+    "with": {
+      "path": "C:\\Users\\yusun\\projects\\law-mcp\\bench\\cpa2-m10\\generated\\solve-with.txt",
+      "sha256": "8c7fc51f45006e97091478c4eac6bd9061aa3dcc8562673699c3b96613744b55",
+      "bytes": 9026
+    },
+    "without": {
+      "path": "C:\\Users\\yusun\\projects\\law-mcp\\bench\\cpa2-m10\\generated\\solve-without.txt",
+      "sha256": "e9447cc16d59053089b41aafb9d6405346a0c785929ca7543cb66201c27d9ca8",
+      "bytes": 9020
+    }
+  }
+}

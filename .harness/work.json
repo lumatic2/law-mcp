@@ -1724,7 +1724,7 @@
         {
           "id": "step-2",
           "label": "step-2 — Codex·Claude 2×2 격리 하네스와 연막검증",
-          "status": "pending"
+          "status": "completed"
         },
         {
           "id": "step-3",

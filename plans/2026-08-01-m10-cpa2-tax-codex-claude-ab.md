@@ -90,7 +90,7 @@ Status: approved (2026-08-01 사용자 승인 — "코덱스도 하고, 클로�
   - Failure probe: 해설 불일치를 임의로 다수결하지 않고 `분쟁`으로 남긴 변형에서 분모가 70% 미만이면
     판정 준비가 반드시 FAIL하는지 검사
   - Commit: `test(m10): 공인회계사 2차 세법 문제와 채점표 동결`
-- [ ] **step-2 — Codex·Claude 2×2 격리 하네스와 연막검증**
+- [x] **step-2 — Codex·Claude 2×2 격리 하네스와 연막검증**
   - Artifact: byte-identical 공통 prompt + arm별 한 문장 차이, Claude strict MCP config 2종과 Codex
     isolated config 2종, 각 `+` arm의 exact law-mcp 목록, 실행 manifest 생성기, `+` 도구 호출 성공/
     `-` 도구 부재/4세션 외부도구 차단 연막증거
@@ -154,3 +154,4 @@ Status: approved (2026-08-01 사용자 승인 — "코덱스도 하고, 클로�
 - 2026-08-01 plan 초안 작성 — Claude Opus law-mcp 사용/미사용 A/B.
 - 2026-08-01 사용자 확장·승인 — Codex pair 추가, 총 4세션 2×2로 승인(`ㄱㄱ`).
 - 2026-08-01 step-1 완료 — 공식 PDF/HWP·문제 1 전사본 해시 동결, 25점/17단위 채점표와 12개 핵심 명제 고정. 월세 1점은 공개 전문가 이견으로 제외해 확정 분모 24/25(96%). Law MCP 시험일 조문 및 tax-agent 계산기로 재판정했고, 분쟁 7점 추가 변형은 68%로 준비 게이트 FAIL을 확인.
+- 2026-08-01 step-2 완료 — Orca 신규 터미널 4개 연막. C+/O+ 실제 Law MCP 본문 성공, C-/O- 호출 0, 금지 surface marker 0, 배포 SHA 일치. Opus 실제 모델은 양쪽 `claude-opus-5`; Codex JSONL 모델 ID 비노출 한계를 명시하고 양쪽 alias/CLI/플래그를 고정. Codex exec MCP 승인·env 전달 결함을 하네스에서 명시 설정하고 실패 감지를 강화.

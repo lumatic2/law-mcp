@@ -1,0 +1,16 @@
+{
+  "mode": "smoke",
+  "common_sha256": "05c2dd2320b98483ea3617fe29e1b90506106b8f7f2b723fb9db52adbaad841f",
+  "prompts": {
+    "with": {
+      "path": "C:\\Users\\yusun\\projects\\law-mcp\\bench\\cpa2-m10\\generated\\smoke-with.txt",
+      "sha256": "daac5580bcd776b7813eaf331f8274e2de082ae62ef47145dcad303bca5caa82",
+      "bytes": 850
+    },
+    "without": {
+      "path": "C:\\Users\\yusun\\projects\\law-mcp\\bench\\cpa2-m10\\generated\\smoke-without.txt",
+      "sha256": "8703b31baffbcf72c5cd31c7f420a368205f7e120ce1e43096149eaefbb928dd",
+      "bytes": 799
+    }
+  }
+}
