@@ -1,8 +1,7 @@
 # ROADMAP
 
 > 마지막 업데이트: 2026-08-01
-> 상태: **목표 "일상어→조문 매핑" 연쇄 진행 중** — M8 completed, M9 active (연쇄 승인 2026-08-01,
-> `--chain` 등록). M1~M8 은 completed.
+> 상태: **세법 기능적 완성의 실전 종합시험 설계 중** — M1~M9 completed, M10 plan draft.
 > 기준선 = 확장 40건 **수리 후** `pass^3` 90.0%·pass@3 100%·`SR@1` 67.5%
 > (`evidence/bench/2026-08-01-m8-repaired/`, 수리 전 75.0%/61.7% 는 기록 동결) ·
 > 고정 43건 `pass^3` 86.0%·`SR@1` 81.4% · 범용축 recall@3 84.2%.
@@ -14,34 +13,26 @@
 
 ## Current Goal
 
-<!-- harness:goal id="query-to-article-mapping" -->
-목표: **일상어→조문 매핑 병목을 해소할지 판단한다.** 조회(조문 지정 호출)는 정확하지만 사람 말에서
-법·조문을 집는 단계에서 깨진다(확장 `SR@1` 61.7%). ① 문항 결함으로 오염된 분모를 청소해 도구 실력
-추정치를 얻고 ② 두 대안(질의 정규화 / 조문 임베딩)의 이득축·손실축을 같은 자로 실측해 처방을 사용자
-결정에 올린다. 사용자 제안(2026-08-01 "법조항 전체를 임베딩")에서 출발. 연쇄: M8 → M9.
-**구현·채택 선언은 사용자가 한다 — 이 연쇄는 판정 재료까지.**
+<!-- harness:goal id="tax-functional-capstone" -->
+목표: **실제 고난도 세법 종합문제로 기능적 완성 여부를 판정한다.** 최신 공인회계사 2차 세법 첫
+대문제를 동일 Claude Opus의 law-mcp 사용/미사용 독립 세션이 풀고, 사전 동결한 채점표로 절대 정확성과
+도구 기여를 분리한다. **최종 "세법 기능적으로 충분" 선언은 보고서를 본 사용자가 한다.**
 
 > 이전 목표 **코퍼스 세법 전반**(`tax-corpus-breadth`, M5~M7)은 2026-08-01 완료 — 판정 보고서
 > `archive/reports/2026-08-01-m7-breadth-verdict.md`. 미결 결정 ⓔ·ⓕ·ⓖ 중 ⓕ(문항 수리)는
 > 2026-08-01 승인되어 M8 로 소비된다.
 
-<!-- harness:milestone id="M9" status="completed" priority="P0" evidence="archive/reports/2026-08-01-m9-mapping-verdict.md" -->
-### M9 — 매핑 병목 유형화 + 의미검색 상한 프로브 + 판정
-- DoD: 실패 전건이 원인 유형으로 분류(유형①은 토큰 겹침 수치 근거) + 측정 대상(A)/참고(B) 분리 ·
-  정규화·임베딩의 이득축·손실축이 동일 단위(조문·k=3/10·`query`·현행 최종 응답)로 산출 · 임베딩
-  인덱스가 세법 12종 전체이고 정답 조문 존재가 선확인 · 3안 비교 판정 보고서(git 추적, "상한 ≠
-  도달률"·버전 스냅샷 위험 명시) · `src/`·`package.json` 무변경 · 조문 덤프 본문 미커밋.
-- Evidence: archive/reports/2026-08-01-m9-mapping-verdict.md
-- Gap: 의미 검색 층은 이미 `aiSearch` 로 돌고 있다(UD2) — 자체 임베딩은 새 아이디어가 아니라 엔진
-  교체 결정이다. 인덱스는 스냅샷이라 세법 개정에 노후하므로 "후보 찾기 한정·본문 API 재조회"
-  전제가 깨지면 `as_of` 함정이 되살아난다. 채택 결정은 사용자 소유.
-- Scale: changesets>=1; surfaces: 유형화·정규화 상한·현행 조문 기준선·조문 수집·임베딩 파일럿·판정;
-  capability: 처방 선택이 취향이 아니라 측정이다
-- Plan: `plans/2026-08-01-m9-매핑병목프로브.md`
-- Status: [x]
-
-- Completed at: 2026-08-01
-- Summary: 매핑 대안 3종 실측 — 임베딩 단독 교체 기각, 현행 유지 권고
+<!-- harness:milestone id="M10" status="active" priority="P0" -->
+### M10 — 공인회계사 2차 세법 Codex·Claude 2×2 완성 판정
+- DoD: 2026년 세법 첫 대문제·채점표 사전 동결(확정 분모 ≥70%) · Codex와 Opus 각각 동일 모델·동일
+  prompt의 law-mcp 사용/미사용 총 4세션 · C+/O+ 실도구 성공, C-/O- MCP 부재, 외부도구 차단 · 원시
+  답안·trace 보존 · 두 `+` arm 절대 조건과 모델별 +/- 기여·종합 판정 보고서 · `src/` 무변경.
+- Gap: 공식 모범답안 부재 가능성과 MCP/웹 오염이 판정을 무효화할 수 있어, 독립 해설 2종+유효 법령
+  삼각검증과 strict config 연막을 먼저 통과해야 한다.
+- Scale: changesets>=1; surfaces: 문제·채점표 동결 / 2×2 격리 / Codex·Opus 4세션 / 채점·판정;
+  capability: "세법 완성"이 벤치 점수가 아니라 실제 종합문제 정확성으로 검증된다
+- Plan: `plans/2026-08-01-m10-cpa2-tax-codex-claude-ab.md`
+- Status: [ ]
 ## 이전 목표 (완료)
 
 <!-- harness:goal id="tax-corpus-breadth" status="completed" -->
@@ -68,7 +59,7 @@
   측정은 무효(배포 사본 분리 함정).
 - Scale: changesets>=1; surfaces: 재측정·리허설·판정 보고서; capability: "완성됐다"가 주장이 아니라
   증거다
-- Plan: `plans/2026-07-31-m4-측정과판정.md`
+- Plan: `archive/plans/2026-07-31-m4-측정과판정.md`
 - Status: [x]
 
 - Completed at: 2026-07-31
@@ -85,7 +76,7 @@
   재현 불가.
 - Scale: changesets>=1; surfaces: 추출기·ADR·가드·스키마/러너 배선; capability: 확장 주제가
   규약을 우회하지 않고 근거를 남기며 통과한다
-- Plan: `plans/2026-08-01-m5-주제목록과봉인규약.md`
+- Plan: `archive/plans/2026-08-01-m5-주제목록과봉인규약.md`
 - Status: [x]
 - Completed at: 2026-08-01
 - Summary: 60 주제 확정 + ADR 0004 개정 + 스키마·러너 배선
@@ -99,7 +90,7 @@
   시행령으로 옮겨가는 라벨이 수 건 예상되며 그 조문은 승인 목록에 없어 가드 예외가 필요하다.
 - Scale: changesets>=1; surfaces: 문항 작성·라벨 검증·코퍼스 통합·봉인 장치; capability: 세법
   전반 문제가 오염 없이 코퍼스에 들어간다
-- Plan: `plans/2026-08-01-m6-문제작성과통합.md`
+- Plan: `archive/plans/2026-08-01-m6-문제작성과통합.md`
 - Status: [x]
 - Completed at: 2026-08-01
 - Summary: 60문항 통합(124→184) + 라벨 검증 + 봉인 20건·강제 장치
@@ -113,7 +104,7 @@
   고정 세트 `pass^3` 는 1회로 정의되지 않아 재측정하지 않는다 — 회귀 검사는 결정적 축으로만.
 - Scale: changesets>=1; surfaces: 두 세트 측정·판정 보고서; capability: "세법 전반"이 주장이 아니라
   측정이다
-- Plan: `plans/2026-08-01-m7-확장기준선측정.md`
+- Plan: `archive/plans/2026-08-01-m7-확장기준선측정.md`
 - Status: [x]
 
 - Completed at: 2026-08-01
