@@ -40,8 +40,8 @@
 ## 3. 증거
 
 - changeset: `changesets/20260801-m9-mapping-probe`; 커밋 `46d91a6`, `f215a36`, `2b3fdcc`, `677a5d1`
-- 검증: 유형 A 5/B 3 전건 근거 · 12법/1,804조 · dev 정답 40/40 · 모델 2/2 완료 · 임베딩 evidence
-  구조 검사 PASS · `npm test` 356/356 · `git diff --stat src/` 0줄 · `package.json` 무변경
+- 검증: `npm test` 356/356 PASS · 임베딩 evidence 구조 검사 PASS · 유형 A 5/B 3 전건 근거 ·
+  12법/1,804조 · dev 정답 40/40 · 모델 2/2 완료 · `git diff --stat src/` 0줄 · `package.json` 무변경
 - 크기 회고: 6 step·5 커밋으로 닫힌 목표 단위 milestone이며 크기 불일치 없음.
 - 실표면: 법제처 DRF 전문을 승인 MST 12건으로 실제 조회해 법령명 12/12와 조문 수 1,804/1,804를
   검증했고, 로컬 CPU 모델 두 종으로 실제 색인·질의 45건을 수행했다.

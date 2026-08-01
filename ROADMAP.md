@@ -25,7 +25,7 @@
 > `archive/reports/2026-08-01-m7-breadth-verdict.md`. 미결 결정 ⓔ·ⓕ·ⓖ 중 ⓕ(문항 수리)는
 > 2026-08-01 승인되어 M8 로 소비된다.
 
-<!-- harness:milestone id="M9" status="active" priority="P0" evidence="archive/reports/2026-08-01-m9-mapping-verdict.md" -->
+<!-- harness:milestone id="M9" status="completed" priority="P0" evidence="archive/reports/2026-08-01-m9-mapping-verdict.md" -->
 ### M9 — 매핑 병목 유형화 + 의미검색 상한 프로브 + 판정
 - DoD: 실패 전건이 원인 유형으로 분류(유형①은 토큰 겹침 수치 근거) + 측정 대상(A)/참고(B) 분리 ·
   정규화·임베딩의 이득축·손실축이 동일 단위(조문·k=3/10·`query`·현행 최종 응답)로 산출 · 임베딩
@@ -38,8 +38,10 @@
 - Scale: changesets>=1; surfaces: 유형화·정규화 상한·현행 조문 기준선·조문 수집·임베딩 파일럿·판정;
   capability: 처방 선택이 취향이 아니라 측정이다
 - Plan: `plans/2026-08-01-m9-매핑병목프로브.md`
-- Status: [ ]
+- Status: [x]
 
+- Completed at: 2026-08-01
+- Summary: 매핑 대안 3종 실측 — 임베딩 단독 교체 기각, 현행 유지 권고
 ## 이전 목표 (완료)
 
 <!-- harness:goal id="tax-corpus-breadth" status="completed" -->
