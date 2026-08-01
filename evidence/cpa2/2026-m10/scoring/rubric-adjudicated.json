@@ -1,0 +1,410 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-08-01",
+  "as_of": "2026-06-27",
+  "total_points": 25,
+  "confirmed_points": 24,
+  "pass_thresholds": {
+    "confirmed_score_ratio": 0.8,
+    "legal_treatment_ratio": 0.9,
+    "key_proposition_evidence_ratio": 1.0,
+    "wrong_or_fabricated_citation_count": 0,
+    "unsupported_key_assertion_count": 0
+  },
+  "field_policy": {
+    "fields": [
+      "conclusion",
+      "calculation",
+      "evidence_exists",
+      "evidence_correct",
+      "as_of_consistent"
+    ],
+    "numeric_default_shares": [
+      0.5,
+      0.2,
+      0.1,
+      0.1,
+      0.1
+    ],
+    "description_default_shares": [
+      0.5,
+      0.0,
+      0.2,
+      0.2,
+      0.1
+    ],
+    "rule": "각 필드는 이진 채점하며 field_weights의 합이 unit weight다. 해당하지 않는 calculation은 weight 0이다."
+  },
+  "units": [
+    {
+      "id": "q1_interest_withholding",
+      "weight": 2,
+      "status": "confirmed",
+      "answer": 2100000,
+      "calculation": "4,000,000×14% + 3,000,000×14% + 5,000,000×14% + 1,000,000×14% + 2,000,000×14%",
+      "field_weights": {
+        "conclusion": 1,
+        "calculation": 0.4,
+        "evidence_exists": 0.2,
+        "evidence_correct": 0.2,
+        "as_of_consistent": 0.2
+      },
+      "legal": true,
+      "key_propositions": [
+        "P1",
+        "P2",
+        "P4"
+      ]
+    },
+    {
+      "id": "q1_interest_gross_receipts",
+      "weight": 2,
+      "status": "confirmed",
+      "answer": 12000000,
+      "calculation": "4,000,000+5,000,000+1,000,000+2,000,000; 법원 보증금 이자 3,000,000은 분리과세",
+      "field_weights": {
+        "conclusion": 1,
+        "calculation": 0.4,
+        "evidence_exists": 0.2,
+        "evidence_correct": 0.2,
+        "as_of_consistent": 0.2
+      },
+      "legal": true,
+      "key_propositions": [
+        "P1",
+        "P4"
+      ]
+    },
+    {
+      "id": "q1_dividend_gross_receipts",
+      "weight": 2,
+      "status": "confirmed",
+      "answer": 27000000,
+      "calculation": "9,000,000+6,000,000+(20,000,000-12,000,000)+4,000,000; 익명 배당 2,000,000은 분리과세",
+      "field_weights": {
+        "conclusion": 1,
+        "calculation": 0.4,
+        "evidence_exists": 0.2,
+        "evidence_correct": 0.2,
+        "as_of_consistent": 0.2
+      },
+      "legal": true,
+      "key_propositions": [
+        "P3",
+        "P5"
+      ]
+    },
+    {
+      "id": "q1_dividend_gross_up",
+      "weight": 2,
+      "status": "confirmed",
+      "answer": 1700000,
+      "calculation": "(주식배당 9,000,000+의제배당 8,000,000)×10%",
+      "field_weights": {
+        "conclusion": 1,
+        "calculation": 0.4,
+        "evidence_exists": 0.2,
+        "evidence_correct": 0.2,
+        "as_of_consistent": 0.2
+      },
+      "legal": true,
+      "key_propositions": [
+        "P5"
+      ]
+    },
+    {
+      "id": "q2_monthly_fixed_pay",
+      "weight": 2,
+      "status": "confirmed",
+      "answer": 2200000,
+      "calculation": "기본급 1,800,000 + 매월 식대 400,000. 식대는 시행령 제17조제1항의 차감항목인 제12조 실비변상적 급여 또는 제17조의4 복리후생적 급여가 아니다.",
+      "field_weights": {
+        "conclusion": 1,
+        "calculation": 0.4,
+        "evidence_exists": 0.2,
+        "evidence_correct": 0.2,
+        "as_of_consistent": 0.2
+      },
+      "legal": true,
+      "key_propositions": [
+        "P6"
+      ]
+    },
+    {
+      "id": "q2_gross_salary",
+      "weight": 2,
+      "status": "confirmed",
+      "answer": 34600000,
+      "calculation": "기본급 21,600,000+상여 5,000,000+직무발명 과세 1,000,000+식대 과세 2,400,000+초과근로 과세 4,600,000",
+      "field_weights": {
+        "conclusion": 1,
+        "calculation": 0.4,
+        "evidence_exists": 0.2,
+        "evidence_correct": 0.2,
+        "as_of_consistent": 0.2
+      },
+      "legal": true,
+      "key_propositions": [
+        "P6"
+      ]
+    },
+    {
+      "id": "q2_personal_deductions",
+      "weight": 1.5,
+      "status": "confirmed",
+      "answer": 10000000,
+      "calculation": "본인·배우자·부친·모친 기본공제 6,000,000+부친·모친 경로우대 2,000,000+모친 장애인 2,000,000",
+      "field_weights": {
+        "conclusion": 0.75,
+        "calculation": 0.3,
+        "evidence_exists": 0.15,
+        "evidence_correct": 0.15,
+        "as_of_consistent": 0.15
+      },
+      "legal": true,
+      "key_propositions": []
+    },
+    {
+      "id": "q2_general_tax",
+      "weight": 1,
+      "status": "confirmed",
+      "answer": 6040000,
+      "calculation": "20,000,000×14% + (50,000,000-20,000,000)에 대한 기본세율 세액 3,240,000",
+      "field_weights": {
+        "conclusion": 0.5,
+        "calculation": 0.2,
+        "evidence_exists": 0.1,
+        "evidence_correct": 0.1,
+        "as_of_consistent": 0.1
+      },
+      "legal": true,
+      "key_propositions": [
+        "P7"
+      ]
+    },
+    {
+      "id": "q2_comparison_tax",
+      "weight": 1.5,
+      "status": "confirmed",
+      "answer": 6600000,
+      "calculation": "6,000,000×25%+24,000,000×14%+(50,000,000-30,000,000)에 대한 기본세율 세액 1,740,000",
+      "field_weights": {
+        "conclusion": 0.75,
+        "calculation": 0.3,
+        "evidence_exists": 0.15,
+        "evidence_correct": 0.15,
+        "as_of_consistent": 0.15
+      },
+      "legal": true,
+      "key_propositions": [
+        "P7"
+      ]
+    },
+    {
+      "id": "q2_disaster_credit",
+      "weight": 1,
+      "status": "confirmed",
+      "answer": 600000,
+      "calculation": "10,000,000×(18,000,000÷60,000,000)×(80,000,000÷400,000,000)",
+      "field_weights": {
+        "conclusion": 0.5,
+        "calculation": 0.2,
+        "evidence_exists": 0.1,
+        "evidence_correct": 0.1,
+        "as_of_consistent": 0.1
+      },
+      "legal": true,
+      "key_propositions": [
+        "P8"
+      ]
+    },
+    {
+      "id": "q2_rent_credit",
+      "weight": 1,
+      "status": "disputed_excluded",
+      "answer": 1350000,
+      "calculation": "잠정: 9,000,000×15%; 공개 전문가가 종합소득 가정 누락으로 복수답안 필요 의견을 제시하여 확정 분모 제외",
+      "field_weights": {
+        "conclusion": 0.5,
+        "calculation": 0.2,
+        "evidence_exists": 0.1,
+        "evidence_correct": 0.1,
+        "as_of_consistent": 0.1
+      },
+      "legal": true,
+      "key_propositions": [
+        "P9"
+      ]
+    },
+    {
+      "id": "q2_marriage_credit",
+      "weight": 1,
+      "status": "confirmed",
+      "answer": 500000,
+      "calculation": "2026년 혼인신고, 과거 공제 없음",
+      "field_weights": {
+        "conclusion": 0.5,
+        "calculation": 0.2,
+        "evidence_exists": 0.1,
+        "evidence_correct": 0.1,
+        "as_of_consistent": 0.1
+      },
+      "legal": true,
+      "key_propositions": []
+    },
+    {
+      "id": "q3_other_income_withholding",
+      "weight": 2,
+      "status": "confirmed",
+      "answer": 125999700,
+      "calculation": "400,000+1,200,000+400,000+4,000,000+119,999,700. 1억 초과·10년 미만 보유 골동품 필요경비는 90,000,000+(150,000,000-100,000,000)×80%.",
+      "field_weights": {
+        "conclusion": 1,
+        "calculation": 0.4,
+        "evidence_exists": 0.2,
+        "evidence_correct": 0.2,
+        "as_of_consistent": 0.2
+      },
+      "legal": true,
+      "key_propositions": [
+        "P10"
+      ]
+    },
+    {
+      "id": "q3_comprehensive_other_income",
+      "weight": 2,
+      "status": "confirmed",
+      "answer": 10000000,
+      "calculation": "산업재산권 2,000,000+주식매수선택권 6,000,000+문예창작 2,000,000; 골동품·복권 분리과세",
+      "field_weights": {
+        "conclusion": 1,
+        "calculation": 0.4,
+        "evidence_exists": 0.2,
+        "evidence_correct": 0.2,
+        "as_of_consistent": 0.2
+      },
+      "legal": true,
+      "key_propositions": [
+        "P10"
+      ]
+    },
+    {
+      "id": "q3_business_income",
+      "weight": 1,
+      "status": "confirmed",
+      "answer": 37000000,
+      "calculation": "20,000,000+대표자급여 30,000,000-사업계좌 이자 5,000,000+자가소비 시가 4,000,000-업무무관 수증이익 12,000,000. 기술 낙후 생산설비 폐기손실은 시행령 제67조제6항에 따라 인정.",
+      "field_weights": {
+        "conclusion": 0.5,
+        "calculation": 0.2,
+        "evidence_exists": 0.1,
+        "evidence_correct": 0.1,
+        "as_of_consistent": 0.1
+      },
+      "legal": true,
+      "key_propositions": [
+        "P11"
+      ]
+    },
+    {
+      "id": "q3_service_withholding_3pct",
+      "weight": 0.5,
+      "status": "confirmed",
+      "answer": "부가가치세법 제26조 제1항 제5호 및 제15호의 면세 용역 공급에서 발생하는 원천징수대상 사업소득(시행령상 제외분 제외)",
+      "field_weights": {
+        "conclusion": 0.25,
+        "calculation": 0,
+        "evidence_exists": 0.1,
+        "evidence_correct": 0.1,
+        "as_of_consistent": 0.05
+      },
+      "legal": true,
+      "key_propositions": [
+        "P12"
+      ]
+    },
+    {
+      "id": "q3_service_withholding_20pct",
+      "weight": 0.5,
+      "status": "confirmed",
+      "answer": "외국인 직업운동가가 프로스포츠구단과의 계약에 따라 제공하는 용역",
+      "field_weights": {
+        "conclusion": 0.25,
+        "calculation": 0,
+        "evidence_exists": 0.1,
+        "evidence_correct": 0.1,
+        "as_of_consistent": 0.05
+      },
+      "legal": true,
+      "key_propositions": [
+        "P12"
+      ]
+    }
+  ],
+  "key_propositions": [
+    {
+      "id": "P1",
+      "text": "법원 보증금 이자는 14% 원천징수하고 종합소득에서 분리한다."
+    },
+    {
+      "id": "P2",
+      "text": "등록 온라인투자연계금융업자를 통한 이자의 시험일 원천징수세율을 적용한다."
+    },
+    {
+      "id": "P3",
+      "text": "실지명의 불명 배당은 45% 또는 금융실명법 적용세율 대상이며 종합소득에서 분리한다."
+    },
+    {
+      "id": "P4",
+      "text": "비통합발행 국채의 원금채권 할인액은 이자소득이다."
+    },
+    {
+      "id": "P5",
+      "text": "주식배당과 청산 의제배당은 Gross-up 대상이고 과세신탁 분배·수동적 동업자 배분은 제외한다."
+    },
+    {
+      "id": "P6",
+      "text": "생산직 월정액급여·직전 총급여 요건과 초과근로·직무발명·식대 비과세 한도를 적용한다."
+    },
+    {
+      "id": "P7",
+      "text": "금융소득 비교산출에서 비영업대금 이익 25%, 나머지 금융소득 14%, 비금융 과세표준 기본세율을 적용한다."
+    },
+    {
+      "id": "P8",
+      "text": "재해손실세액공제는 토지를 제외한 사업용 자산 손실률과 사업소득 귀속 산출세액으로 계산한다."
+    },
+    {
+      "id": "P9",
+      "text": "월세세액공제는 총급여와 종합소득금액 문턱을 함께 적용한다(본 평가는 공개 이견으로 배점 제외)."
+    },
+    {
+      "id": "P10",
+      "text": "기타소득 유형별 필요경비·분리과세·원천징수세율을 구분한다."
+    },
+    {
+      "id": "P11",
+      "text": "사업소득 결산상 항목을 소득세법상 총수입금액·필요경비로 세무조정한다."
+    },
+    {
+      "id": "P12",
+      "text": "원천징수대상 사업소득 3% 범위와 외국인 직업운동가 20% 예외를 구분한다."
+    }
+  ],
+  "error_taxonomy": [
+    "wrong_classification",
+    "wrong_rate",
+    "wrong_amount_or_arithmetic",
+    "omitted_item",
+    "unsupported_key_assertion",
+    "fabricated_or_wrong_article",
+    "as_of_mismatch",
+    "tool_evidence_mismatch"
+  ],
+  "derived_from_sha256": "7a97e05851c1795807ce45bdffc9889b49d753cfa1975a718a7880408a504330",
+  "post_freeze_corrections": [
+    "q2_monthly_fixed_pay",
+    "q3_other_income_withholding",
+    "q3_business_income"
+  ]
+}

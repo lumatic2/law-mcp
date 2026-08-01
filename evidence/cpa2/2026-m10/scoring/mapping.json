@@ -1,0 +1,18 @@
+{
+  "A": {
+    "arm": "codex-with",
+    "answer_sha256": "86a3360abfe26e5d7ba71439f0513bb3afd01b1874d82b42a267148a813dcdfb"
+  },
+  "B": {
+    "arm": "opus-without",
+    "answer_sha256": "a49cc81d401aeceaa5a2ebfdda553e10f42db3cee887bdbedf8081286ecbc1c8"
+  },
+  "C": {
+    "arm": "opus-with",
+    "answer_sha256": "c09150d77992b8c12345e6357503114ec740ee0e404d4021f43601c69ecbdc64"
+  },
+  "D": {
+    "arm": "codex-without",
+    "answer_sha256": "ee004f8712ba5d9dd164dc1e5fa464b4940343d743673249266f1e39390400a0"
+  }
+}

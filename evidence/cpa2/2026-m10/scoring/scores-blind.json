@@ -1,0 +1,841 @@
+{
+  "A": {
+    "score": 18.4,
+    "max": 24,
+    "score_ratio": 0.7667,
+    "legal_treatment_ratio": 0.7083,
+    "key_proposition_evidence_ratio": 1.0,
+    "wrong_or_fabricated_citation_count": 0,
+    "unsupported_key_assertion_count": 0,
+    "errors": [
+      "wrong_amount_or_arithmetic:gross_up",
+      "wrong_classification:meal_allowance",
+      "wrong_classification:retirement_reserve",
+      "wrong_classification:discarded_equipment",
+      "wrong_classification:unrelated_gift"
+    ],
+    "units": [
+      {
+        "unit": "q1_interest_withholding",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q1_interest_gross_receipts",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q1_dividend_gross_receipts",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q1_dividend_gross_up",
+        "score": 0.4,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_monthly_fixed_pay",
+        "score": 0.4,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_gross_salary",
+        "score": 0.4,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_personal_deductions",
+        "score": 1.5,
+        "max": 1.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_general_tax",
+        "score": 1.0,
+        "max": 1,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_comparison_tax",
+        "score": 1.5,
+        "max": 1.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_disaster_credit",
+        "score": 1.0,
+        "max": 1,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_marriage_credit",
+        "score": 1.0,
+        "max": 1,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_other_income_withholding",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_comprehensive_other_income",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_business_income",
+        "score": 0.2,
+        "max": 1,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_service_withholding_3pct",
+        "score": 0.5,
+        "max": 0.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_service_withholding_20pct",
+        "score": 0.5,
+        "max": 0.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      }
+    ]
+  },
+  "B": {
+    "score": 14.7,
+    "max": 24,
+    "score_ratio": 0.6125,
+    "legal_treatment_ratio": 0.5208,
+    "key_proposition_evidence_ratio": 1.0,
+    "wrong_or_fabricated_citation_count": 0,
+    "unsupported_key_assertion_count": 0,
+    "errors": [
+      "omitted_item:commercial_bill_discount",
+      "wrong_amount_or_arithmetic:gross_up",
+      "as_of_mismatch:production_worker_threshold",
+      "wrong_amount_or_arithmetic:antique_expense",
+      "wrong_amount_or_arithmetic:business_income",
+      "wrong_classification:foreign_athlete_scope"
+    ],
+    "units": [
+      {
+        "unit": "q1_interest_withholding",
+        "score": 0.6,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q1_interest_gross_receipts",
+        "score": 0.6,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q1_dividend_gross_receipts",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q1_dividend_gross_up",
+        "score": 0.4,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_monthly_fixed_pay",
+        "score": 1.6,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 0
+        }
+      },
+      {
+        "unit": "q2_gross_salary",
+        "score": 0.2,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 0
+        }
+      },
+      {
+        "unit": "q2_personal_deductions",
+        "score": 1.5,
+        "max": 1.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_general_tax",
+        "score": 1.0,
+        "max": 1,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_comparison_tax",
+        "score": 1.5,
+        "max": 1.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_disaster_credit",
+        "score": 1.0,
+        "max": 1,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_marriage_credit",
+        "score": 1.0,
+        "max": 1,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_other_income_withholding",
+        "score": 0.4,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_comprehensive_other_income",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_business_income",
+        "score": 0.3,
+        "max": 1,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_service_withholding_3pct",
+        "score": 0.5,
+        "max": 0.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_service_withholding_20pct",
+        "score": 0.1,
+        "max": 0.5,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 0
+        }
+      }
+    ]
+  },
+  "C": {
+    "score": 21.2,
+    "max": 24,
+    "score_ratio": 0.8833,
+    "legal_treatment_ratio": 0.8333,
+    "key_proposition_evidence_ratio": 1.0,
+    "wrong_or_fabricated_citation_count": 0,
+    "unsupported_key_assertion_count": 0,
+    "errors": [
+      "omitted_item:commercial_bill_discount"
+    ],
+    "units": [
+      {
+        "unit": "q1_interest_withholding",
+        "score": 0.6,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q1_interest_gross_receipts",
+        "score": 0.6,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q1_dividend_gross_receipts",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q1_dividend_gross_up",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_monthly_fixed_pay",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_gross_salary",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_personal_deductions",
+        "score": 1.5,
+        "max": 1.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_general_tax",
+        "score": 1.0,
+        "max": 1,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_comparison_tax",
+        "score": 1.5,
+        "max": 1.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_disaster_credit",
+        "score": 1.0,
+        "max": 1,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_marriage_credit",
+        "score": 1.0,
+        "max": 1,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_other_income_withholding",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_comprehensive_other_income",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_business_income",
+        "score": 1.0,
+        "max": 1,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_service_withholding_3pct",
+        "score": 0.5,
+        "max": 0.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_service_withholding_20pct",
+        "score": 0.5,
+        "max": 0.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      }
+    ]
+  },
+  "D": {
+    "score": 15.9,
+    "max": 24,
+    "score_ratio": 0.6625,
+    "legal_treatment_ratio": 0.5625,
+    "key_proposition_evidence_ratio": 1.0,
+    "wrong_or_fabricated_citation_count": 0,
+    "unsupported_key_assertion_count": 0,
+    "errors": [
+      "wrong_classification:court_deposit_gross_receipts",
+      "wrong_amount_or_arithmetic:gross_up",
+      "wrong_classification:retirement_reserve",
+      "wrong_amount_or_arithmetic:general_tax",
+      "wrong_amount_or_arithmetic:antique_expense",
+      "wrong_classification:discarded_equipment",
+      "wrong_classification:foreign_athlete_scope"
+    ],
+    "units": [
+      {
+        "unit": "q1_interest_withholding",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q1_interest_gross_receipts",
+        "score": 0.6,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q1_dividend_gross_receipts",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q1_dividend_gross_up",
+        "score": 0.4,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_monthly_fixed_pay",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_gross_salary",
+        "score": 0.4,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_personal_deductions",
+        "score": 1.5,
+        "max": 1.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_general_tax",
+        "score": 0.3,
+        "max": 1,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_comparison_tax",
+        "score": 1.5,
+        "max": 1.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_disaster_credit",
+        "score": 1.0,
+        "max": 1,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q2_marriage_credit",
+        "score": 1.0,
+        "max": 1,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_other_income_withholding",
+        "score": 0.4,
+        "max": 2,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_comprehensive_other_income",
+        "score": 2.0,
+        "max": 2,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 1,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_business_income",
+        "score": 0.2,
+        "max": 1,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_service_withholding_3pct",
+        "score": 0.5,
+        "max": 0.5,
+        "fields": {
+          "conclusion": 1,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 1,
+          "as_of_consistent": 1
+        }
+      },
+      {
+        "unit": "q3_service_withholding_20pct",
+        "score": 0.1,
+        "max": 0.5,
+        "fields": {
+          "conclusion": 0,
+          "calculation": 0,
+          "evidence_exists": 1,
+          "evidence_correct": 0,
+          "as_of_consistent": 0
+        }
+      }
+    ]
+  }
+}

@@ -116,7 +116,7 @@ Status: approved (2026-08-01 사용자 승인 — "코덱스도 하고, 클로�
   - Failure probe: 출력 잘림·model mismatch·금지 도구 호출·상대 답안 또는 채점표 접근 중 하나라도 있으면
     해당 arm을 무효로 표시하고 동일 입력의 새 세션 1회만 재실행
   - Commit: `test(m10): Codex Claude 세법 4세션 원시 실행 증거`
-- [ ] **step-4 — 블라인드 채점·완성 판정**
+- [x] **step-4 — 블라인드 채점·완성 판정**
   - Artifact: 소문항별 C+/C-/O+/O- 점수·법적 근거·오류 유형·모델별 도구 기여 비교표와
     `archive/reports/2026-08-01-m10-cpa2-tax-opus-ab-verdict.md`
   - Risk: 없음 (동결 답안과 채점표를 대조하는 기록)
@@ -156,3 +156,4 @@ Status: approved (2026-08-01 사용자 승인 — "코덱스도 하고, 클로�
 - 2026-08-01 step-1 완료 — 공식 PDF/HWP·문제 1 전사본 해시 동결, 25점/17단위 채점표와 12개 핵심 명제 고정. 월세 1점은 공개 전문가 이견으로 제외해 확정 분모 24/25(96%). Law MCP 시험일 조문 및 tax-agent 계산기로 재판정했고, 분쟁 7점 추가 변형은 68%로 준비 게이트 FAIL을 확인.
 - 2026-08-01 step-2 완료 — Orca 신규 터미널 4개 연막. C+/O+ 실제 Law MCP 본문 성공, C-/O- 호출 0, 금지 surface marker 0, 배포 SHA 일치. Opus 실제 모델은 양쪽 `claude-opus-5`; Codex JSONL 모델 ID 비노출 한계를 명시하고 양쪽 alias/CLI/플래그를 고정. Codex exec MCP 승인·env 전달 결함을 하네스에서 명시 설정하고 실패 감지를 강화.
 - 2026-08-01 step-3 완료 — Orca 신규 터미널 C+/C-/O+/O- 동시 시작 편차 1.043초. 전 arm exit 0·답안 완결·stderr 0·금지 surface 0, C+/O+만 Law MCP trace, C-/O- 호출 0. raw/answer/meta 해시와 terminal handle을 봉인했으며 채점표 경로 접근 흔적 0.
+- 2026-08-01 step-4 완료 — 답안 A-D 블라인드 채점 후 arm 공개. 원본 정답표 SHA를 보존하고 법령 원문으로 월정액급여·골동품·사업소득 3건을 동결 후 정정. C+ 18.4/24, C- 15.9/24, O+ 21.2/24, O- 14.7/24. 두 + arm 모두 사전 5조건 전부 통과에 실패해 종합 `미달`; 결정적 재채점 일치와 점수 변조 실패 탐침 확인.
