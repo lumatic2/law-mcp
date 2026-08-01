@@ -1,30 +1,17 @@
 # HANDOFF — 세션 핸드오프 (git-tracked, session-end 소유)
 
 ## 이어서 할 일
-> 2026-08-01 세션 종료 시 기록
+> 2026-08-02 세션 종료 시 기록
 
-- **M9 step-4 부터 이어간다** (승인 영수증 유효, plan hash 불변). 세법 12종 조문 1,804조 수집 —
-  `topics-2026-08-01.json` 의 `mst` 로 법당 전문 조회 1회. **폴백 금지**(법령명 불일치 시 중단).
-- step-5 임베딩 파일럿: 로컬 torch 2.12+cpu · sentence-transformers 5.4(설치 확인, API 키 불요).
-  `BAAI/bge-m3` 는 HF 캐시에 있다. 덤프 본문은 scratchpad, 레포에는 manifest 만.
-- **손실축 기준은 step-3 산출 하나뿐이다** — 단발 조문 top-3 **7/40 = 17.5%**
-  (`evidence/bench/2026-08-01-m9-taxonomy/current-article-baseline.json`). M8 에이전틱 90% 로
-  대체하면 단위가 달라 손실이 과소 산출된다.
-- **이득 상한이 이미 좁혀졌다**: A 5건 중 정규화(치환)가 exp-06 을 2위로 올려, 임베딩 고유 여지는
-  **exp-42 한 건**이다. step-6 판정에서 "상한 ≠ 도달률"과 함께 이 사실을 앞에 둔다.
-- `.harness/work.json` `next_step` 이 `step-1` 로 남아 있다(승인 재등록 부작용) —
-  **plan 체크박스(step-1~3 `[x]`)가 정본**이다.
-
-### 계획 위치 (cascade)
-- 북극성: 한국 사람들이 '법' 작업을 AI 에이전트로 할 때 설치하는 MCP 의 대표 중 하나가 된다
-- 목표: `query-to-article-mapping` — 일상어→조문 매핑 병목 해소 판단 (M8→M9)
-- Milestone(active): **M9 · 매핑 병목 유형화 + 의미검색 상한 프로브 + 판정**
-- Step: 완료 3/6 · 다음 leaf **step-4**(세법 12종 조문 전량 수집)
-- 다음 차례: `/harness-run` 으로 step-4 → step-5 → step-6(판정 보고서)
+- 사용자 결정을 먼저 받는다: ① `law-mcp` 목 본문 누락을 ordered XML 방식으로 고칠지, ② 노출된 봉인 20건을 ledger `opened` 처리·교체할지 또는 현 세션만 sealed 측정에서 제외할지.
+- ① 승인 시 `/harness-plan`으로 새 milestone을 연다. 첫 leaf는 2026-06-27 시행판 6조문(소득세법 §12·§14·§62·§129, 시행령 §87·§208)의 축약 XML/JSON fixture와 현재 실패하는 순서·누락 테스트 고정이다.
+- 구현 권고는 JSON 목번호 휴리스틱이 아니라 XML 형제 순서(`호 → 해당 목들 → 다음 호`)를 보존하는 공통 ordered parser다. 단건 조회와 `article-index`/`verify_citation`이 같은 본문을 내게 한다.
+- 회귀 게이트: `npm test`, `npm run build`, 고정 43건 recall@3, 공개 확장 dev 40건 pass^3·SR@1, as_of 6조문 live smoke. 완료 시 `custom-mcps/law-mcp` pull·build와 사용자 MCP 재시작까지 포함한다.
+- 봉인 사고: 이 Codex 세션의 도구 로그에 sealed 20건의 query/context/expected_laws/expected_article/source가 직렬화됐다. 파일·git에는 기록되지 않았고 조사 판단에는 사용하지 않았다. 이 세션으로 sealed 측정을 실행하지 않는다.
 
 ### 현재 상태 / 주의점
-- master, push 완료(`1d017b8`). `npm test` 356/356 · `git diff --stat src/` 0줄 · package.json 무변경.
-- 봉인 20건 미개봉(`opened_at = None`) — 개봉 시점은 사용자 결정.
-- ROADMAP read-only: 138줄(≤150), active=1(M9), completed 4. session-end 는 수정하지 않았다.
-- 미결 사용자 결정 누적: ⓐ 세법 완성 선언 · ⓑ 기본통칙 공백 재판정 · ⓔ 후보 S 해소 인정 ·
-  ⓖ 다음 진행 · **신규 ⓘ 경계 문항 2건(exp-42·48, 후보 X) 처분** · 후보 W 약칭 유출 수리 여부.
+- ROADMAP read-only 확인: 134줄(≤150), M10 completed, active milestone 없음. 다음 non-trivial 작업은 `/harness-plan` 승인부터 시작한다.
+- M10 감사: 확정 24점 중 현행 결정론 코드 2.5점, partial 16.5점, 코드 없음 5점, 회색지대 해석 0점. + arm 실점의 직접 원인은 retrieval이 아니라 분류·적용이었다.
+- 별도 `law-mcp` 결함은 실재: DRF JSON의 `항.목`을 `src/providers/lawgo-provider.ts`와 `src/article-index.ts`가 읽지 않아 목 본문을 조용히 누락한다. XML은 기준일 6/6 조문에서 원문 순서를 보존했다.
+- 세법 상수 확정: 생산직 260만원/직전 총급여 3,700만원/연 240만원, 복권 3억원 초과 소득세 30%(지방세 포함 33%), 비영업대금 이익 25%.
+- master main checkout. 이번 세션은 읽기 전용 조사만 했고 소스·ROADMAP·ledger·배포 사본은 무변경이다.
