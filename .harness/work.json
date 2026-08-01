@@ -1710,9 +1710,9 @@
     "m10-cpa2-four-session-ab": {
       "work_id": "m10-cpa2-four-session-ab",
       "milestone_id": "M10",
-      "status": "active",
-      "plan_path": "plans/2026-08-01-m10-cpa2-tax-codex-claude-ab.md",
-      "changeset_path": "changesets/20260801-m10-cpa2-tax-codex-claude-ab",
+      "status": "completed",
+      "plan_path": "archive/plans/2026-08-01-m10-cpa2-tax-codex-claude-ab.md",
+      "changeset_path": "changesets/20260801-m10-cpa2-tax-opus-ab",
       "next_step": "step-1",
       "current_step": "step-1",
       "steps": [
@@ -1759,7 +1759,8 @@
       ],
       "owner_session_uuid": null,
       "updated_at": "2026-08-01",
-      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation."
+      "notes": "Registered atomically by canonical harness approve_harness_plan.py after plan validation.",
+      "completion_summary": "Codex·Opus 2×2 세법 종합시험 완료 — 도구 사용은 개선됐지만 두 + arm 모두 사전 절대 기준 미달"
     }
   },
   "stop_reason": null,

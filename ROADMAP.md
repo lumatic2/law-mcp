@@ -22,7 +22,7 @@
 > `archive/reports/2026-08-01-m7-breadth-verdict.md`. 미결 결정 ⓔ·ⓕ·ⓖ 중 ⓕ(문항 수리)는
 > 2026-08-01 승인되어 M8 로 소비된다.
 
-<!-- harness:milestone id="M10" status="active" priority="P0" -->
+<!-- harness:milestone id="M10" status="completed" priority="P0" evidence="archive/reports/2026-08-01-m10-cpa2-tax-close.md" -->
 ### M10 — 공인회계사 2차 세법 Codex·Claude 2×2 완성 판정
 - DoD: 2026년 세법 첫 대문제·채점표 사전 동결(확정 분모 ≥70%) · Codex와 Opus 각각 동일 모델·동일
   prompt의 law-mcp 사용/미사용 총 4세션 · C+/O+ 실도구 성공, C-/O- MCP 부재, 외부도구 차단 · 원시
@@ -32,7 +32,10 @@
 - Scale: changesets>=1; surfaces: 문제·채점표 동결 / 2×2 격리 / Codex·Opus 4세션 / 채점·판정;
   capability: "세법 완성"이 벤치 점수가 아니라 실제 종합문제 정확성으로 검증된다
 - Plan: `plans/2026-08-01-m10-cpa2-tax-codex-claude-ab.md`
-- Status: [ ]
+- Status: [x]
+- Completed at: 2026-08-01
+- Evidence: archive/reports/2026-08-01-m10-cpa2-tax-close.md
+- Summary: Codex·Opus 2×2 종합시험 완료 — 도구 사용 개선, 두 + arm 절대 기준 미달
 ## 이전 목표 (완료)
 
 <!-- harness:goal id="tax-corpus-breadth" status="completed" -->
