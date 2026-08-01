@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "arms": {
+    "codex-with": {
+      "arm": "codex-with",
+      "mode": "solve",
+      "availability": "with",
+      "requested_model": "gpt-5.6-sol",
+      "prompt_sha256": "8c7fc51f45006e97091478c4eac6bd9061aa3dcc8562673699c3b96613744b55",
+      "deployed_entry": "C:/Users/yusun/projects/custom-mcps/law-mcp/dist/index.js",
+      "deployed_sha256": "02fff2fedf5106fb387c0d06a7b1c146b95209234d59e558990c965753f0a324",
+      "scratch_dir": "C:\\Users\\yusun\\AppData\\Local\\Temp\\law-mcp-m10-codex-with-70f8057a7f064b1387d3d0755567dbfb",
+      "started_at": "2026-08-01T05:19:00.4707678Z",
+      "ended_at": "2026-08-01T05:25:22.8329179Z",
+      "exit_code": 0,
+      "inherited_law_api_oc": true,
+      "forbidden_surfaces": [
+        "web",
+        "chrome",
+        "shell",
+        "file",
+        "skills",
+        "agents"
+      ],
+      "raw_sha256": "3dee72c067dadc6e73cd0acb7191be50537b891ad9e9b3297cb09cf082b065b2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "answer_sha256": "86a3360abfe26e5d7ba71439f0513bb3afd01b1874d82b42a267148a813dcdfb",
+      "actual_models_in_trace": [],
+      "actual_model_observability": "Codex JSONL does not expose the resolved model; requested alias and CLI version are frozen",
+      "law_mcp_call_count": 80,
+      "web_request_count": 0,
+      "forbidden_tool_markers": []
+    },
+    "codex-without": {
+      "arm": "codex-without",
+      "mode": "solve",
+      "availability": "without",
+      "requested_model": "gpt-5.6-sol",
+      "prompt_sha256": "e9447cc16d59053089b41aafb9d6405346a0c785929ca7543cb66201c27d9ca8",
+      "deployed_entry": null,
+      "deployed_sha256": null,
+      "scratch_dir": "C:\\Users\\yusun\\AppData\\Local\\Temp\\law-mcp-m10-codex-without-bf6b3b1f95e14867ac9dda6f75dd060a",
+      "started_at": "2026-08-01T05:18:59.4582707Z",
+      "ended_at": "2026-08-01T05:22:03.8342935Z",
+      "exit_code": 0,
+      "inherited_law_api_oc": true,
+      "forbidden_surfaces": [
+        "web",
+        "chrome",
+        "shell",
+        "file",
+        "skills",
+        "agents"
+      ],
+      "raw_sha256": "b6b8f6c205269d8a75570679485ec4c17a98642ccbd23d19d942cb34b36ae2f8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "answer_sha256": "ee004f8712ba5d9dd164dc1e5fa464b4940343d743673249266f1e39390400a0",
+      "actual_models_in_trace": [],
+      "actual_model_observability": "Codex JSONL does not expose the resolved model; requested alias and CLI version are frozen",
+      "law_mcp_call_count": 0,
+      "web_request_count": 0,
+      "forbidden_tool_markers": []
+    },
+    "opus-with": {
+      "arm": "opus-with",
+      "mode": "solve",
+      "availability": "with",
+      "requested_model": "opus",
+      "prompt_sha256": "8c7fc51f45006e97091478c4eac6bd9061aa3dcc8562673699c3b96613744b55",
+      "deployed_entry": "C:/Users/yusun/projects/custom-mcps/law-mcp/dist/index.js",
+      "deployed_sha256": "02fff2fedf5106fb387c0d06a7b1c146b95209234d59e558990c965753f0a324",
+      "scratch_dir": "C:\\Users\\yusun\\AppData\\Local\\Temp\\law-mcp-m10-opus-with-6aa362837f17433eaf9b912b0b86f202",
+      "started_at": "2026-08-01T05:18:59.7857001Z",
+      "ended_at": "2026-08-01T05:33:45.8866887Z",
+      "exit_code": 0,
+      "inherited_law_api_oc": true,
+      "forbidden_surfaces": [
+        "web",
+        "chrome",
+        "shell",
+        "file",
+        "skills",
+        "agents"
+      ],
+      "raw_sha256": "aae6049796770c55fe75183899526a8f28740e8df1797269fb283b53ea0b20d5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "answer_sha256": "c09150d77992b8c12345e6357503114ec740ee0e404d4021f43601c69ecbdc64",
+      "actual_models_in_trace": [
+        "claude-opus-5"
+      ],
+      "actual_model_observability": "trace",
+      "law_mcp_call_count": 49,
+      "web_request_count": 0,
+      "forbidden_tool_markers": []
+    },
+    "opus-without": {
+      "arm": "opus-without",
+      "mode": "solve",
+      "availability": "without",
+      "requested_model": "opus",
+      "prompt_sha256": "e9447cc16d59053089b41aafb9d6405346a0c785929ca7543cb66201c27d9ca8",
+      "deployed_entry": null,
+      "deployed_sha256": null,
+      "scratch_dir": "C:\\Users\\yusun\\AppData\\Local\\Temp\\law-mcp-m10-opus-without-5363316d386a47659b6a329c23939201",
+      "started_at": "2026-08-01T05:19:00.5014252Z",
+      "ended_at": "2026-08-01T05:24:38.4225809Z",
+      "exit_code": 0,
+      "inherited_law_api_oc": true,
+      "forbidden_surfaces": [
+        "web",
+        "chrome",
+        "shell",
+        "file",
+        "skills",
+        "agents"
+      ],
+      "raw_sha256": "584d621aaa11860aea68b4b095596573f8f4ecec32034914d160a152ce1b2136",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "answer_sha256": "a49cc81d401aeceaa5a2ebfdda553e10f42db3cee887bdbedf8081286ecbc1c8",
+      "actual_models_in_trace": [
+        "claude-opus-5"
+      ],
+      "actual_model_observability": "trace",
+      "law_mcp_call_count": 0,
+      "web_request_count": 0,
+      "forbidden_tool_markers": []
+    }
+  },
+  "law_mcp_tool_allowlist": [
+    "search_law",
+    "get_law_article",
+    "search_precedents",
+    "get_precedent",
+    "search_admin_rules",
+    "get_admin_rule",
+    "batch_validate_legal_terms",
+    "suggest_term_patches",
+    "verify_citation",
+    "search_legal_source",
+    "get_legal_source"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "arm": "codex-without",
+  "mode": "solve",
+  "availability": "without",
+  "requested_model": "gpt-5.6-sol",
+  "prompt_sha256": "e9447cc16d59053089b41aafb9d6405346a0c785929ca7543cb66201c27d9ca8",
+  "deployed_entry": null,
+  "deployed_sha256": null,
+  "scratch_dir": "C:\\Users\\yusun\\AppData\\Local\\Temp\\law-mcp-m10-codex-without-bf6b3b1f95e14867ac9dda6f75dd060a",
+  "started_at": "2026-08-01T05:18:59.4582707Z",
+  "ended_at": "2026-08-01T05:22:03.8342935Z",
+  "exit_code": 0,
+  "inherited_law_api_oc": true,
+  "forbidden_surfaces": [
+    "web",
+    "chrome",
+    "shell",
+    "file",
+    "skills",
+    "agents"
+  ]
+}

@@ -39,6 +39,7 @@ def main() -> int:
             **meta,
             "raw_sha256": sha(directory / "raw.jsonl"),
             "stderr_sha256": sha(directory / "stderr.log"),
+            "answer_sha256": sha(directory / "answer.md") if (directory / "answer.md").exists() else None,
             "actual_models_in_trace": models,
             "actual_model_observability": "trace" if models else "Codex JSONL does not expose the resolved model; requested alias and CLI version are frozen",
             "law_mcp_call_count": len(re.findall(r'"type":"mcp_tool_call".*?"status":"completed"', raw)) + len(re.findall(r'"type":"tool_use".*?"name":"mcp__law_mcp__', raw)),

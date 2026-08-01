@@ -1,0 +1,22 @@
+{
+  "arm": "opus-with",
+  "mode": "solve",
+  "availability": "with",
+  "requested_model": "opus",
+  "prompt_sha256": "8c7fc51f45006e97091478c4eac6bd9061aa3dcc8562673699c3b96613744b55",
+  "deployed_entry": "C:/Users/yusun/projects/custom-mcps/law-mcp/dist/index.js",
+  "deployed_sha256": "02fff2fedf5106fb387c0d06a7b1c146b95209234d59e558990c965753f0a324",
+  "scratch_dir": "C:\\Users\\yusun\\AppData\\Local\\Temp\\law-mcp-m10-opus-with-6aa362837f17433eaf9b912b0b86f202",
+  "started_at": "2026-08-01T05:18:59.7857001Z",
+  "ended_at": "2026-08-01T05:33:45.8866887Z",
+  "exit_code": 0,
+  "inherited_law_api_oc": true,
+  "forbidden_surfaces": [
+    "web",
+    "chrome",
+    "shell",
+    "file",
+    "skills",
+    "agents"
+  ]
+}

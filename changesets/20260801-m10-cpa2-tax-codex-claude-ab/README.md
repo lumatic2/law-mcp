@@ -8,7 +8,7 @@
 
 - [x] 문제·정답·채점표 동결
 - [x] Codex·Claude 2×2 격리 하네스와 연막검증
-- [ ] 독립 4세션 풀이와 원시 증거 보존
+- [x] 독립 4세션 풀이와 원시 증거 보존
 - [ ] 블라인드 채점과 최종 판정
 
 ## Step 1 증거
@@ -24,3 +24,10 @@
 - Claude pair의 실제 모델은 trace상 모두 `claude-opus-5`다. Codex JSONL은 해석된 모델 ID를 노출하지 않아 동일 alias `gpt-5.6-sol`과 CLI 0.146.0을 고정했다.
 - 배포 사본 해시 일치, `+` 호출 성공, `-` 호출 0, 웹·셸·파일·브라우저·스킬·하위 에이전트 marker 0을 `smoke/manifest.json`과 validator로 확인했다.
 - 잘못된 배포 엔트리와 `-` arm MCP 주입 실패 probe가 각각 준비 게이트를 차단한다.
+
+## Step 3 증거
+
+- Orca terminal handle 네 개를 새로 만들고 1.043초 안에 C+/C-/O+/O-를 동시에 시작했다.
+- 네 arm 모두 exit 0, 완결 답안, stderr 0, 금지 surface marker 0이다. C+/O+만 Law MCP trace가 있고 C-/O-는 호출 0이다.
+- raw JSONL·추출 답안·실행 meta의 SHA-256과 terminal handle을 `evidence/cpa2/2026-m10/runs/`에 봉인했다.
+- 답안 생성 중 채점표·정답 근거 파일 접근 흔적은 없었다.

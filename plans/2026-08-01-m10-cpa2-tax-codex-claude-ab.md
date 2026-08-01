@@ -104,7 +104,7 @@ Status: approved (2026-08-01 사용자 승인 — "코덱스도 하고, 클로�
   - Failure probe: 각 `-` config에 사용자 MCP를 주입한 변형과 각 `+` 배포 엔트리를 잘못 지정한 변형을
     하네스가 실행 전 차단
   - Commit: `test(m10): Codex Claude 2x2 도구 격리 하네스와 연막검증`
-- [ ] **step-3 — Codex·Claude 독립 4세션 풀이**
+- [x] **step-3 — Codex·Claude 독립 4세션 풀이**
   - Artifact: 동시에 시작한 신규 C+/C-/O+/O- 세션의 원시 JSON 답안·도구 추적·시간·종료코드·실제
     model ID와 불변 manifest; 답안 생성 시점에는 채점표 비공개
   - Risk: 없음 (동결 입력으로 답안을 생성·기록)
@@ -155,3 +155,4 @@ Status: approved (2026-08-01 사용자 승인 — "코덱스도 하고, 클로�
 - 2026-08-01 사용자 확장·승인 — Codex pair 추가, 총 4세션 2×2로 승인(`ㄱㄱ`).
 - 2026-08-01 step-1 완료 — 공식 PDF/HWP·문제 1 전사본 해시 동결, 25점/17단위 채점표와 12개 핵심 명제 고정. 월세 1점은 공개 전문가 이견으로 제외해 확정 분모 24/25(96%). Law MCP 시험일 조문 및 tax-agent 계산기로 재판정했고, 분쟁 7점 추가 변형은 68%로 준비 게이트 FAIL을 확인.
 - 2026-08-01 step-2 완료 — Orca 신규 터미널 4개 연막. C+/O+ 실제 Law MCP 본문 성공, C-/O- 호출 0, 금지 surface marker 0, 배포 SHA 일치. Opus 실제 모델은 양쪽 `claude-opus-5`; Codex JSONL 모델 ID 비노출 한계를 명시하고 양쪽 alias/CLI/플래그를 고정. Codex exec MCP 승인·env 전달 결함을 하네스에서 명시 설정하고 실패 감지를 강화.
+- 2026-08-01 step-3 완료 — Orca 신규 터미널 C+/C-/O+/O- 동시 시작 편차 1.043초. 전 arm exit 0·답안 완결·stderr 0·금지 surface 0, C+/O+만 Law MCP trace, C-/O- 호출 0. raw/answer/meta 해시와 terminal handle을 봉인했으며 채점표 경로 접근 흔적 0.

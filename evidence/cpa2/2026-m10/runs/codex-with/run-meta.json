@@ -1,0 +1,22 @@
+{
+  "arm": "codex-with",
+  "mode": "solve",
+  "availability": "with",
+  "requested_model": "gpt-5.6-sol",
+  "prompt_sha256": "8c7fc51f45006e97091478c4eac6bd9061aa3dcc8562673699c3b96613744b55",
+  "deployed_entry": "C:/Users/yusun/projects/custom-mcps/law-mcp/dist/index.js",
+  "deployed_sha256": "02fff2fedf5106fb387c0d06a7b1c146b95209234d59e558990c965753f0a324",
+  "scratch_dir": "C:\\Users\\yusun\\AppData\\Local\\Temp\\law-mcp-m10-codex-with-70f8057a7f064b1387d3d0755567dbfb",
+  "started_at": "2026-08-01T05:19:00.4707678Z",
+  "ended_at": "2026-08-01T05:25:22.8329179Z",
+  "exit_code": 0,
+  "inherited_law_api_oc": true,
+  "forbidden_surfaces": [
+    "web",
+    "chrome",
+    "shell",
+    "file",
+    "skills",
+    "agents"
+  ]
+}

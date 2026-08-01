@@ -1,0 +1,22 @@
+{
+  "runtime_id": "acf8ff30-87aa-4a8f-9e97-3bfdda05c3ea",
+  "created_at": "2026-08-01",
+  "sessions": {
+    "codex-with": {
+      "terminal_handle": "term_64e52b34-7e5b-4ce4-bf81-f739ed8ed07e",
+      "tab_id": "440d0bef-3f0e-40a2-88e4-fe5e87b9aa53"
+    },
+    "codex-without": {
+      "terminal_handle": "term_ce2e92d5-6050-42f3-bb28-a80d4d55ce11",
+      "tab_id": "3edf21bd-ac65-40d2-829a-5ee7d22f555e"
+    },
+    "opus-with": {
+      "terminal_handle": "term_ca1e27e7-0bbd-4bee-83a2-d092a23e25ab",
+      "tab_id": "c1181b7a-44b9-4363-a722-d242f73df32d"
+    },
+    "opus-without": {
+      "terminal_handle": "term_5d4b3b57-ad4f-4792-9020-a5c61ce780c5",
+      "tab_id": "7e6650fa-4f86-4f79-962a-8bcc9dc74d3c"
+    }
+  }
+}
