@@ -22,6 +22,13 @@
 > `archive/reports/2026-08-01-m7-breadth-verdict.md`. 미결 결정 ⓔ·ⓕ·ⓖ 중 ⓕ(문항 수리)는
 > 2026-08-01 승인되어 M8 로 소비된다.
 
+<!-- harness:milestone id="M11" status="active" priority="P0" -->
+### M11 — 다음 축 확정 (M8 살림 판정의 내용)
+
+- Gap: M1~M10 이 전부 completed 라 연쇄가 비어 있다. 2026-08-15 `agent-orchestration` M8 전수 실사에서 이 레포는 **제품시도 축 18개 중 유일하게 매일 실사용되는 인프라**로 판정돼 「살림」으로 확정됐는데, 총괄이 볼 active milestone 이 없어 조용한 레포와 구분되지 않았다.
+- DoD: `plans/horizons/CANDIDATES.md` 의 후보 중 다음 축을 사용자와 확정하고, 그 축의 milestone 계획을 `/harness-plan` 으로 연다. **순서는 사용자 소유다** — 이 milestone 은 후보를 고르지 않고 고를 자리를 여는 것까지다.
+- Status: [ ]
+
 <!-- harness:milestone id="M10" status="completed" priority="P0" evidence="archive/reports/2026-08-01-m10-cpa2-tax-close.md" -->
 ### M10 — 공인회계사 2차 세법 Codex·Claude 2×2 완성 판정
 - DoD: 2026년 세법 첫 대문제·채점표 사전 동결(확정 분모 ≥70%) · Codex와 Opus 각각 동일 모델·동일
