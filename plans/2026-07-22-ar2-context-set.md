@@ -10,7 +10,7 @@ Status: approved (2026-07-22 사용자 "ㄱㄱ")
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중
   하나가 된다 (← `OBJECTIVE.md`)
-- **horizon**: 에이전트가 쓰는 대로 재고, 그 기준으로 올린다 (← `plans/horizons/agentic-reach.md`)
+- **horizon**: 에이전트가 쓰는 대로 재고, 그 기준으로 올린다 (← `archive/horizons/agentic-reach.md`)
 - **milestone**: AR2 — **잴 것을 만들고 기준선을 박는다.** 구 홀드아웃 20건에 맥락을 붙여 dev 로
   강등하고, 답이 없는 기권 케이스를 섞고, 새 홀드아웃을 봉인한 뒤 기준선을 측정한다.
   규모 근거: 맥락 세트 제작·기권 케이스·봉인+기준선이 독립 changeset 3, 통합검증 = 단발 75% 대비 대조표.

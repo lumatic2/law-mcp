@@ -10,7 +10,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중
   하나가 된다 (← `OBJECTIVE.md`)
-- **horizon**: 세법을 끝까지 (← `plans/horizons/tax-vertical.md`)
+- **horizon**: 세법을 끝까지 (← `archive/horizons/tax-vertical.md`)
 - **milestone**: TV1 — 이 horizon 의 **모든 판정이 딛고 설 바닥**을 만든다. 직전 horizon 의 홀드아웃
   15건은 close 개봉으로 소진됐고, 세법 전용 라벨은 애초에 없다. 세트 없이 TV2~TV5 를 채택하면
   그게 정확히 F5 과적합이다(행정 도메인 진단이 이미 이 이유로 멈췄다).

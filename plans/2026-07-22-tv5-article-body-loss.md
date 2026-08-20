@@ -15,7 +15,7 @@ Supersedes: `plans/2026-07-21-tv5-tax-tables.md` — 그 계획의 전제(세율
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중
   하나가 된다 (← `OBJECTIVE.md`)
-- **horizon**: 세법을 끝까지 (← `plans/horizons/tax-vertical.md`)
+- **horizon**: 세법을 끝까지 (← `archive/horizons/tax-vertical.md`)
 - **milestone**: TV5 — **조문 본문이 조용히 사라지고 있다.** `항내용` 이 중첩 배열
   (`[[본문, img, 표행…]]`)인 조문에서 `pickString` 이 `null` 을 돌려 **그 항의 본문이 통째로**
   빠진다. 그래서 소득세법 제55조가 "다음의 세율을 적용하여"라고 해 놓고 **표가 없다** —

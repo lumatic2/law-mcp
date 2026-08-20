@@ -10,7 +10,7 @@ Status: approved (2026-07-22 사용자 "ㄱㄱ")
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중
   하나가 된다 (← `OBJECTIVE.md`)
-- **horizon**: 에이전트가 쓰는 대로 재고, 그 기준으로 올린다 (← `plans/horizons/agentic-reach.md`)
+- **horizon**: 에이전트가 쓰는 대로 재고, 그 기준으로 올린다 (← `archive/horizons/agentic-reach.md`)
 - **milestone**: AR3 — **새 자로 판정해서 고친다.** 프로브가 적발한 실 결함 3종 중 `SR@1`
   (1턴 성공률)을 가장 많이 깎는 것을 골라 수리하고, 교차 A/B 로 채택 판정한다.
   규모 근거: 기여도 프로브·수리·채택 판정이 독립 changeset 3, 통합검증 = 손실 0 AND `SR@1` 순 이득.

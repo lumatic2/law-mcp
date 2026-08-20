@@ -38,7 +38,7 @@
   삼각검증과 strict config 연막을 먼저 통과해야 한다.
 - Scale: changesets>=1; surfaces: 문제·채점표 동결 / 2×2 격리 / Codex·Opus 4세션 / 채점·판정;
   capability: "세법 완성"이 벤치 점수가 아니라 실제 종합문제 정확성으로 검증된다
-- Plan: `plans/2026-08-01-m10-cpa2-tax-codex-claude-ab.md`
+- Plan: `archive/plans/2026-08-01-m10-cpa2-tax-codex-claude-ab.md`
 - Status: [x]
 - Completed at: 2026-08-01
 - Evidence: archive/reports/2026-08-01-m10-cpa2-tax-close.md

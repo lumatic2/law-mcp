@@ -11,7 +11,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중
   하나가 된다 (← `OBJECTIVE.md`)
-- **horizon**: 세법을 끝까지 (← `plans/horizons/tax-vertical.md`)
+- **horizon**: 세법을 끝까지 (← `archive/horizons/tax-vertical.md`)
 - **milestone**: TV2 — 세법 실무에서 실제로 답이 나오는 층이 통째로 비어 있다. 조세심판원
   4,688건("가산세")·국세청 예규 1,938건이 실측으로 열려 있는데 `source` enum 14종에 둘 다 없다.
   노동에서 `nlrc` 로 이 층을 채운 선례를 세법에 적용한다.

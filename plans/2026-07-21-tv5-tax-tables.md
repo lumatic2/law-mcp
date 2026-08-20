@@ -10,7 +10,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중
   하나가 된다 (← `OBJECTIVE.md`)
-- **horizon**: 세법을 끝까지 (← `plans/horizons/tax-vertical.md`)
+- **horizon**: 세법을 끝까지 (← `archive/horizons/tax-vertical.md`)
 - **milestone**: TV5 — 세법의 실제 숫자(세율·공제한도·과세표준 구간)는 조문 본문이 아니라 **별표**
   에 있다. 지금 조문만 주면 "대통령령으로 정하는 율"에서 끊긴다. `licbyl` 이 실측 97건("세율")로
   열려 있고 메타데이터는 JSON 으로 오지만 **표 내용은 파일(HWP/PDF)** 이다 — 찾기와 읽기가 서로

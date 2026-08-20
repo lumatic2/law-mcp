@@ -10,7 +10,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중
   하나가 된다 (← `OBJECTIVE.md`)
-- **horizon**: 세법을 끝까지 (← `plans/horizons/tax-vertical.md`)
+- **horizon**: 세법을 끝까지 (← `archive/horizons/tax-vertical.md`)
 - **milestone**: TV4 — 2026-07-21 실측에서 `세금계산서 지연발급 가산세` 가 **부가가치세법을 후보에
   올리지도 못했다.** 행정 도메인 진단이 규명한 것과 같은 결함이다: 본문검색은 가나다순인데
   우리는 앞 30건만 받으므로 뒷글자 법령(부·행·환)이 구조적으로 탈락한다. 그 진단은 **평가 세트가

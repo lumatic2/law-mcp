@@ -11,7 +11,7 @@ Status: approved (2026-07-21 사용자 "응 그렇게 해")
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중
   하나가 된다 (← `OBJECTIVE.md`)
-- **horizon**: 세법을 끝까지 (← `plans/horizons/tax-vertical.md`)
+- **horizon**: 세법을 끝까지 (← `archive/horizons/tax-vertical.md`)
 - **milestone**: TV3 — **이 horizon 의 차별점.** 세법은 "몇 년 귀속이냐"가 곧 답이다. 같은 조문
   번호라도 귀속연도가 다르면 요건이 다르고(이월과세 5년→10년 등), 조세심판원조차 귀속년도를
   사건 식별 1급 메타데이터로 쓴다. 지금 우리는 **항상 현행만 준다** — 2023년 사건에 2026년

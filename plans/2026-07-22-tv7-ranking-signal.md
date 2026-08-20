@@ -10,7 +10,7 @@ Status: approved (2026-07-22 사용자 "ㄱㄱ")
 
 - **Objective**: 한국 사람들이 '법' 관련 작업을 AI 에이전트로 할 때 설치하게 되는 MCP 의 대표 중
   하나가 된다 (← `OBJECTIVE.md`)
-- **horizon**: 세법을 끝까지 (← `plans/horizons/tax-vertical.md`)
+- **horizon**: 세법을 끝까지 (← `archive/horizons/tax-vertical.md`)
 - **milestone**: TV7 — TV4 가 판정한 진짜 결함을 친다. **도달은 고쳤는데 순위가 안 움직였다** —
   순위를 정하는 신호가 법령명 문자열뿐이라, 이름과 글자를 공유하지 않는 정답(`수정신고`→
   `국세기본법`)은 후보에 들어와도 밀린다. TV4 는 조문제목이 옳은 신호임을 확인했지만
