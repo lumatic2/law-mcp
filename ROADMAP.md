@@ -59,6 +59,16 @@
 
 ## Active Milestones
 
+## Next Candidates
+
+후보 백로그 정본 → `plans/horizons/CANDIDATES.md` (순서는 사용자 소유).
+요약: 다음 분야 vertical(노동·부동산) · 소비 표면(서버 instructions — M4 측정 후에만) ·
+홀드아웃 재구성(E·L) · 벤더 교차 측정 · AR3 어휘 공백 경고 유지 여부.
+
+**범위 밖(사용자 발화가 착수 신호)**: 공개 배포 · npm · 발견성 · 회계(§범위).
+
+## Completed
+
 <!-- harness:milestone id="M4" status="completed" priority="P0" evidence="archive/reports/2026-07-31-m4-tax-complete-verdict.md" -->
 ### M4 — after 측정 + 실전 리허설 + 완성 판정
 - DoD: M1 과 동일 세트·지표 재측정 + before/after 비교표(회귀 판정선 pass^3 −5%p 이내) · 블라인드
@@ -74,6 +84,7 @@
 
 - Completed at: 2026-07-31
 - Summary: after 재측정+리허설 5건+4축 판정 보고 — 닫는 판정은 사용자 소유
+
 <!-- harness:milestone id="M5" status="completed" priority="P0" evidence="archive/reports/2026-08-01-m5-topics-close.md" -->
 ### M5 — 주제 목록 확정 + 규약 개정 + 스키마 배선
 - DoD: 승인 규칙이 파일로 외부화되고 60 주제가 동일 규칙·동일 MST 에서 2회 diff 0 으로 재현 ·
@@ -90,6 +101,7 @@
 - Status: [x]
 - Completed at: 2026-08-01
 - Summary: 60 주제 확정 + ADR 0004 개정 + 스키마·러너 배선
+
 <!-- harness:milestone id="M6" status="completed" priority="P0" evidence="archive/reports/2026-08-01-m6-items-close.md" -->
 ### M6 — 문제 작성 + 라벨 검증 + 코퍼스 통합
 - DoD: 신규 60건이 검사 3종(스키마·유출·주제출처) 전건 통과 · 라벨 60건이 조문 본문 조회로 검증된
@@ -104,6 +116,7 @@
 - Status: [x]
 - Completed at: 2026-08-01
 - Summary: 60문항 통합(124→184) + 라벨 검증 + 봉인 20건·강제 장치
+
 <!-- harness:milestone id="M7" status="completed" priority="P0" evidence="archive/reports/2026-08-01-m7-breadth-verdict.md" -->
 ### M7 — 확장 코퍼스 기준선 측정 + 넓이 판정
 - DoD: 고정 43건 레코드 해시 불변 + 범용 recall@3 = M4 값(84.2%) · 확장 dev 40건 블라인드 ×3
@@ -119,13 +132,6 @@
 
 - Completed at: 2026-08-01
 - Summary: 확장 40건 기준선(pass^3 75.0%) + 고정 세트 불변 + 후보 S 해소 판정
-## Next Candidates
-
-후보 백로그 정본 → `plans/horizons/CANDIDATES.md` (순서는 사용자 소유).
-요약: 다음 분야 vertical(노동·부동산) · 소비 표면(서버 instructions — M4 측정 후에만) ·
-홀드아웃 재구성(E·L) · 벤더 교차 측정 · AR3 어휘 공백 경고 유지 여부.
-
-**범위 밖(사용자 발화가 착수 신호)**: 공개 배포 · npm · 발견성 · 회계(§범위).
 
 ## Archive Pointer
 완료 이력은 `docs/BACKLOG.md` 참조 (trap-free TF1~TF4 는 2026-07-31 compact 로 이관).
