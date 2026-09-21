@@ -1,28 +1,93 @@
 # PLAN — {milestone 제목}
 
-> 생성: {YYYY-MM-DD} · 갈래: {product|learning|tooling|workflow} · scope 결정: {이번 run 이 어디까지}
+> 생성: {YYYY-MM-DD} · 산출물: {changeset | 분석 노트·experiment | playbook | phase} · scope 결정: {이번 run 이 어디까지}
 > milestone-레벨 durable plan doc. Claude/Codex 가 이 문서만 읽고 이어받는 단일 장부.
-> 세부 step 상태는 갈래별 status machine(`phases/index.json` / `changesets/README.md` / `run.json`)에, milestone 전체 픽업은 여기서.
+> **`Commit:` 필드 — ST1 스테이징 레인 대상 작업은 `장벽 후 일괄` 로 적는다** (M6 2026-08-20). leaf 마다 커밋 경계를 요구하는 기본 의미는 ST1 밖 작업에는 그대로 맞지만, 스테이징 대상(하네스 흐름 3종·훅·공유 기계장치)은 커밋 게이트가 배포본 드리프트를 막으므로 소스를 재생성 장벽 통과까지 미커밋 작업 트리에 두고 그 뒤 일괄 커밋한다 — leaf 별 커밋을 요구하면 계약이 자기모순이 된다.
+> 세부 step 상태는 이 문서의 **체크박스가 쓰기 정본**이고, 산출물별 status machine(`phases/index.json` / `changesets/README.md` / `run.json`)은 거기서 파생되는 포인터다.
+> **미기입 표식 게이트 (M7 2026-08-20)**: 게이트 어휘·중괄호 표식을 산문에서 언급하려면 백틱으로 감싼다(인라인 코드·코드 펜스·`## 진행 로그`·`## finding 큐` 절은 면제). 단 leaf 필드 값은 백틱 안이라도 예외 없이 검사한다.
 
-## 북극성 → horizon → milestone → step (위계)
-- **북극성**: {CLAUDE.md 궁극 목표 한 줄} (← `docs/OBJECTIVE.md`)
-- **horizon**: {현 ROADMAP horizon} (← `docs/horizons/<slug>.md` — cascade 상위 백링크)
-- **milestone**: {이번 milestone + 왜 이 규모인가(스케일 루브릭상 milestone인 근거)}
+Status: {draft → 승인 시 approved (날짜·승인 문구) → 완료 시 completed}
+
+## 북극성 → milestone → step (위계 — 2계층, horizon 층은 2026-07-23 C4 폐지)
+- **북극성**: {한 줄} (← `CLAUDE.md` 맨 위 「북극성」 절)
+- **milestone**: {이번 milestone + 왜 이 규모인가(리프 판정상 milestone인 근거)}
 
 ## run 전 scope 결정 (확정)
 - **결정**: {이번 run 이 닫을 step 범위}
-- **중단점(stop points)**: {검증 PASS 후 / blocked / budget 초과 / 사용자 결정 필요}
+- **execution mode**: `continuous`
+- **중단점(stop points)**: completed / 증거가 있는 blocked / decision_required / risk_gate / secret_required / external_authority_required / user_stopped
+- **진행 보고**: commentary only. 미완 leaf 는 턴 종료점이 아니다.
+- **되돌리기 어려운 동작**: {없음 | 목록 — 라이브 배포·삭제·외부 발송·크리덴셜 변경류. 항목마다 실행 전 승인 경로(사용자 게이트·백업)를 붙인다} (2026-08-29 M28 O2 — 게이트가 이 줄의 **존재**를 검사한다. 내용 판단은 승인자 몫 — 계기: 배포 게이트 누락을 문장 규칙만으로는 기계가 못 잡았다)
+- **rollback/cleanup**: {changeset별 되돌리기 및 임시 자원 정리 방법}
 
-## 결정 로그 (run 전 사전 소진 — §B2-scope)
+## 스캐폴딩 결정 (CS6 범용화 — validate_plan_gate 가 기계 검증, 결정 없이 위임 금지)
+> 코어 3 + 이 작업에 필요한 도메인을 스스로 선언해 전부 채운다. 기본값 소스: `~/.claude/memory/dev-stack.md`, 디자인은 Askewly Design 진입 프로토콜(ui.askewly.com). 안 걸리는 도메인은 값에 `해당 없음 — <이유>`.
+- source-of-truth: {정본이 어디 사는가 — 레포/파일/서비스}
+- 검증: {무엇으로 검증하는가 — 테스트·스모크·E2E 표면}
+- 배포/운영: {어떻게 도달·운영되는가 — 호스팅·동기화·env·관측 / 해당 없음 — <이유>}
+<!-- 아래는 자기선언 도메인 — 이 작업에 걸리는 것만 추가 (서비스형 참고 카탈로그: 화면·서버·데이터·디자인·배포·관측 → planning-gates.md) -->
+- {도메인}: {결정 내용}
+- 검토 후 제외: {검토했으나 안 걸리는 표준 도메인 — 이유 / 없음}
+
+## 결정 로그 (run 전 사전 소진 — /harness-plan 계획 분해)
 > 이 milestone 실행 중 나올 수 있는 사용자 소유 결정을 계획 단계에서 전부 매듭. 없으면 "없음" 명시(빈 섹션 금지).
 - {결정 1: 선택지 → 확정값 (근거·확정일)} / 없음
+<!-- 매듭 완료면 resolved, 애초에 결정이 없으면 none-required -->
+- status: resolved
 
-## Step 트리 (실행 전 재귀 분해 — step-leaf 테스트로 leaf까지 펼침)
-> 목표→milestone→step→spec 으로 위에서 아래로 쪼갠다. 각 노드가 step-leaf 테스트(① 한 coding pass ② 단일 검증 ③ 한 surface ④ 새 사용자결정 없음)를 통과하면 leaf. 아는 만큼 펼치고(못 펼치면 다음 1~2 leaf만) 나머지는 finding 큐로.
-> 진행 권위는 갈래 status machine(`phases/index.json`·changeset 표·`run.json`)이 정본 — 이 체크박스는 milestone boundary 에서만 동기화(이중기록 drift 방지).
-- [ ] **step-1** {slug} — {한 coding pass 작업} · 검증: {AC/커맨드}
-- [ ] **step-2** {slug} — … · 검증: …
+
+## Step 트리 (실행 전 계획 분해 — 리프 판정로 leaf까지 펼침)
+> 목표→milestone→step→spec 으로 위에서 아래로 쪼갠다. 각 노드가 리프 판정(① 한 coding pass ② 단일 검증 ③ 한 surface ④ 새 사용자결정 없음)를 통과하면 leaf. 아는 만큼 펼치고(못 펼치면 다음 1~2 leaf만) 나머지는 finding 큐로.
+> **`Dependencies:` 는 기계 판독된다** (2026-07-23 OI2) — 값은 `none`(또는 `없음`) 이거나 `step-N` 나열(쉼표/공백)이고, id 뒤에 **괄호 꼬리말 1개**로 *왜* 그 의존인지 적을 수 있다(`step-2 (게이트 형식 확정 후)`). 괄호 밖 산문은 게이트가 거절한다. 여기서 **다음에 착수 가능한 leaf 와 동시 가능 집합이 파생**되므로, 순서를 적는 자리가 아니라 **무엇이 끝나야 시작할 수 있는지**를 적는 자리다. milestone 사이의 의존은 여기 쓰지 않는다 — 그건 horizon 설계서와 ROADMAP marker 소유다.
+> **leaf heading 꼬리말은 괄호 1개까지** (M24 2026-08-22) — 닫는 `**` 뒤에는 괄호 꼬리말 1개만 온다(`- [ ] **step-N — 제목** (범위 한정)`). 괄호 밖 산문·괄호 2개를 붙이면 그 step 은 leaf 집합에서 조용히 빠진다(생성일 2026-08-22 이후 계획서부터 leaf 로 인식 — 소급 없음).
+> ⚠ **이 꼬리말은 승인 *전에* 쓰는 것이고, 완료 메모 자리가 아니다** (2026-08-30 M31 실측 정정). 승인 씰이 봉인에서 빼는 것은 **체크박스 상태**(`[ ]`↔`[x]`)와 **append-only 절의 내용**뿐이다 — 제목 줄도 본문 `- Done:` 류 추가 줄도 전부 봉인 대상이라, 완료 후 붙이면 `approval_receipt` 가 FAIL 한다. **완료 메모는 `## 진행 로그` 에 적는다.** 구 문구는 제목 꼬리말과 `- Done:` 줄을 완료 메모 자리로 권했는데, 둘 다 실제로 씰을 깬다(해시 대조로 확인 — 체크박스·append-only 절만 불변).
+> **`Risk:` 는 배차와 검증 두께를 정한다** (2026-07-23 DC1) — `위험`·`기계적`·`없음` 중 하나, 판단이 안 서면 `미분류`(게이트가 따로 집계하고 위험 쪽으로 취급한다). 가르는 질문은 하나다: **이 변경으로 지금까지 통과하던 것이 막히기 시작하는가.** 막히기 시작하면 `위험`(오탐이 정상 작업을 세운다), 막히는 집합이 그대로면 `기계적`, 산출물이 기록뿐이면 `없음`. 등급은 *의식의 크기*만 정하지 테스트 면제권이 아니다 — 실제 위험이 있는 동작을 검증 없이 두면 등급과 무관하게 미달. 소비 규칙(등급별 실행 모드·배차 이득 체크리스트)은 `~/projects/agent-orchestration/context/delegation.md` (2026-07-23 재조립 P1 로 구 `references/delegation.md` 에서 이전).
+> **진행의 쓰기 정본은 이 체크박스다** — step 을 끝낼 때마다 그 자리에서 `- [ ]`→`- [x]` 를 켠다(승인 해시는 체크박스 *상태*를 봉인하지 않는다, MM7). 산출물별 status machine(`phases/index.json`·changeset 표·`run.json`)과 `work.json` 은 여기서 파생되는 포인터이고, 어긋나면 plan 이 이긴다. ~~구 서술: 진행 권위는 status machine 이 정본, 체크박스는 boundary 에서만 동기화~~ — **폐기 (2026-07-23)**, 근거였던 이중기록 drift 는 파생 전환(cs#353)으로 해소됐다.
+
+## 이 문서의 내용 계약 (2026-07-17 CS5)
+> **적는 것**: step 트리(leaf 필드 완비)·스캐폴딩 결정·결정 로그·검증/DoD·scope 경계. 승인 후 본문은 불변(실행 계약).
+> **적지 않는 것**: 실시간 진행 상태(→ `.harness/work.json`·산출물 status machine 정본) · 도메인 지식 본문(→ docs/·research/ 링크) · 완료 후 회고(→ changeset Result·BACKLOG).
+- [ ] **step-1 — {slug}**
+  - Artifact: {완료 시 존재할 산출물/동작}
+  - Risk: {위험 | 기계적 | 없음 | 미분류} ({한 줄 근거})
+  - Files: {읽을 파일 + 수정할 정확한 파일/surface}
+  - Dependencies: none
+  - Verify: {AC를 판정할 명령/체크}
+  - Failure probe: {반드시 실패해야 하는 negative-path 검증}
+  - Commit: {이 leaf의 changeset/commit 경계}
+- [ ] **step-2 — {slug}**
+  - Artifact: {완료 시 존재할 산출물/동작}
+  - Risk: {위험 | 기계적 | 없음 | 미분류} ({한 줄 근거})
+  - Files: {읽을 파일 + 수정할 정확한 파일/surface}
+  - Dependencies: step-1
+  - Verify: {AC를 판정할 명령/체크}
+  - Failure probe: {반드시 실패해야 하는 negative-path 검증}
+  - Commit: {이 leaf의 changeset/commit 경계}
   - (더 쪼갤 필요 있으면 하위 leaf 로)
+
+## 배차 설계 (선택 — 배차 이득을 살 때, 2026-08-14 M18 · 2026-08-22 M23 확장)
+> **opt-in**: 이 절이 없으면 게이트는 아무것도 요구하지 않는다(실행은 전부 인라인). 쓰는 조건 = **동시 가능 leaf ≥2 또는 단가 이득**(순차 leaf 라도 명세 고정 + Risk `기계적`/`없음` 이면 하위 모델 워커가 기본 — 2026-08-22 사용자) + 배차 이득 체크리스트(`~/projects/agent-orchestration/context/delegation.md`: 파일 격리·독립 시각·컨텍스트 격리·벽시계 단축·단가) 중 ≥1 을 실제로 산다.
+> 행 문법(게이트가 검사): `- step-N · inline|worker(<model>) · 격리 none|worktree · 검증 <equivalent 경로/커맨드>` — worker 행은 model 필수, 참조 leaf 는 실재해야 하며, 서로 의존하는 두 leaf 를 worker 로 병렬 선언하면 차단된다. **`- 계획 모델: <model>` 줄 필수(worker 행이 있으면)** — 워커 모델 상한(≤ 계획 모델, 서열 haiku<sonnet<opus<fable)의 대조 기준, 게이트가 초과 선언을 차단한다. 워커 결과는 부모가 leaf Verify 를 직접 재실행한 뒤에만 체크박스를 켠다. **이 절을 가진 계획의 승인(ㄱㄱ)이 곧 그 규모 fan-out 의 사전 승인이다** — 절에 없는 즉흥 fan-out 은 여전히 건별 승인(글로벌 규약).
+- 근거: {배차 이득 항목 — 무엇을 사는가}
+- 계획 모델: {이 계획을 짠 모델 — fable|opus|sonnet|haiku}
+- {step-N · worker(sonnet) · 격리 worktree · 검증 …}
+
+## 재생성 장벽 (선택 — wave 사이에 한 번 도는 횡단 단계)
+> 특정 step 들이 끝난 뒤 **다음 leaf 를 시작하기 전에** 한 번 돌아야 하는 것. 배포·훅 출고·인덱스
+> 재생성이 여기 해당한다(지금까지는 사람이 기억해서 돌렸다). 없으면 이 절을 지운다.
+- after: {step-N, step-M} · run: `{명령}`
+
+## 검증자 지적 처분 (선택 — 계획 검증자를 붙였으면 채운다, 강제 아님)
+> 검증자(`plan-verifier` 등) 지적을 **반영·부분 반영·기각** 중 무엇으로 처분했는지 남긴다. 왜: 반영분은 결정 로그에 녹아 사라지고 **기각·부분 반영의 흔적이 없어서**, 승인자가 "n건 중 무엇을 안 받았나"를 에이전트 요약 한 줄로만 보게 된다(M5 실측: 지적 9건).
+> 강제하지 않는 이유 — FA1 은 정의 미배포·위임 제한 시 **자기 재검토 대체**를 허용하므로, 멀티스텝인데도 검증자 지적이 정당하게 0건일 수 있다. 절을 강제하면 그 경로가 막힌다. 검증을 안 붙였으면 이 절을 지운다.
+> **검증자가 낸 층별 실행/생략 줄을 이 절 머리에 그대로 옮긴다** (h-e M10 2026-09-07) — `plan-verifier` 는 L1~L5 각각에 `실행` 또는 `생략: <사유>` 를 반환하고 지적마다 층 라벨을 붙인다. 지적만 옮기고 층 줄을 버리면 *무엇을 안 봤는지*가 사라져 다음 회차에 개선 여부를 셀 수 없다.
+
+층별 실행/생략 (검증자 반환 그대로):
+`L1 커버리지: … · L2 적대 검증: … · L3 프리모템: … · L4 드라이런: … · L5 후계 자족성: …`
+
+| 지적 | 층 | 처분 | 이유 |
+|---|---|---|---|
+| <검증자가 지적한 것 한 줄> | L1~L5 중 하나 | 반영 / 부분 반영 / 기각 | <그렇게 처분한 이유 — 기각이면 특히> |
 
 ## 검증/DoD
 - **DoD**: {milestone 완료 판정 — 통합 증거}
@@ -31,4 +96,14 @@
 - {F1 …}
 
 ## 진행 로그 (append-only)
-- {YYYY-MM-DD} {무엇을 했나}
+- {날짜 · step-N 완료 (cs#NNN) — 한 줄. 서사 금지, 다음 세션에 필요한 사실만}
+
+<!--
+~~진행 로그 절을 두지 않는다 (2026-07-21 CF3 step-4)~~ — **폐기 (2026-07-22 SS4 step-2).**
+CF3 의 근거는 "승인 해시가 본문 추가를 차단한다" 는 기술적 사유 하나뿐이었는데,
+cs#357 이 append-only 절의 *내용*을 봉인에서 빼면서 그 사유가 사라졌다. 근거가
+사라진 결론은 유지하지 않는다. 반대편에는 살아 있는 근거가 있다 — 계획서는
+에이전트가 자기 진행을 체크·기록하며 나아가는 장부다(cs#353, 사용자 확정).
+절의 제목 줄은 여전히 봉인되므로 지우거나 이름을 바꾸면 continuation 이 막힌다.
+-->
+
